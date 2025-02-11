@@ -1,0 +1,26 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+env/
+venv/
+*_pyvenv.cfg
+*.egg-info/
+
+# Laboratory
+laboratory/
+
+# Sphinx documentation
+build/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
