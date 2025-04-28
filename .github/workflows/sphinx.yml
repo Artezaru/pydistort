@@ -1,0 +1,40 @@
+name: Deploy Documentation to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install sphinx pydata-sphinx-theme
+
+    - name: Build documentation
+      run: sphinx-build -b html docs/source/ public/
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      
+      with:
+        branch: gh-pages
+        folder: public
+        clean: true

@@ -1,0 +1,9 @@
+[bumpver]
+current_version = "0.0.1"
+version_pattern = "MAJOR.MINOR.PATCH"
+default_level = "patch"
+
+[bumpver.file_patterns]
+"pydistort/__version__.py" = [
+    '__version__ = "{version}"'
+]

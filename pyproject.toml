@@ -1,0 +1,49 @@
+[build-system]
+requires = [
+  "setuptools>=42",
+  "setuptools-scm>=8.0"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pydistort"
+requires-python = ">= 3.8"
+dynamic = ["dependencies", "version"]
+description = "Distortion models for cameras"
+license = {file = "LICENSE"}
+authors = [
+{name = "Artezaru", email = "artezaru.github@proton.me"}
+]
+classifiers = [
+  "Programming Language :: Python"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["pydistort", "pydistort*"]
+exclude = ["laboratory", "laboratory.*", "tests", "tests*", "examples", "examples*"]
+
+[tool.setuptools.package-data]
+"pydistort.ressources" = ["*"]
+
+[project.scripts]
+pydistort = "pydistort.__main__:__main__"
+
+[project.gui-scripts]
+pydistort-gui = "pydistort.__main__:__main_gui__"
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+version = {attr = "pydistort.__version__.__version__"}
+
+[project.optional-dependencies]
+dev = [
+    "sphinx",
+    "pydata-sphinx-theme",
+    "numpydoc",
+    "pytest",
+    "pyinstaller",
+    "pytest-cov",
+    "bumpver",
+    "pyinstaller"
+]
