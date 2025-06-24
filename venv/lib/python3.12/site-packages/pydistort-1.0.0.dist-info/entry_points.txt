@@ -1,5 +1,0 @@
-[console_scripts]
-pydistort = pydistort.__main__:__main__
-
-[gui_scripts]
-pydistort-gui = pydistort.__main__:__main_gui__
