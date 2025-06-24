@@ -1,0 +1,721 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pydistort.project_points &#8212; pydistort 1.0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_doc/project_points';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pydistort.undistort_points" href="undistort_points.html" />
+    <link rel="prev" title="pydistort.ZernikeDistortion" href="zernike_distortion.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydistort 1.0.1 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../warnings.html">
+    WARNINGS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../warnings.html">
+    WARNINGS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformation Classes:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="transform.html">pydistort.Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extrinsic.html">pydistort.Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.Distortion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Distortion Models:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="no_distortion.html">pydistort.NoDistortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_distortion.html">pydistort.Cv2Distortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="undistort_points.html">pydistort.undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="undistort_image.html">pydistort.undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="distort_image.html">pydistort.distort_image</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.project_points</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pydistort-project-points">
+<h1>pydistort.project_points<a class="headerlink" href="#pydistort-project-points" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydistort.project_points">
+<span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">project_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world_3dpoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rvec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tvec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distortion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="distortion.html#pydistort.Distortion" title="pydistort.distortion.Distortion"><span class="pre">Distortion</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">faster_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydistort.ProjectPointsResult" title="pydistort.project_points.ProjectPointsResult"><span class="pre">ProjectPointsResult</span></a></span></span><a class="reference internal" href="../_modules/pydistort/project_points.html#project_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.project_points" title="Link to this definition">#</a></dt>
+<dd><p>Project 3D points to 2D image points using the camera intrinsic and extrinsic matrix and distortion coefficients.</p>
+<p>The process to correspond a 3D-world point to a 2D-image point is as follows:</p>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_W\)</span>) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the <code class="docutils literal notranslate"><span class="pre">camera_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_C\)</span>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">camera_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_C\)</span>) are normalized by dividing by the third coordinate to obtain the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>) are distorted by the distortion model using the coefficients <span class="math notranslate nohighlight">\(\{\lambda_1, \lambda_2, \lambda_3, \ldots\}\)</span> to obtain the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> (<span class="math notranslate nohighlight">\(x_D\)</span>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> (<span class="math notranslate nohighlight">\(x_D\)</span>) are projected onto the image plane using the intrinsic matrix K to obtain the <code class="docutils literal notranslate"><span class="pre">image_points</span></code> (<span class="math notranslate nohighlight">\(x_I\)</span>).</p></li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+X_C &amp;= R \cdot X_W + T \\
+x_N &amp;= \frac{X_C}{Z_C} \\
+x_D &amp;= \text{distort}(x_N, \lambda_1, \lambda_2, \lambda_3, \ldots) \\
+x_I &amp;= K \cdot x_D
+\end{align*}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(R\)</span> is the rotation matrix, <span class="math notranslate nohighlight">\(T\)</span> is the translation vector et <span class="math notranslate nohighlight">\(K\)</span> is the intrinsic camera matrix.
+The intrinsic camera matrix is defined as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}K = \begin{pmatrix}
+f_x &amp; 0 &amp; c_x \\
+0 &amp; f_y &amp; c_y \\
+0 &amp; 0 &amp; 1
+\end{pmatrix}\end{split}\]</div>
+<p>The given points <code class="docutils literal notranslate"><span class="pre">world</span> <span class="pre">3dpoints</span></code> are assumed to be in the world coordinate system and expressed in 3D coordinates with shape (…, 3).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">...</span></code> in the shape of the arrays means that the array can have any number of dimensions.
+Classically, the <code class="docutils literal notranslate"><span class="pre">...</span></code> can be replaced by <span class="math notranslate nohighlight">\(N\)</span> which is the number of points.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The rotation matrix and the rotation vector must be given in the convention 0 of py3dframe.
+(see <a class="github reference external" href="https://github.com/Artezaru/py3dframe">Artezaru/py3dframe</a>)</p>
+</div>
+<p>To compute the Jacobians of the image points with respect to the input 3D world points and the projection parameters, set the <code class="docutils literal notranslate"><span class="pre">dx</span></code> and <code class="docutils literal notranslate"><span class="pre">dp</span></code> parameters to True.
+The Jacobians are computed using the chain rule of differentiation and are returned in the result object.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the Jacobian with respect to the input 3D world points, a faster method than the full chain rule can be used by setting the <code class="docutils literal notranslate"><span class="pre">faster_dx</span></code> parameter to True.
+The method uses the fact that the Jacobian of the image points with respect to the input 3D world points can be computed directly as the matrix product of the jacobian with respect to the translation and the rotation matrix.
+This method is only used if the <code class="docutils literal notranslate"><span class="pre">dp</span></code> parameter is set to True.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world_3dpoints</strong> (<em>numpy.ndarray</em>) – The 3D points in the world coordinate system. Shape (…, 3).</p></li>
+<li><p><strong>rvec</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The rotation vector (or rotation matrix) of the camera. Shape (3,) or (3, 3).
+If None, the identity rotation is used.</p></li>
+<li><p><strong>tvec</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The translation vector of the camera. Shape (3,).
+If None, the zero translation is used.</p></li>
+<li><p><strong>K</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The intrinsic camera matrix (or vector). Shape (3, 3) or (4,).
+If None, the identity intrinsic matrix is used.</p></li>
+<li><p><strong>distortion</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="distortion.html#pydistort.Distortion" title="pydistort.Distortion"><em>Distortion</em></a><em>]</em>) – The distortion model to be applied to the image points.
+If None, a zero distortion is applied.</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the input points are assumed to be in the shape (3, …) instead of (…, 3). Default is False.
+In this case, the output points will be in the shape (2, …) and the jacobians will be in the shape (2, …, 3) and (2, …, 10 + Nparams).</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the image points with respect to the input 3D world points with shape (…, 2, 3).
+If False, the Jacobian is not computed. default is False.</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the image points with respect to the projection parameters with shape (…, 2, 10 + Nparams).
+If False, the Jacobian is not computed. Default is False.</p></li>
+<li><p><strong>faster_dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, use a faster method to compute the Jacobian of the image points with respect to the input 3D world points.
+Default is True.
+This method is only processed if the <code class="docutils literal notranslate"><span class="pre">dp</span></code> parameter is set to True.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em>) – Additional keyword arguments to be passed to the distortion model’s transform method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The result of the projection transformation.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pydistort.ProjectPointsResult" title="pydistort.ProjectPointsResult">ProjectPointsResult</a></p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Create a simple example to project 3D points to 2D image points using the intrinsic and extrinsic parameters of the camera.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydistort</span><span class="w"> </span><span class="kn">import</span> <span class="n">project_points</span><span class="p">,</span> <span class="n">Cv2Distortion</span>
+
+<span class="c1"># Define the 3D points in the world coordinate system</span>
+<span class="n">world_3dpoints</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span>
+                                <span class="p">[</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span>
+                                <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]])</span> <span class="c1"># shape (5, 3)</span>
+
+<span class="c1"># Define the rotation vector and translation vector</span>
+<span class="n">rvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">])</span>  <span class="c1"># small rotation</span>
+<span class="n">tvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>    <span class="c1"># small translation</span>
+
+<span class="c1"># Define the intrinsic camera matrix</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">320.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">240.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+
+<span class="c1"># Define the distortion model (optional)</span>
+<span class="n">distortion</span> <span class="o">=</span> <span class="n">Cv2Distortion</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+
+<span class="c1"># Project the 3D points to 2D image points</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">project_points</span><span class="p">(</span><span class="n">world_3dpoints</span><span class="p">,</span> <span class="n">rvec</span><span class="o">=</span><span class="n">rvec</span><span class="p">,</span> <span class="n">tvec</span><span class="o">=</span><span class="n">tvec</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">distortion</span><span class="o">=</span><span class="n">distortion</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Projected image points:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">image_points</span><span class="p">)</span> <span class="c1"># shape (5, 2)</span>
+</pre></div>
+</div>
+<p>You can also compute the Jacobians of the image points with respect to the input 3D world points and the projection parameters by setting the <code class="docutils literal notranslate"><span class="pre">dx</span></code> and <code class="docutils literal notranslate"><span class="pre">dp</span></code> parameters to True.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Project the 3D points to 2D image points with Jacobians</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">project_points</span><span class="p">(</span><span class="n">world_3dpoints</span><span class="p">,</span> <span class="n">rvec</span><span class="o">=</span><span class="n">rvec</span><span class="p">,</span> <span class="n">tvec</span><span class="o">=</span><span class="n">tvec</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">distortion</span><span class="o">=</span><span class="n">distortion</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jacobian with respect to 3D points:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">jacobian_dx</span><span class="p">)</span> <span class="c1"># shape (5, 2, 3)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Jacobian with respect to projection parameters:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">)</span> <span class="c1"># shape (5, 2, 10 + Nparams)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydistort.ProjectPointsResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">ProjectPointsResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/project_points.html#ProjectPointsResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.ProjectPointsResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="transform.html#pydistort.TransformResult" title="pydistort.transform.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformResult</span></code></a></p>
+<p>Subclass of TransformResult to represent the result of the projection transformation from 3D world points to 2D image points.</p>
+<blockquote>
+<div><p>This class is used to store the result of transforming the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> to <code class="docutils literal notranslate"><span class="pre">image_points</span></code>, and the optional Jacobians.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">transformed_points</span></code>: The transformed image points in the camera pixel coordinate system.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dx</span></code>: The Jacobian of the image points with respect to the input 3D world points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None. Shape (…, 2, 3).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dp</span></code>: The Jacobian of the image points with respect to the parameters (rotation, translation, distortion, intrinsic) if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None. Shape (…, 2, 10 + Nparams). [rx, ry, rz, tx, ty, tz, fx, fy, cx, cy, d1, d2, …, dNparams] where Nparams is the number of distortion parameters.</p></li>
+</ul>
+<p>Some properties are provided for convenience:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">image_points</span></code>: Alias for <code class="docutils literal notranslate"><span class="pre">transformed_points</span></code> to represent the transformed image points. Shape (…, 2).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dr</span></code>: Part of the Jacobian with respect to the rotation vector. Shape (…, 2, 3).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dt</span></code>: Part of the Jacobian with respect to the translation vector. Shape (…, 2, 3).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_df</span></code>: Part of the Jacobian with respect to the focal length parameters. Shape (…, 2, 2).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dc</span></code>: Part of the Jacobian with respect to the principal point parameters. Shape (…, 2, 2).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_ddis</span></code>: Part of the Jacobian with respect to the distortion coefficients. Shape (…, 2, Nparams).</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the transformation, the output points will have shape (output_dim, …) instead of (…, output_dim), same for the Jacobian matrices.</p>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.ProjectPointsResult.image_points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">image_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.ProjectPointsResult.image_points" title="Link to this definition">#</a></dt>
+<dd><p>Get the transformed image points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The transformed image points in the camera pixel coordinate system. Shape (…, 2).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.ProjectPointsResult.jacobian_dc">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dc</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.ProjectPointsResult.jacobian_dc" title="Link to this definition">#</a></dt>
+<dd><p>Get the jacobian of the image points with respect to the principal point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Jacobian with respect to principal point parameters (dc). Shape (…, 2, 2).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[numpy.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.ProjectPointsResult.jacobian_ddis">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_ddis</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.ProjectPointsResult.jacobian_ddis" title="Link to this definition">#</a></dt>
+<dd><p>Get the jacobian of the image points with respect to the distortion coefficients.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Jacobian with respect to distortion parameters (ddis). Shape (…, 2, Nparams).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[numpy.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.ProjectPointsResult.jacobian_df">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_df</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.ProjectPointsResult.jacobian_df" title="Link to this definition">#</a></dt>
+<dd><p>Get the jacobian of the image points with respect to the focal length.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Jacobian with respect to focal lenght parameters (df). Shape (…, 2, 2).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[numpy.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.ProjectPointsResult.jacobian_dr">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.ProjectPointsResult.jacobian_dr" title="Link to this definition">#</a></dt>
+<dd><p>Get the jacobian of the image points with respect to the rotation vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Jacobian with respect to rotation (dr). Shape (…, 2, 3).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[numpy.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.ProjectPointsResult.jacobian_dt">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.ProjectPointsResult.jacobian_dt" title="Link to this definition">#</a></dt>
+<dd><p>Get the jacobian of the image points with respect to the translation vector.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The Jacobian with respect to translation (dt). Shape (…, 2, 3).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[numpy.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="zernike_distortion.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pydistort.ZernikeDistortion</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="undistort_points.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pydistort.undistort_points</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.project_points"><code class="docutils literal notranslate"><span class="pre">project_points()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.ProjectPointsResult"><code class="docutils literal notranslate"><span class="pre">ProjectPointsResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.ProjectPointsResult.image_points"><code class="docutils literal notranslate"><span class="pre">ProjectPointsResult.image_points</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.ProjectPointsResult.jacobian_dc"><code class="docutils literal notranslate"><span class="pre">ProjectPointsResult.jacobian_dc</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.ProjectPointsResult.jacobian_ddis"><code class="docutils literal notranslate"><span class="pre">ProjectPointsResult.jacobian_ddis</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.ProjectPointsResult.jacobian_df"><code class="docutils literal notranslate"><span class="pre">ProjectPointsResult.jacobian_df</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.ProjectPointsResult.jacobian_dr"><code class="docutils literal notranslate"><span class="pre">ProjectPointsResult.jacobian_dr</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.ProjectPointsResult.jacobian_dt"><code class="docutils literal notranslate"><span class="pre">ProjectPointsResult.jacobian_dt</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api_doc/project_points.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-%Y, Artezaru.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

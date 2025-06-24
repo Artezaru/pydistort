@@ -1,0 +1,1154 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydistort.extrinsic &#8212; pydistort 1.0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/extrinsic';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydistort 1.0.1 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../warnings.html">
+    WARNINGS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../warnings.html">
+    WARNINGS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.extrinsic</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pydistort.extrinsic</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">py3dframe</span><span class="w"> </span><span class="kn">import</span> <span class="n">Frame</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transform</span><span class="p">,</span> <span class="n">TransformResult</span><span class="p">,</span> <span class="n">InverseTransformResult</span>
+
+<div class="viewcode-block" id="ExtrinsicResult">
+<a class="viewcode-back" href="../../api_doc/extrinsic.html#pydistort.ExtrinsicResult">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ExtrinsicResult</span><span class="p">(</span><span class="n">TransformResult</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Subclass of TransformResult to represent the result of the extrinsic transformation.</span>
+
+<span class="sd">    This class is used to store the result of transforming the ``world_3dpoints`` to ``normalized_points``, and the optional Jacobians.</span>
+
+<span class="sd">    - ``transformed_points``: The transformed normalized points in the camera coordinate system.</span>
+<span class="sd">    - ``jacobian_dx``: The Jacobian of the normalized points with respect to the input 3D world points if ``dx`` is True. Otherwise None. Shape (..., 2, 3).</span>
+<span class="sd">    - ``jacobian_dp``: The Jacobian of the normalized points with respect to the pose parameters (rotation and translation) if ``dp`` is True. Otherwise None. Shape (..., 2, 6), where the last dimension represents (dr, dt).</span>
+
+<span class="sd">    Some properties are provided for convenience:</span>
+
+<span class="sd">    - ``normalized_points``: Alias for ``transformed_points`` to represent the transformed normalized points. Shape (..., 2).</span>
+<span class="sd">    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 2, 3).</span>
+<span class="sd">    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 2, 3).</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">normalized_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the transformed normalized points in the camera coordinate system.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            The transformed normalized points. Shape (..., 2).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformed_points</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Jacobian of the normalized points with respect to the rotation vector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian with respect to rotation (dr). Shape (..., 2, 3).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Jacobian of the normalized points with respect to the translation vector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian with respect to translation (dt). Shape (..., 2, 3).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span></div>
+
+
+
+
+<div class="viewcode-block" id="InverseExtrinsicResult">
+<a class="viewcode-back" href="../../api_doc/extrinsic.html#pydistort.InverseExtrinsicResult">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InverseExtrinsicResult</span><span class="p">(</span><span class="n">InverseTransformResult</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Subclass of InverseTransformResult to represent the result of the inverse extrinsic transformation.</span>
+
+<span class="sd">    This class is used to store the result of transforming the ``normalized_points`` back to ``world_3dpoints``, and the optional Jacobians.</span>
+
+<span class="sd">    - ``transformed_points``: The transformed world 3D points. Shape (..., 3).</span>
+<span class="sd">    - ``jacobian_dx``: The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None. Shape (..., 3, 2).</span>
+<span class="sd">    - ``jacobian_dp``: The Jacobian of the world 3D points with respect to the pose parameters (rotation and translation) if ``dp`` is True. Otherwise None. Shape (..., 3, 6), where the last dimension represents (dr, dt).</span>
+
+<span class="sd">    Some properties are provided for convenience:</span>
+
+<span class="sd">    - ``world_3dpoints``: Alias for ``transformed_points`` to represent the transformed world 3D points. Shape (..., 3).</span>
+<span class="sd">    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 3, 3).</span>
+<span class="sd">    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 3, 3).</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        If ``transpose`` is set to True during the inverse transformation, the output points will have shape (input_dim, ...) instead of (..., input_dim), same for the Jacobian matrices.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">world_3dpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the transformed world 3D points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            The transformed world 3D points. Shape (..., 3).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformed_points</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Jacobian of the world 3D points with respect to the rotation vector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian with respect to rotation (dr). Shape (..., 3, 3).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the Jacobian of the world 3D points with respect to the translation vector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian with respect to translation (dt). Shape (..., 3, 3).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span></div>
+
+    
+
+
+
+
+<div class="viewcode-block" id="Extrinsic">
+<a class="viewcode-back" href="../../api_doc/extrinsic.html#pydistort.Extrinsic">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Extrinsic</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    .. note::</span>
+
+<span class="sd">        This class represents the extrinsic transformation, which is the first step of the process.</span>
+
+<span class="sd">    The process to correspond a 3D-world point to a 2D-image point in the stenopic camera model is as follows:</span>
+
+<span class="sd">    1. The ``world_3dpoints`` (:math:`X_W`) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the ``camera_3dpoints`` (:math:`X_C`).</span>
+<span class="sd">    2. The ``camera_3dpoints`` (:math:`X_C`) are normalized by dividing by the third coordinate to obtain the ``normalized_points`` (:math:`x_N`).</span>
+<span class="sd">    3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).</span>
+<span class="sd">    4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic matrix K to obtain the ``image_points`` (:math:`x_I`).</span>
+
+<span class="sd">    This tranformation can be decomposed into 3 main steps:</span>
+
+<span class="sd">    1. **Extrinsic**: Transform the ``world 3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).</span>
+<span class="sd">    2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model.</span>
+<span class="sd">    3. **Intrinsic**: Transform the ``distorted_points`` to ``image_points`` using the intrinsic matrix K.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        To manage only ``world_3dpoints`` to ``camera_3dpoints``, use the package py3dframe (https://github.com/Artezaru/py3dframe).</span>
+
+<span class="sd">    The equation used for the extrinsic transformation is:    </span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \begin{align*}</span>
+<span class="sd">        X_C &amp;= R \cdot X_W + T \\</span>
+<span class="sd">        x_N &amp;= \frac{X_C}{Z_C} \\</span>
+<span class="sd">        \end{align*}</span>
+
+<span class="sd">    where :math:`R` is the rotation matrix, :math:`T` is the translation vector.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        To compute the translation vector and the rotation vector, you can use cv2.Rodrigues() or py3dframe.Frame with convention 0.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rvec : Optional[numpy.ndarray]</span>
+<span class="sd">        The rotation vector of the camera. Shape (3,). If None, the rotation vector is not set.</span>
+
+<span class="sd">    tvec : Optional[numpy.ndarray]</span>
+<span class="sd">        The translation vector of the camera. Shape (3,). If None, the translation vector is not set.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    Create an extrinsic object with a rotation vector and a translation vector:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import numpy as np</span>
+<span class="sd">        from pydistort import Extrinsic</span>
+
+<span class="sd">        rvec = np.array([0.1, 0.2, 0.3])</span>
+<span class="sd">        tvec = np.array([0.5, 0.5, 0.5])</span>
+
+<span class="sd">        extrinsic = Extrinsic(rvec, tvec)</span>
+
+<span class="sd">    Then you can use the extrinsic object to transform ``world_3dpoints`` to ``camera_points``:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        world_3dpoints = np.array([[1, 2, 3],</span>
+<span class="sd">                                   [4, 5, 6],</span>
+<span class="sd">                                   [7, 8, 9],</span>
+<span class="sd">                                   [10, 11, 12]])</span>
+
+<span class="sd">        result = extrinsic.transform(world_3dpoints)</span>
+<span class="sd">        normalized_points = result.normalized_points</span>
+<span class="sd">        print(normalized_points)</span>
+
+<span class="sd">    You can also access to the jacobian of the extrinsic transformation:</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        result = extrinsic.transform(world_3dpoints, dx=True, dp=True)</span>
+<span class="sd">        normalized_points_dx = result.jacobian_dx  # Shape (..., 2, 3)</span>
+<span class="sd">        normalized_points_dp = result.jacobian_dp  # Shape (..., 2, 6)</span>
+<span class="sd">        print(normalized_points_dx) </span>
+<span class="sd">        print(normalized_points_dp)</span>
+
+<span class="sd">    The inverse transformation can be computed using the `inverse_transform` method:</span>
+<span class="sd">    By default, the depth is assumed to be 1.0 for all points, but you can provide a specific depth for each point with shape (...,).</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        depth = np.array([1.0, 2.0, 3.0, 4.0])  # Example depth values for each point</span>
+
+<span class="sd">        inverse_result = extrinsic.inverse_transform(normalized_points, dx=True, dp=True, depth=depth)</span>
+<span class="sd">        world_3dpoints = inverse_result.transformed_points  # Shape (..., 3)</span>
+<span class="sd">        print(world_3dpoints)</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        The jacobian with respect to the depth is not computed.</span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
+
+<span class="sd">        For more information about the transformation process, see:</span>
+
+<span class="sd">        - :meth:`pydistort.Extrinsic._transform` to transform the ``world_3dpoints`` to ``normalized_points``.</span>
+<span class="sd">        - :meth:`pydistort.Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Initialize the Transform base class</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Initialize the extrinsic parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Set the extrinsic parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rvec</span> <span class="o">=</span> <span class="n">rvec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tvec</span> <span class="o">=</span> <span class="n">tvec</span>
+
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Properties for ABC Transform Class</span>
+    <span class="c1"># =============================================</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">input_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">3</span> <span class="c1"># The input is a 3D point (x, y, z)</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">2</span> <span class="c1"># The output is a 2D point (x, y)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Nparams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">6</span> <span class="c1"># The number of parameters is 6 (3 for rotation and 3 for translation)</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">ExtrinsicResult</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">inverse_result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">InverseExtrinsicResult</span>
+    
+    <span class="c1"># =============================================</span>
+    <span class="c1"># translation vector</span>
+    <span class="c1"># =============================================</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">translation_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get or set the translation vector ``tvec`` of the extrinsic transformation.</span>
+
+<span class="sd">        The translation vector is a numpy array of shape (3,) representing the translation of the camera in the world coordinate system.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            An alias for ``translation_vector`` is ``tvec``.</span>
+
+<span class="sd">        .. seealso::</span>
+
+<span class="sd">            - :meth:`pydistort.Extrinsic.rotation_vector` or ``rvec`` to set the rotation vector of the extrinsic transformation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The translation vector of the camera in the world coordinate system. (or None if not set)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span>
+    
+    <span class="nd">@translation_vector</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">translation_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">tvec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span>
+        <span class="n">tvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tvec</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">tvec</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Translation vector must be a 3D vector.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">tvec</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Translation vector must be a finite 3D vector.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="o">=</span> <span class="n">tvec</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tvec</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">translation_vector</span>
+
+    <span class="nd">@tvec</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">translation_vector</span> <span class="o">=</span> <span class="n">tvec</span>
+
+    <span class="c1"># =============================================</span>
+    <span class="c1"># rotation vector</span>
+    <span class="c1"># =============================================</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rotation_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get or set the rotation vector ``rvec`` of the extrinsic transformation.</span>
+
+<span class="sd">        The rotation vector is a numpy array of shape (3,) representing the rotation of the camera in the world coordinate system.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            An alias for ``rotation_vector`` is ``rvec``.</span>
+
+<span class="sd">        .. seealso::</span>
+
+<span class="sd">            - :meth:`pydistort.Extrinsic.translation_vector` or ``tvec`` to set the translation vector of the extrinsic transformation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The rotation vector of the camera in the world coordinate system. (or None if not set)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span>
+    
+    <span class="nd">@rotation_vector</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rotation_vector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">rvec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span>
+        <span class="n">rvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rvec</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">rvec</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Rotation vector must be a 3D vector.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">rvec</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Rotation vector must be a finite 3D vector.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="o">=</span> <span class="n">rvec</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rvec</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_vector</span>
+    
+    <span class="nd">@rvec</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_vector</span> <span class="o">=</span> <span class="n">rvec</span>
+
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Rotation matrix</span>
+    <span class="c1"># =============================================</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rotation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get or set the rotation matrix of the extrinsic transformation.</span>
+
+<span class="sd">        The rotation matrix is a numpy array of shape (3, 3) representing the rotation of the camera in the world coordinate system.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            The rotation matrix is computed using the Rodrigues formula.</span>
+<span class="sd">            An alias for ``rotation_matrix`` is ``rmat``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The rotation matrix of the camera in the world coordinate system. (or None if not set)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Rodrigues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="nd">@rotation_matrix</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rotation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">rmat</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span>
+        <span class="n">rmat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rmat</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">rmat</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Rotation matrix must be a 3x3 matrix.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">rmat</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Rotation matrix must be a finite 3x3 matrix.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Rodrigues</span><span class="p">(</span><span class="n">rmat</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rmat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rotation_matrix</span>
+    
+    <span class="nd">@rmat</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">rmat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">rmat</span>
+
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Frame (for 3dframe)</span>
+    <span class="c1"># =============================================</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">frame</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Frame</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get or set the 3D frame of the extrinsic transformation.</span>
+
+<span class="sd">        The frame is a py3dframe.Frame object representing the 3D frame of the camera in the world coordinate system.</span>
+
+<span class="sd">        .. seealso::</span>
+
+<span class="sd">            https://github.com/Artezaru/py3dframe for more information about the Frame class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[Frame]</span>
+<span class="sd">            The 3D frame of the camera in the world coordinate system. (or None if not set)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">Frame</span><span class="p">(</span><span class="n">translation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="p">,</span> <span class="n">rotation_vector</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span><span class="p">,</span> <span class="n">convention</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="nd">@frame</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Frame</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">frame</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">Frame</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Frame must be a py3dframe.Frame object.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">get_global_rotation_vector</span><span class="p">(</span><span class="n">convention</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">get_global_translation</span><span class="p">(</span><span class="n">convention</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Display the extrinsic parameters</span>
+    <span class="c1"># =============================================</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return a string representation of the extrinsic parameters.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            A string representation of the extrinsic parameters.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Extrinsic Pose: rvec=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span><span class="si">}</span><span class="s2">, tvec=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Methods for ABC Transform Class</span>
+    <span class="c1"># =============================================</span>
+<div class="viewcode-block" id="Extrinsic.is_set">
+<a class="viewcode-back" href="../../api_doc/extrinsic.html#pydistort.Extrinsic.is_set">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the extrinsic parameters are set.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if both rotation vector and translation vector are set, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Extrinsic._transform">
+<a class="viewcode-back" href="../../api_doc/extrinsic.html#pydistort.Extrinsic._transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_3dpoints</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is called by the :meth:`pydistort.Transform.transform` method to perform the extrinsic transformation.</span>
+<span class="sd">        This method allows to transform the ``world_3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            For ``_transform`` the input must have shape (Npoints, 3) with float64 type.</span>
+<span class="sd">            The output has shape (Npoints, 2) for the normalized points and (Npoints, 2, 3) for the jacobian with respect to the 3D world points and (Npoints, 2, 6) for the jacobian with respect to the extrinsic parameters.</span>
+
+<span class="sd">        The equation used for the transformation is:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            [X_C, Y_C, Z_C]^T = R \cdot [X_W, Y_W, Z_W]^T + T</span>
+<span class="sd">        </span>
+<span class="sd">        .. math::</span>
+
+<span class="sd">            x_N = \frac{X_C}{Z_C}</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            y_N = \frac{Y_C}{Z_C}</span>
+
+<span class="sd">        where :math:`R` is the rotation matrix, :math:`T` is the translation vector.</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            This method is not designed to be used directly for the transformation of points.</span>
+<span class="sd">            No checks are performed on the input points, so it is the user&#39;s responsibility to ensure that the input points are valid.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        world_3dpoints : numpy.ndarray</span>
+<span class="sd">            Array of world 3dpoints to be transformed with shape (Npoints, 3).</span>
+
+<span class="sd">        dx : bool, optional</span>
+<span class="sd">            If True, the Jacobian of the normalized points with respect to the input 3D world points is computed. Default is False.</span>
+<span class="sd">            The output will be a 2D array of shape (Npoints, 2, 3).</span>
+
+<span class="sd">        dp : bool, optional</span>
+<span class="sd">            If True, the Jacobian of the normalized points with respect to the pose parameters is computed. Default is False.</span>
+<span class="sd">            The output will be a 2D array of shape (Npoints, 2, 6).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        normalized_points : numpy.ndarray</span>
+<span class="sd">            The transformed image points in pixels. It will be a 2D array of shape (Npoints, 2).</span>
+
+<span class="sd">        jacobian_dx : Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian of the normalized points with respect to the input 3D world points if ``dx`` is True. Otherwise None.</span>
+<span class="sd">            It will be a 2D array of shape (Npoints, 2, 2) if ``transpose`` is False.</span>
+
+<span class="sd">        jacobian_dp : Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian of the normalized points with respect to the pose parameters if ``dp`` is True. Otherwise None.</span>
+<span class="sd">            It will be a 2D array of shape (Npoints, 2, 6) if ``transpose`` is False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the number of points</span>
+        <span class="n">Npoints</span> <span class="o">=</span> <span class="n">world_3dpoints</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Get the rotation matrix and translation vector</span>
+        <span class="n">rmat</span><span class="p">,</span> <span class="n">jacobian</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Rodrigues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span><span class="p">)</span>
+        <span class="n">rmat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rmat</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (3, 3)</span>
+        <span class="n">jacobian</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">jacobian</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (3, 9) [R11,R12,R13,R21,R22,R23,R31,R32,R33]</span>
+        <span class="n">rmat_dr</span> <span class="o">=</span> <span class="n">jacobian</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># shape (3, 3, 3) # [i, j, k] = dR[i,j]/drvec[k]</span>
+
+        <span class="c1"># ==================</span>
+        <span class="c1"># Camera points</span>
+        <span class="c1"># ==================</span>
+        <span class="c1"># Compute the camera points</span>
+        <span class="n">points_camera_flat</span> <span class="o">=</span> <span class="n">world_3dpoints</span> <span class="o">@</span> <span class="n">rmat</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
+        <span class="n">X_C</span> <span class="o">=</span> <span class="n">points_camera_flat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># shape (Npoints,)</span>
+        <span class="n">Y_C</span> <span class="o">=</span> <span class="n">points_camera_flat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># shape (Npoints,)</span>
+        <span class="n">Z_C</span> <span class="o">=</span> <span class="n">points_camera_flat</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># shape (Npoints,)</span>
+
+        <span class="c1"># Compute the jacobian with respect to the world points</span>
+        <span class="k">if</span> <span class="n">dx</span><span class="p">:</span>
+            <span class="n">points_camera_flat_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3, 3)</span>
+            <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">rmat</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3, 3)</span>
+            <span class="n">X_C_dx</span> <span class="o">=</span> <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
+            <span class="n">Y_C_dx</span> <span class="o">=</span> <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
+            <span class="n">Z_C_dx</span> <span class="o">=</span> <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
+
+        <span class="c1"># Compute the jacobian with respect to the extrinsic parameters</span>
+        <span class="k">if</span> <span class="n">dp</span><span class="p">:</span>
+            <span class="n">points_camera_flat_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3, 6)</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+                <span class="n">points_camera_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">world_3dpoints</span> <span class="o">@</span> <span class="n">rmat_dr</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="c1"># shape (Npoints, 3)</span>
+            <span class="n">points_camera_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
+            <span class="n">points_camera_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
+            <span class="n">points_camera_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
+            <span class="n">X_C_dp</span> <span class="o">=</span> <span class="n">points_camera_flat_dp</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 6)</span>
+            <span class="n">Y_C_dp</span> <span class="o">=</span> <span class="n">points_camera_flat_dp</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 6)</span>
+            <span class="n">Z_C_dp</span> <span class="o">=</span> <span class="n">points_camera_flat_dp</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 6)</span>
+
+        <span class="c1"># ==================</span>
+        <span class="c1"># Normalized points</span>
+        <span class="c1"># ==================</span>
+        <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">points_camera_flat</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-6</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The Z coordinate of the camera points is too close to zero. This may cause numerical instability.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Compute the normalized points</span>
+        <span class="n">iZ_C</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">Z_C</span> <span class="c1"># shape (Npoints,)</span>
+
+        <span class="n">normalized_points_flat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2)</span>
+        <span class="n">x_N</span> <span class="o">=</span> <span class="n">X_C</span> <span class="o">*</span> <span class="n">iZ_C</span>
+        <span class="n">y_N</span> <span class="o">=</span> <span class="n">Y_C</span> <span class="o">*</span> <span class="n">iZ_C</span>
+        <span class="n">normalized_points_flat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_N</span>
+        <span class="n">normalized_points_flat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y_N</span>
+
+        <span class="c1"># Compute the jacobian with respect to the camera points</span>
+        <span class="k">if</span> <span class="n">dx</span><span class="p">:</span>
+            <span class="n">jacobian_flat_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2, 3)</span>
+            <span class="n">jacobian_flat_dx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_C_dx</span> <span class="o">-</span> <span class="n">x_N</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">Z_C_dx</span><span class="p">)</span> <span class="o">*</span> <span class="n">iZ_C</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="c1"># shape (Npoints, 3)</span>
+            <span class="n">jacobian_flat_dx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">Y_C_dx</span> <span class="o">-</span> <span class="n">y_N</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">Z_C_dx</span><span class="p">)</span> <span class="o">*</span> <span class="n">iZ_C</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="c1"># shape (Npoints, 3)</span>
+
+        <span class="c1"># Compute the jacobian with respect to the extrinsic parameters</span>
+        <span class="k">if</span> <span class="n">dp</span><span class="p">:</span>
+            <span class="n">jacobian_flat_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2, 6)</span>
+            <span class="n">jacobian_flat_dp</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_C_dp</span> <span class="o">-</span> <span class="n">x_N</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">Z_C_dp</span><span class="p">)</span> <span class="o">*</span> <span class="n">iZ_C</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="c1"># shape (Npoints, 6)</span>
+            <span class="n">jacobian_flat_dp</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">Y_C_dp</span> <span class="o">-</span> <span class="n">y_N</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="n">Z_C_dp</span><span class="p">)</span> <span class="o">*</span> <span class="n">iZ_C</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="c1"># shape (Npoints, 6)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dx</span><span class="p">:</span>
+            <span class="n">jacobian_flat_dx</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dp</span><span class="p">:</span>
+            <span class="n">jacobian_flat_dp</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">normalized_points_flat</span><span class="p">,</span> <span class="n">jacobian_flat_dx</span><span class="p">,</span> <span class="n">jacobian_flat_dp</span></div>
+
+    
+
+<div class="viewcode-block" id="Extrinsic._inverse_transform">
+<a class="viewcode-back" href="../../api_doc/extrinsic.html#pydistort.Extrinsic._inverse_transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse extrinsic transformation.</span>
+<span class="sd">        This method allows to transform the ``normalized_points`` back to ``world_3dpoints`` using the extrinsic parameters (rotation and translation).</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            For ``_inverse_transform`` the input must have shape (Npoints, 2) with float64 type.</span>
+<span class="sd">            The output has shape (Npoints, 3) for the world 3D points and (Npoints, 3, 2)</span>
+
+<span class="sd">        The equation used for the transformation is:</span>
+
+<span class="sd">        .. math::</span>
+
+<span class="sd">            [X_W, Y_W, Z_W]^T = R^{-1} \cdot ([X_N, Y_N, 1]^T \cdot Z_C - T)</span>
+
+<span class="sd">        where :math:`R^{-1}` is the inverse of the rotation matrix, :math:`T` is the translation vector.</span>
+
+<span class="sd">        The depth parameter is used to scale the normalized points to the world 3D points.</span>
+<span class="sd">        By default, the depth is assumed to be 1.0 for all points, but you can provide a specific depth for each point with shape (...,).</span>
+
+<span class="sd">        .. warning::</span>
+
+<span class="sd">            This method is not designed to be used directly for the transformation of points.</span>
+<span class="sd">            No checks are performed on the input points, so it is the user&#39;s responsibility to ensure that the input points are valid.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        normalized_points : numpy.ndarray</span>
+<span class="sd">            Array of normalized points to be transformed with shape (Npoints, 2).</span>
+
+<span class="sd">        dx : bool, optional</span>
+<span class="sd">            If True, the Jacobian of the world 3D points with respect to the input normalized points is computed. Default is False.</span>
+<span class="sd">            The output will be a 2D array of shape (Npoints, 3, 2).</span>
+<span class="sd">        </span>
+<span class="sd">        dp : bool, optional</span>
+<span class="sd">            If True, the Jacobian of the world 3D points with respect to the pose parameters is computed. Default is False.</span>
+<span class="sd">            The output will be a 2D array of shape (Npoints, 3, 6).</span>
+
+<span class="sd">        depth : Optional[numpy.ndarray], optional</span>
+<span class="sd">            The depth of the points in the world coordinate system. If None, the depth is assumed to be 1.0 for all points.</span>
+<span class="sd">            The shape should be (...,). If provided, it will be used to scale the normalized points to the world 3D points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        world_3dpoints : numpy.ndarray</span>
+<span class="sd">            The transformed world 3D points. It will be a 2D array of shape (Npoints, 3).</span>
+
+<span class="sd">        jacobian_dx : Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None.</span>
+<span class="sd">            It will be a 2D array of shape (Npoints, 3, 2) if ``transpose`` is False.</span>
+<span class="sd">        </span>
+<span class="sd">        jacobian_dp : Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian of the world 3D points with respect to the pose parameters if ``dp`` is True. Otherwise None.</span>
+<span class="sd">            It will be a 2D array of shape (Npoints, 3, 6) if ``transpose`` is False.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Get the number of points</span>
+        <span class="n">Npoints</span> <span class="o">=</span> <span class="n">normalized_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Get the rotation matrix and translation vector</span>
+        <span class="n">rmat</span><span class="p">,</span> <span class="n">jacobian</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Rodrigues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span><span class="p">)</span>
+        <span class="n">rmat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rmat</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (3, 3)</span>
+        <span class="n">rmat_inv</span> <span class="o">=</span> <span class="n">rmat</span><span class="o">.</span><span class="n">T</span> <span class="c1"># Inverse of the rotation matrix (R^{-1} = R^{T})</span>
+        <span class="n">jacobian</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">jacobian</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (3, 9) [R11,R12,R13,R21,R22,R23,R31,R32,R33]</span>
+        <span class="n">rmat_dr</span> <span class="o">=</span> <span class="n">jacobian</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># shape (3, 3, 3) # [i, j, k] = dR[i,j]/drvec[k]</span>
+        <span class="n">rmat_inv_dr</span> <span class="o">=</span> <span class="n">rmat_dr</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="c1"># shape (3, 3, 3) # [i, j, k] = dR^{-1}[i,j]/drvec[k] = dR^{T}[i,j]/drvec[k] = dR[j,i]/drvec[k]</span>
+
+
+        <span class="c1"># ==================</span>
+        <span class="c1"># Check depth</span>
+        <span class="c1"># ==================</span>
+        <span class="k">if</span> <span class="n">depth</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">depth</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">depth</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">depth</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">depth</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="n">Npoints</span><span class="p">,):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Depth must be a 1D array with the same number of points as normalized_points.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># ==================</span>
+        <span class="c1"># Camera points</span>
+        <span class="c1"># ==================</span>
+        <span class="c1"># Compute the camera points</span>
+        <span class="n">X_C</span> <span class="o">=</span> <span class="n">normalized_points</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">depth</span> <span class="c1"># shape (Npoints,)</span>
+        <span class="n">Y_C</span> <span class="o">=</span> <span class="n">normalized_points</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">depth</span> <span class="c1"># shape (Npoints,)</span>
+        <span class="n">Z_C</span> <span class="o">=</span> <span class="n">depth</span> <span class="c1"># shape (Npoints,)</span>
+
+        <span class="n">points_camera_flat</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3)</span>
+        <span class="n">points_camera_flat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_C</span>
+        <span class="n">points_camera_flat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Y_C</span>
+        <span class="n">points_camera_flat</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">Z_C</span>
+
+        <span class="c1"># Compute the jacobian with respect to the normalized points</span>
+        <span class="k">if</span> <span class="n">dx</span><span class="p">:</span>
+            <span class="n">points_camera_flat_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3, 2)</span>
+            <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">depth</span> <span class="c1"># shape (Npoints, 2)</span>
+            <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">depth</span> <span class="c1"># shape (Npoints, 2)</span>
+            <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="c1"># ===================</span>
+        <span class="c1"># World points</span>
+        <span class="c1"># ===================</span>
+        <span class="c1"># Compute the world points</span>
+        <span class="n">world_3dpoints_flat</span> <span class="o">=</span> <span class="p">(</span><span class="n">points_camera_flat</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:])</span> <span class="o">@</span> <span class="n">rmat_inv</span><span class="o">.</span><span class="n">T</span> <span class="c1"># shape (Npoints, 3)</span>
+        <span class="n">X_W</span> <span class="o">=</span> <span class="n">world_3dpoints_flat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="c1"># shape (Npoints,)</span>
+        <span class="n">Y_W</span> <span class="o">=</span> <span class="n">world_3dpoints_flat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="c1"># shape (Npoints,)</span>
+        <span class="n">Z_W</span> <span class="o">=</span> <span class="n">world_3dpoints_flat</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="c1"># shape (Npoints,)</span>
+
+        <span class="c1"># Compute the jacobian with respect to the camera points</span>
+        <span class="k">if</span> <span class="n">dx</span><span class="p">:</span>
+            <span class="n">world_3dpoints_flat_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3, 2)</span>
+            <span class="n">world_3dpoints_flat_dx</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">@</span> <span class="n">rmat_inv</span><span class="o">.</span><span class="n">T</span> <span class="c1"># shape (Npoints, 3)</span>
+            <span class="n">world_3dpoints_flat_dx</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">@</span> <span class="n">rmat_inv</span><span class="o">.</span><span class="n">T</span> <span class="c1"># shape (Npoints, 3)</span>
+    
+        <span class="c1"># Compute the jacobian with respect to the extrinsic parameters</span>
+        <span class="k">if</span> <span class="n">dp</span><span class="p">:</span>
+            <span class="n">world_3dpoints_flat_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3, 6)</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+                <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">points_camera_flat</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:])</span> <span class="o">@</span> <span class="n">rmat_inv_dr</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">rmat_inv</span> <span class="o">@</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">rmat_inv</span> <span class="o">@</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">rmat_inv</span> <span class="o">@</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dx</span><span class="p">:</span>
+            <span class="n">world_3dpoints_flat_dx</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">dp</span><span class="p">:</span>
+            <span class="n">world_3dpoints_flat_dp</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="n">world_3dpoints_flat</span><span class="p">,</span> <span class="n">world_3dpoints_flat_dx</span><span class="p">,</span> <span class="n">world_3dpoints_flat_dp</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-%Y, Artezaru.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
