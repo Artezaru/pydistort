@@ -1,44 +1,50 @@
 from typing import Optional
-from numbers import Number
+from dataclasses import dataclass
 import numpy
-from py3dframe import Frame
-import cv2
 
-from .distortion import Distortion, NoDistortion
+from .transform import TransformResult
+from .distortion import Distortion
+from .no_distortion import NoDistortion
 from .intrinsic import Intrinsic
 from .extrinsic import Extrinsic
 
 
-
-class ProjectPointsResult(object):
+@dataclass
+class ProjectPointsResult(TransformResult):
     r"""
-    Class to represent the result of the projection transformation from 3D world points to 2D image points.
+    Subclass of TransformResult to represent the result of the projection transformation from 3D world points to 2D image points.
 
-    This class is used to store the result of projecting 3D points,
-    with optional Jacobians.
+        This class is used to store the result of transforming the ``world_3dpoints`` to ``image_points``, and the optional Jacobians.
 
-    .. note::
+    - ``transformed_points``: The transformed image points in the camera pixel coordinate system.
+    - ``jacobian_dx``: The Jacobian of the image points with respect to the input 3D world points if ``dx`` is True. Otherwise None. Shape (..., 2, 3).
+    - ``jacobian_dp``: The Jacobian of the image points with respect to the parameters (rotation, translation, distortion, intrinsic) if ``dp`` is True. Otherwise None. Shape (..., 2, 10 + Nparams). [rx, ry, rz, tx, ty, tz, fx, fy, cx, cy, d1, d2, ..., dNparams] where Nparams is the number of distortion parameters.
 
-        ``...`` in the shape of the arrays means the array can have any number of leading dimensions.
-        For example, shape (..., 3) corresponds to arbitrary shapes of 3D points.
+    Some properties are provided for convenience:
 
-    Parameters
-    ----------
-    image_points : numpy.ndarray
-        The image points in the camera coordinate system. Shape (..., 2) if ``transpose`` is False, otherwise (2, ...).
+    - ``image_points``: Alias for ``transformed_points`` to represent the transformed image points. Shape (..., 2).
+    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 2, 3).
+    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 2, 3).
+    - ``jacobian_df``: Part of the Jacobian with respect to the focal length parameters. Shape (..., 2, 2).
+    - ``jacobian_dc``: Part of the Jacobian with respect to the principal point parameters. Shape (..., 2, 2).
+    - ``jacobian_ddis``: Part of the Jacobian with respect to the distortion coefficients. Shape (..., 2, Nparams).
 
-    jacobian_dx : Optional[numpy.ndarray]
-        The Jacobian of the image points with respect to the input 3D world points if ``dx`` is True. Otherwise None.
-        Shape (..., 2, 3) if ``transpose`` is False, otherwise (2, ..., 3).
+    .. warning::
 
-    jacobian_dp : Optional[numpy.ndarray]
-        The Jacobian of the image points with respect to the projection parameters (rotation, translation, intrinsic, distortion) if ``dp`` is True. Otherwise None.
-        Shape (..., 2, 10 + Nparams) if ``transpose`` is False, otherwise (2, ..., 10 + Nparams), where the last dimension represents (dr, dt, df, dc, ddis) and Nparams is the number of distortion parameters.
+        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
+
     """
-    def __init__(self, image_points: numpy.ndarray, jacobian_dx: Optional[numpy.ndarray], jacobian_dp: Optional[numpy.ndarray]):
-        self.image_points = image_points
-        self.jacobian_dx = jacobian_dx
-        self.jacobian_dp = jacobian_dp
+    @property
+    def image_points(self) -> numpy.ndarray:
+        r"""
+        Get the transformed image points.
+
+        Returns
+        -------
+        numpy.ndarray
+            The transformed image points in the camera pixel coordinate system. Shape (..., 2).
+        """
+        return self.transformed_points
 
     @property
     def jacobian_dr(self) -> Optional[numpy.ndarray]:
@@ -48,11 +54,11 @@ class ProjectPointsResult(object):
         Returns
         -------
         Optional[numpy.ndarray]
-            The Jacobian with respect to rotation (dr). Shape (..., 3, 3).
+            The Jacobian with respect to rotation (dr). Shape (..., 2, 3).
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 0:3]
+        return self.jacobian_dp[..., 0:3]
     
     @property
     def jacobian_dt(self) -> Optional[numpy.ndarray]:
@@ -62,11 +68,11 @@ class ProjectPointsResult(object):
         Returns
         -------
         Optional[numpy.ndarray]
-            The Jacobian with respect to translation (dt). Shape (..., 3, 3).
+            The Jacobian with respect to translation (dt). Shape (..., 2, 3).
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 3:6]
+        return self.jacobian_dp[..., 3:6]
     
     @property
     def jacobian_df(self) -> Optional[numpy.ndarray]:
@@ -76,11 +82,11 @@ class ProjectPointsResult(object):
         Returns
         -------
         Optional[numpy.ndarray]
-            The Jacobian with respect to focal lenght parameters (df). Shape (..., 3, 2).
+            The Jacobian with respect to focal lenght parameters (df). Shape (..., 2, 2).
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 6:8]
+        return self.jacobian_dp[..., 6:8]
     
     @property
     def jacobian_dc(self) -> Optional[numpy.ndarray]:
@@ -90,11 +96,11 @@ class ProjectPointsResult(object):
         Returns
         -------
         Optional[numpy.ndarray]
-            The Jacobian with respect to principal point parameters (dc). Shape (..., 3, 2).
+            The Jacobian with respect to principal point parameters (dc). Shape (..., 2, 2).
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 8:10]
+        return self.jacobian_dp[..., 8:10]
     
     @property
     def jacobian_ddis(self) -> Optional[numpy.ndarray]:
@@ -104,11 +110,11 @@ class ProjectPointsResult(object):
         Returns
         -------
         Optional[numpy.ndarray]
-            The Jacobian with respect to distortion parameters (ddis). Shape (..., 3, Nparams).
+            The Jacobian with respect to distortion parameters (ddis). Shape (..., 2, Nparams).
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 10:]
+        return self.jacobian_dp[..., 10:]
     
 
 
@@ -123,7 +129,9 @@ def project_points(
         distortion: Optional[Distortion], 
         transpose: bool = False,
         dx: bool = False, 
-        dp: bool = True
+        dp: bool = False,
+        faster_dx: bool = True,
+        **kwargs
     ) -> ProjectPointsResult:
     r"""
     Project 3D points to 2D image points using the camera intrinsic and extrinsic matrix and distortion coefficients.
@@ -139,7 +147,7 @@ def project_points(
 
         \begin{align*}
         X_C &= R \cdot X_W + T \\
-        x_N &= \frac{X_C}{X_C[2]} \\
+        x_N &= \frac{X_C}{Z_C} \\
         x_D &= \text{distort}(x_N, \lambda_1, \lambda_2, \lambda_3, \ldots) \\
         x_I &= K \cdot x_D
         \end{align*}
@@ -166,6 +174,15 @@ def project_points(
 
         The rotation matrix and the rotation vector must be given in the convention 0 of py3dframe.
         (see https://github.com/Artezaru/py3dframe)
+
+    To compute the Jacobians of the image points with respect to the input 3D world points and the projection parameters, set the ``dx`` and ``dp`` parameters to True.
+    The Jacobians are computed using the chain rule of differentiation and are returned in the result object.
+
+    .. note::
+
+        For the Jacobian with respect to the input 3D world points, a faster method than the full chain rule can be used by setting the ``faster_dx`` parameter to True.
+        The method uses the fact that the Jacobian of the image points with respect to the input 3D world points can be computed directly as the matrix product of the jacobian with respect to the translation and the rotation matrix.
+        This method is only used if the ``dp`` parameter is set to True.
 
     Parameters
     ----------
@@ -194,24 +211,30 @@ def project_points(
         
     dx : bool, optional
         If True, compute the Jacobian of the image points with respect to the input 3D world points with shape (..., 2, 3).
-        If False, the Jacobian is not computed.
+        If False, the Jacobian is not computed. default is False.
 
     dp : bool, optional
         If True, compute the Jacobian of the image points with respect to the projection parameters with shape (..., 2, 10 + Nparams).
-        If False, the Jacobian is not computed.
+        If False, the Jacobian is not computed. Default is False.
 
+    faster_dx : bool, optional
+        If True, use a faster method to compute the Jacobian of the image points with respect to the input 3D world points.
+        Default is True.
+        This method is only processed if the ``dp`` parameter is set to True.
+
+    **kwargs : dict
+        Additional keyword arguments to be passed to the distortion model's transform method.
+        
     Returns
     -------
-    project_result : ProjectPointsResult
+    ProjectPointsResult
         The result of the projection transformation.
-        This object has the following attributes:
 
-        - image_points : numpy.ndarray, shape (..., 2), The projected 2D image points.
-        - jacobian_dx : Optional[numpy.ndarray], shape (..., 2, 3), The Jacobian of the image points with respect to the input 3D world points.
-        - jacobian_dp : Optional[numpy.ndarray], shape (..., 2, 10 + Nparams), The Jacobian of the image points with respect to the projection parameters.
+        
+    Examples
+    ~~~~~~~~~~
 
-    Exemples
-    --------
+    Create a simple example to project 3D points to 2D image points using the intrinsic and extrinsic parameters of the camera.
 
     .. code-block:: python
 
@@ -241,6 +264,14 @@ def project_points(
         result = project_points(world_3dpoints, rvec=rvec, tvec=tvec, K=K, distortion=distortion)
         print("Projected image points:")
         print(result.image_points) # shape (5, 2)
+
+    You can also compute the Jacobians of the image points with respect to the input 3D world points and the projection parameters by setting the ``dx`` and ``dp`` parameters to True.
+
+    .. code-block:: python
+
+        # Project the 3D points to 2D image points with Jacobians
+        result = project_points(world_3dpoints, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True)
+
         print("Jacobian with respect to 3D points:")
         print(result.jacobian_dx) # shape (5, 2, 3)
         print("Jacobian with respect to projection parameters:")
@@ -289,6 +320,15 @@ def project_points(
     if not distortion.is_set():
         raise ValueError("The distortion coefficients must be set")
     
+    if not isinstance(faster_dx, bool):
+        raise ValueError("faster_dx must be a boolean value")
+    if not isinstance(transpose, bool):
+        raise ValueError("transpose must be a boolean value")
+    if not isinstance(dx, bool):
+        raise ValueError("dx must be a boolean value")
+    if not isinstance(dp, bool):
+        raise ValueError("dp must be a boolean value")        
+
     # Create the array of points
     points = numpy.asarray(world_3dpoints, dtype=numpy.float64) 
 
@@ -313,13 +353,9 @@ def project_points(
     jacobian_dp = None
     
     # Realize the transformation:
-    normalized_points, extrinsic_jacobian_dx, extrinsic_jacobian_dp = extrinsic._transform(points_flat, dx=dx, dp=dp)
-    distorted_points, distortion_jacobian_dx, distortion_jacobian_dp = distortion._distort(normalized_points, dx=dp or dx, dp=dp) # (dx is requiered for propagation of dp)
+    normalized_points, extrinsic_jacobian_dx, extrinsic_jacobian_dp = extrinsic._transform(points_flat, dx=dx, dp=dp or (dx and faster_dx)) # (dx is requiered for propagation of dp)
+    distorted_points, distortion_jacobian_dx, distortion_jacobian_dp = distortion._transform(normalized_points, dx=dp or dx, dp=dp, **kwargs) # (dx is requiered for propagation of dp)
     image_points_flat, intrinsic_jacobian_dx, intrinsic_jacobian_dp = intrinsic._transform(distorted_points, dx=dp or dx, dp=dp) # (dx is requiered for propagation of dp)
-
-    # Apply the chain rules to compute the Jacobians with respect to the input 3D world points
-    if dx:
-        jacobian_flat_dx = numpy.einsum("nij, njk -> nik", intrinsic_jacobian_dx, numpy.einsum("nij, njk -> nik", distortion_jacobian_dx, extrinsic_jacobian_dx))
 
     # Apply the chain rules to compute the Jacobians with respect to the projection parameters
     if dp:
@@ -329,6 +365,15 @@ def project_points(
         jacobian_flat_dp[..., 10:] = numpy.einsum("nij, njk -> nik", intrinsic_jacobian_dx, distortion_jacobian_dp) # (distortion coefficients)
         jacobian_flat_dp[..., 0:6] = numpy.einsum("nij, njk -> nik", intrinsic_jacobian_dx, numpy.einsum("nij, njk -> nik", distortion_jacobian_dx, extrinsic_jacobian_dp)) # (rotation and translation)
     
+    # Apply the chain rules to compute the Jacobians with respect to the input 3D world points
+    if dx:
+        if faster_dx and dp:
+            jacobian_flat_dx = numpy.empty((Npoints, 2, 3), dtype=numpy.float64)
+            jacobian_flat_dx[:,0,:] = jacobian_flat_dp[:, 0, 3:6] @ extrinsic.rotation_matrix # shape (Npoints, 3)
+            jacobian_flat_dx[:,1,:] = jacobian_flat_dp[:, 1, 3:6] @ extrinsic.rotation_matrix # shape (Npoints, 3)
+        else:
+            jacobian_flat_dx = numpy.einsum("nij, njk -> nik", intrinsic_jacobian_dx, numpy.einsum("nij, njk -> nik", distortion_jacobian_dx, extrinsic_jacobian_dx))
+
     # Reshape the normalized points back to the original shape (Warning shape is (..., 3) and not (..., 2))
     image_points = image_points_flat.reshape((*shape[:-1], 2)) # shape (Npoints, 2) -> (..., 2)
     jacobian_dx = jacobian_flat_dx.reshape((*shape[:-1], 2, 3)) if dx else None # shape (Npoints, 2, 3) -> (..., 2, 3)
@@ -342,7 +387,7 @@ def project_points(
 
     # Return the result
     result = ProjectPointsResult(
-        image_points=image_points,
+        transformed_points=image_points,
         jacobian_dx=jacobian_dx,
         jacobian_dp=jacobian_dp
     )

@@ -1,179 +1,186 @@
-from typing import Optional
-from numbers import Number
+from typing import Optional, Tuple
+from dataclasses import dataclass
 import numpy
+from numbers import Number
 
+from .transform import Transform, TransformResult, InverseTransformResult
 
-class IntrinsicResult(object):
+@dataclass
+class IntrinsicResult(TransformResult):
     r"""
-    Class to represent the result of the intrinsic transformation.
+    Subclass of TransformResult to represent the result of the intrinsic transformation.
 
-    This class is used to store the result of the intrinsic transformation and its jacobian matrices.
+    This class is used to store the result of transforming the ``distorted_points`` to ``image_points``, and the optional Jacobians.
+
+    - ``transformed_points``: The transformed image points in the camera coordinate system. Shape (..., 2).
+    - ``jacobian_dx``: The Jacobian of the image points with respect to the input distorted points if ``dx`` is True. Otherwise None. Shape (..., 2, 2), where the last dimension represents (dx, dy).
+    - ``jacobian_dp``: The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 4), where the last dimension represents (dfx, dfy, dcx, dcy).
+
+    Some properties are provided for convenience:
+
+    - ``image_points``: Alias for ``transformed_points`` to represent the transformed distorted points. Shape (..., 2).
+    - ``jacobian_df``: Part of the Jacobian with respect to the focal length. Shape (..., 2, 2).
+    - ``jacobian_dc``: Part of the Jacobian with respect to the principal point. Shape (..., 2, 2).
 
     .. note::
 
-        ``...`` in the shape of the arrays means that the array can have any number of dimensions.
-        Classically, the ``...`` can be replaced by :math:`N` which is the number of points.
+        If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.
 
-    Parameters
-    ----------
-    image_points : numpy.ndarray
-        The transformed image points in pixels. It will be a 2D array of shape (..., 2) if ``transpose`` is False and a 2D array of shape (2, ...) if ``transpose`` is True.
+    .. warning::
 
-    jacobian_dx : Optional[numpy.ndarray]
-        The Jacobian of the image points with respect to the distorted points if ``dx`` is True. Otherwise None.
-        It will be a 2D array of shape (..., 2, 2) if ``transpose`` are False and a 2D array of shape (2, ..., 2) if ``transpose`` is True.
+        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
 
-    jacobian_dp : Optional[numpy.ndarray]
-        The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None.
-        It will be a 2D array of shape (..., 2, 4) if ``transpose`` are False and a 2D array of shape (2, ..., 4) if ``transpose`` is True.
     """
-    def __init__(self, image_points: numpy.ndarray, jacobian_dx: Optional[numpy.ndarray], jacobian_dp: Optional[numpy.ndarray]):
-        self.image_points = image_points
-        self.jacobian_dx = jacobian_dx
-        self.jacobian_dp = jacobian_dp
+    @property
+    def image_points(self) -> numpy.ndarray:
+        r"""
+        Get the transformed image points.
 
+        Returns
+        -------
+        numpy.ndarray
+            The transformed image points in the camera coordinate system. Shape (..., 2).
+        """
+        return self.transformed_points
+    
     @property
     def jacobian_df(self) -> Optional[numpy.ndarray]:
         r"""
-        Get the jacobian of the image points with respect to the focal length.
+        Get the Jacobian of the image points with respect to the focal length.
 
         Returns
         -------
         Optional[numpy.ndarray]
-            The jacobian of the image points with respect to the focal length if ``dp`` is True. Otherwise None.
-            It will be a 2D array of shape (..., 2, 2) if ``transpose`` are False and a 2D array of shape (2, ..., 2) if ``transpose`` is True.
+            The Jacobian with respect to focal length (df). Shape (..., 2, 2).
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 0:2] # shape (..., 2, 4) -> shape (..., 2, 2)
+        return self.jacobian_dp[..., 0:2]
     
     @property
     def jacobian_dc(self) -> Optional[numpy.ndarray]:
         r"""
-        Get the jacobian of the image points with respect to the principal point.
+        Get the Jacobian of the image points with respect to the principal point.
 
         Returns
         -------
         Optional[numpy.ndarray]
-            The jacobian of the image points with respect to the principal point if ``dp`` is True. Otherwise None.
-            It will be a 2D array of shape (..., 2, 2) if ``transpose`` are False and a 2D array of shape (2, ..., 2) if ``transpose`` is True.
+            The Jacobian with respect to principal point (dc). Shape (..., 2, 2).
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 2:4] # shape (..., 2, 4) -> shape (..., 2, 2)
+        return self.jacobian_dp[..., 2:4]
+    
 
 
-class InverseIntrinsicResult(object):
+@dataclass
+class InverseIntrinsicResult(InverseTransformResult):
     r"""
-    Class to represent the result of the inverse intrinsic transformation.
+    Subclass of InverseTransformResult to represent the result of the inverse intrinsic transformation.
 
-    This class is used to store the result of the inverse intrinsic transformation and its jacobian matrices.
+    This class is used to store the result of transforming the ``image_points`` back to ``distorted_points``, and the optional Jacobians.
+
+    - ``transformed_points``: The transformed distorted points in the camera coordinate system. Shape (..., 2).
+    - ``jacobian_dx``: The Jacobian of the distorted points with respect to the input image points if ``dx`` is True. Otherwise None. Shape (..., 2, 2), where the last dimension represents (dx, dy).
+    - ``jacobian_dp``: The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 4), where the last dimension represents (dfx, dfy, dcx, dcy).
+
+    Some properties are provided for convenience:
+
+    - ``distorted_points``: Alias for ``transformed_points`` to represent the transformed image points. Shape (..., 2).
+    - ``jacobian_df``: Part of the Jacobian with respect to the focal length. Shape (..., 2, 2).
+    - ``jacobian_dc``: Part of the Jacobian with respect to the principal point. Shape (..., 2, 2).
 
     .. note::
 
-        ``...`` in the shape of the arrays means that the array can have any number of dimensions.
-        Classically, the ``...`` can be replaced by :math:`N` which is the number of points.
+        If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.
 
-    Parameters
-    ----------
-    distorted_points : numpy.ndarray
-        The transformed distorted points in normalized coordinates. It will be a 2D array of shape (..., 2) if ``transpose`` is False and a 2D array of shape (2, ...) if ``transpose`` is True.
+    .. warning::
 
-    jacobian_dx : Optional[numpy.ndarray]
-        The Jacobian of the distorted points with respect to the image points if ``dx`` is True. Otherwise None.
-        It will be a 2D array of shape (..., 2, 2) if ``transpose`` are False and a 2D array of shape (2, ..., 2) if ``transpose`` is True.
+        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
 
-    jacobian_dp : Optional[numpy.ndarray]
-        The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None.
-        It will be a 2D array of shape (..., 2, 4) if ``transpose`` are False and a 2D array of shape (2, ..., 4) if ``transpose`` is True.
     """
-    def __init__(self, distorted_points: numpy.ndarray, jacobian_dx: Optional[numpy.ndarray], jacobian_dp: Optional[numpy.ndarray]):
-        self.distorted_points = distorted_points
-        self.jacobian_dx = jacobian_dx
-        self.jacobian_dp = jacobian_dp
+    @property
+    def distorted_points(self) -> numpy.ndarray:
+        r"""
+        Get the transformed distorted points.
 
+        Returns
+        -------
+        numpy.ndarray
+            The transformed distorted points in the camera coordinate system. Shape (..., 2).
+        """
+        return self.transformed_points
+    
     @property
     def jacobian_df(self) -> Optional[numpy.ndarray]:
         r"""
-        Get the jacobian of the distorted points with respect to the focal length.
+        Get the Jacobian of the distorted points with respect to the focal length.
 
         Returns
         -------
         Optional[numpy.ndarray]
-            The jacobian of the distorted points with respect to the focal length if ``dp`` is True. Otherwise None.
-            It will be a 2D array of shape (..., 2, 2) if ``transpose`` are False and a 2D array of shape (2, ..., 2) if ``transpose`` is True.
+            The Jacobian with respect to focal length (df). Shape (..., 2, 2).
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 0:2] # shape (..., 2, 4) -> shape (..., 2, 2)
+        return self.jacobian_dp[..., 0:2]
     
     @property
     def jacobian_dc(self) -> Optional[numpy.ndarray]:
         r"""
-        Get the jacobian of the distorted points with respect to the principal point.
+        Get the Jacobian of the distorted points with respect to the principal point.
+
         Returns
         -------
         Optional[numpy.ndarray]
-            The jacobian of the distorted points with respect to the principal point if ``dp`` is True. Otherwise None.
-            It will be a 2D array of shape (..., 2, 2) if ``transpose`` are False and a 2D array of shape (2, ..., 2) if ``transpose`` is True.
+            The Jacobian with respect to principal point (dc). Shape (..., 2, 2).
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 2:4] # shape (..., 2, 4) -> shape (..., 2, 2)
+        return self.jacobian_dp[..., 2:4]
 
 
 
-# =============================================
-# Intrinsic class
-# =============================================
-class Intrinsic(object):
+class Intrinsic(Transform):
     r"""
-    Class to represent the intrinsic parameters of a camera.
+    .. note::
 
-    This class defines the interface for intrinsic transformation for cameras.
+        This class represents the intrinsic transformation, which is the last step of the process.
 
-    In the pinhole camera model, the intrinsic transformation is represented by a set of coefficients :math:`\{f_x, f_y, c_x, c_y}`.
-    The process to correspond a 3D-world point to a 2D-image point is as follows:
+    The process to correspond a 3D-world point to a 2D-image point in the stenopic camera model is as follows:
 
     1. The ``world_3dpoints`` (:math:`X_W`) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the ``camera_3dpoints`` (:math:`X_C`).
     2. The ``camera_3dpoints`` (:math:`X_C`) are normalized by dividing by the third coordinate to obtain the ``normalized_points`` (:math:`x_N`).
     3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).
     4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic matrix K to obtain the ``image_points`` (:math:`x_I`).
 
-    .. note::
+    This tranformation can be decomposed into 3 main steps:
 
-        This class manage the transformation between the ``distorted points`` and the ``image points``.
+    1. **Extrinsic**: Transform the ``world 3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
+    2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model.
+    3. **Intrinsic**: Transform the ``distorted_points`` to ``image_points`` using the intrinsic matrix K.
+
+    The equation used for the intrinsic transformation is:    
 
     .. math::
 
         \begin{align*}
-        X_C &= R \cdot X_W + T \\
-        x_N &= \frac{X_C}{X_C[2]} \\
-        x_D &= \text{distort}(x_N, \lambda_1, \lambda_2, \lambda_3, \ldots) \\
-        x_I &= K \cdot x_D
+        x_I &= K \cdot x_D \\
         \end{align*}
-        
-    The intrinsic matrix K is defined as:
 
-    .. math::
+    where :math:`x_D` is the distorted points, :math:`x_I` is the image points, and :math:`K` is the intrinsic matrix defined as:
 
-        K = \begin{bmatrix}
-        f_x & 0 & c_x \\
-        0 & f_y & c_y \\
-        0 & 0 & 1
-        \end{bmatrix}
-    
-    where :math:`f_x` and :math:`f_y` are the focal lengths in pixels, and :math:`c_x` and :math:`c_y` are the coordinates of the principal point in pixels.
+    .. note::
+
+        If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.
 
     Parameters
     ----------
-
-    intrinsic_matrix : numpy.ndarray, optional
+    intrinsic_matrix : Optional[numpy.ndarray], optional
         The intrinsic matrix of the camera. It should be a 3x3 matrix. Default is None.
 
     Example
     -------
-
     Create an intrinsic object with a given intrinsic matrix:
 
     .. code-block:: python
@@ -182,8 +189,8 @@ class Intrinsic(object):
         from pydistort import Intrinsic
 
         intrinsic_matrix = np.array([[1000, 0, 320],
-                                      [0, 1000, 240],
-                                      [0, 0, 1]])
+                                     [0, 1000, 240],
+                                     [0, 0, 1]])
         intrinsic = Intrinsic(intrinsic_matrix)
 
     Then you can use the intrinsic object to transform ``distorted_points`` to ``image_points``:
@@ -197,10 +204,6 @@ class Intrinsic(object):
         image_points = result.image_points
         print(image_points)
 
-        result = intrinsic.inverse_transform(image_points)
-        distorted_points = result.distorted_points
-        print(distorted_points)
-
     You can also access to the jacobian of the intrinsic transformation:
 
     .. code-block:: python
@@ -208,19 +211,60 @@ class Intrinsic(object):
         result = intrinsic.transform(distorted_points, dx=True, dp=True)
         image_points_dx = result.jacobian_dx  # Jacobian of the image points with respect to the distorted points
         image_points_dp = result.jacobian_dp  # Jacobian of the image points with respect to the intrinsic parameters
-        print(image_points_dx) 
+        print(image_points_dx)
 
+    The inverse transformation can be computed using the `inverse_transform` method:
+
+    .. code-block:: python
+
+        inverse_result = intrinsic.inverse_transform(image_points, dx=True, dp=True)
+        distorted_points = inverse_result.transformed_points  # Shape (..., 2)
+        print(distorted_points)
+    
+    .. seealso::
+
+        For more information about the transformation process, see:
+
+        - :meth:`pydistort.Intrinsic._transform` to transform the ``distorted_points`` to ``image_points``.
+        - :meth:`pydistort.Intrinsic._inverse_transform` to transform the ``image_points`` back to ``distorted_points``.
+    
     """
     def __init__(self, intrinsic_matrix: Optional[numpy.ndarray] = None):
+        # Initialize the Transform base class
+        super().__init__()
+
         # Initialize the intrinsic parameters
-        self._fx = None # focal length in pixels in x direction
-        self._fy = None # focal length in pixels in y direction
-        self._cx = None # principal point in pixels in x direction
-        self._cy = None # principal point in pixels in y direction
+        self._fx = None
+        self._fy = None
+        self._cx = None
+        self._cy = None
 
         # Set the intrinsic matrix
         self.intrinsic_matrix = intrinsic_matrix
 
+    # =============================================
+    # Properties for ABC Transform Class
+    # =============================================
+    @property
+    def input_dim(self) -> int:
+        return 2 # The input is a 2D point (x, y)
+    
+    @property
+    def output_dim(self) -> int:
+        return 2 # The output is a 2D point (x, y)
+
+    @property
+    def Nparams(self) -> int:
+        return 4  # The intrinsic parameters are (fx, fy, cx, cy)
+    
+    @property
+    def result_class(self) -> type:
+        return IntrinsicResult
+    
+    @property
+    def inverse_result_class(self) -> type:
+        return InverseIntrinsicResult
+    
     # =============================================
     # Focal length
     # =============================================
@@ -552,63 +596,79 @@ class Intrinsic(object):
             The string representation of the intrinsic matrix.
         """
         return f"Intrinsic matrix: fx={self._fx}, fy={self._fy}, cx={self._cx}, cy={self._cy}"
+    
 
     # =============================================
-    # Check if the intrinsic matrix is set
+    # Methods for ABC Transform Class
     # =============================================
     def is_set(self) -> bool:
         r"""
-        Check if the intrinsic matrix is set.
-
-        The intrinsic matrix is set if all the parameters are set.
+        Check if the intrinsic parameters are set.
 
         Returns
         -------
         bool
-            True if the intrinsic matrix is set, False otherwise.
+            True if all intrinsic parameters are set, False otherwise.
         """
         return self._fx is not None and self._fy is not None and self._cx is not None and self._cy is not None
+    
 
-    # =============================================
-    # Transformations
-    # =============================================
-    def _transform(self, distorted_points: numpy.ndarray, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This methos allow to bypass the check on the input points made in the transform method.
+        This method is called by the :meth:`pydistort.Transform.transform` method to perform the intrinsic transformation.
+        This method allows to transform the ``distorted_points`` to ``image_points`` using the intrinsic parameters.
 
         .. note::
 
-            For ``_transform`` the input is always in the shape (Npoints, 2) with float64 type.
-            The output must be (Npoints, 2) for the image points and (Npoints, 2, 2) for the jacobian with respect to the distorted points and (Npoints, 2, 4) for the jacobian with respect to the intrinsic parameters.
+            For ``_transform`` the input must have shape (Npoints, 2) with float64 type.
+            The output has shape (Npoints, 2) for the image points and (Npoints, 2, 2) for the jacobian with respect to the distorted points and (Npoints, 2, 4) for the jacobian with respect to the intrinsic parameters.
+
+        The equation used for the transformation is:
+
+        .. math::
+
+            \begin{align*}
+            x_I &= K \cdot x_D \\
+            \end{align*}
+
+        where :math:`x_D` is the distorted points, :math:`x_I` is the image points, and :math:`K` is the intrinsic matrix defined as:
+
+        .. math::
+
+            K = \begin{bmatrix}
+            f_x & 0 & c_x \\
+            0 & f_y & c_y \\
+            0 & 0 & 1
+            \end{bmatrix}
+
+        where :math:`f_x` and :math:`f_y` are the focal lengths in pixels, and :math:`c_x` and :math:`c_y` are the coordinates of the principal point in pixels.
+
+        .. warning::
+
+            This method is not designed to be used directly for the transformation of points.
+            No checks are performed on the input points, so it is the user's responsibility to ensure that the input points are valid.
 
         Parameters
         ----------
         distorted_points : numpy.ndarray
-            Array of distorted points to be transformed with shape (Npoints, 2).
+            The distorted points to be transformed. Shape (Npoints, 2).
 
         dx : bool, optional
-            If True, the Jacobian of the image points with respect to the distorted points is computed. Default is False.
-            The output will be a 2D array of shape (Npoints, 2, 2).
+            If True, compute the Jacobian of the image points with respect to the distorted points. Default is False.
 
         dp : bool, optional
-            If True, the Jacobian of the image points with respect to the intrinsic parameters is computed. Default is False.
-            The output will be a 2D array of shape (Npoints, 2, 4).
-
-        kwargs : dict, optional
-            Additional keyword arguments to be passed to the distortion model.
+            If True, compute the Jacobian of the image points with respect to the intrinsic parameters. Default is False.
 
         Returns
         -------
         image_points : numpy.ndarray
-            The transformed image points in pixels. It will be a 2D array of shape (Npoints, 2).
+            The transformed image points in the camera coordinate system. Shape (Npoints, 2).
 
         jacobian_dx : Optional[numpy.ndarray]
-            The Jacobian of the image points with respect to the distorted points if ``dx`` is True. Otherwise None.
-            It will be a 2D array of shape (Npoints, 2, 2).
+            The Jacobian of the image points with respect to the distorted points if ``dx`` is True. Otherwise None. Shape (Npoints, 2, 2), where the last dimension represents (dx, dy).
 
         jacobian_dp : Optional[numpy.ndarray]
-            The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None.
-            It will be a 2D array of shape (Npoints, 2, 4).
+            The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (Npoints, 2, 4), where the last dimension represents (dfx, dfy, dcx, dcy).
         """
         # Extract the useful coordinates
         x_D = distorted_points[:, 0] # shape (Npoints,)
@@ -648,218 +708,67 @@ class Intrinsic(object):
             jacobian_flat_dp = None
 
         return image_points_flat, jacobian_flat_dx, jacobian_flat_dp
+    
 
-        
-    def transform(self, distorted_points: numpy.ndarray, transpose: bool = False, dx: bool = False, dp: bool = False) -> IntrinsicResult:
+    def _inverse_transform(self, image_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        Transform the given ``distorted points`` to ``image points`` using the intrinsic transformation.
+        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse intrinsic transformation.
+        This method allows to transform the ``image_points`` back to ``distorted_points`` using the intrinsic parameters.
 
-        The given points ``distorted points`` are assumed to be in the camera coordinate system and expressed in normalized coordinates with shape (..., 2).
-        
         .. note::
 
-            ``...`` in the shape of the arrays means that the array can have any number of dimensions.
-            Classically, the ``...`` can be replaced by :math:`N` which is the number of points.
+            For ``_inverse_transform`` the input must have shape (Npoints, 2) with float64 type.
+            The output has shape (Npoints, 2) for the distorted points and (Npoints, 2, 2)
 
-        The equations used to transform the points are:
+        The equation used for the inverse transformation is:
 
         .. math::
 
-            x_I = f_x \cdot x_D + c_x \\
-        
+            \begin{align*}
+            x_D &= \frac{x_I - c_x}{f_x} \\
+            y_D &= \frac{y_I - c_y}{f_y} \\
+            \end{align*}
+
+        where :math:`x_I` is the image points, :math:`x_D` is the distorted points, and :math:`K` is the intrinsic matrix defined as:
+
         .. math::
 
-            y_I = f_y \cdot y_D + c_y
+            K = \begin{bmatrix}
+            f_x & 0 & c_x \\
+            0 & f_y & c_y \\
+            0 & 0 & 1
+            \end{bmatrix}
 
-        The output points ``image points`` are in pixels and expressed in the image coordinate system with shape (..., 2).
+        where :math:`f_x` and :math:`f_y` are the focal lengths in pixels, and :math:`c_x` and :math:`c_y` are the coordinates of the principal point in pixels.
 
         .. warning::
 
-            The points are converting to float type before applying the intrinsic matrix.
-
-        The method also computes 2 Jacobian matrices if requested:
-
-        - ``dx``: Jacobian of the image points with respect to the distorted points.
-        - ``dp``: Jacobian of the image points with respect to the intrinsic parameters.
-
-        The jacobian matrice with respect to the distorted points is a (..., 2 , 2) matrix where :
-
-        .. code-block:: python
-
-            jacobian_dx[..., 0, 0]  # ∂x_I/∂x_D -> Jacobian of the coordinates x_I with respect to the coordinates x_D.
-            jacobian_dx[..., 0, 1]  # ∂x_I/∂y_D
-
-            jacobian_dx[..., 1, 0]  # ∂y_I/∂x_D -> Jacobian of the coordinates y_I with respect to the coordinates x_D.
-            jacobian_dx[..., 1, 1]  # ∂y_I/∂y_D
-
-        The Jacobian matrice with respect to the intrinsic parameters is a (..., 2, 4) matrix where :
-
-        .. code-block:: python
-
-            jacobian_dp[..., 0, 0]  # ∂x_I/∂fx -> Jacobian of the coordinates x_I with respect to the focal length in pixels in x direction (fx).
-            jacobian_dp[..., 0, 1]  # ∂x_I/∂fy
-            jacobian_dp[..., 0, 2]  # ∂x_I/∂cx
-            jacobian_dp[..., 0, 3]  # ∂x_I/∂cy
-
-            jacobian_dp[..., 1, 0]  # ∂y_I/∂fx -> Jacobian of the coordinates y_I with respect to the focal length in pixels in x direction (fx).
-            jacobian_dp[..., 1, 1]  # ∂y_I/∂fy
-            jacobian_dp[..., 1, 2]  # ∂y_I/∂cx
-            jacobian_dp[..., 1, 3]  # ∂y_I/∂cy
-
-            
-        Parameters
-        ----------
-        distorted_points : numpy.ndarray
-            Array of normalized points to be transformed with shape (..., 2).
-
-        transpose : bool, optional
-            If True, the input points are assume to have shape (2, ...).
-            In this case, the output points will have shape (2, ...) as well and the jacobian matrices will have shape (2, ..., 2) and (2, ..., 4) respectively.
-            Default is False.
-
-        dx : bool, optional
-            If True, the Jacobian of the image points with respect to the distorted points is computed. Default is False.
-            The output will be a 2D array of shape (..., 2, 2) if ``transpose`` is False.
-            If ``dx`` is False, the output will be None.
-
-        dp : bool, optional
-            If True, the Jacobian of the image points with respect to the intrinsic parameters is computed. Default is False.
-            The output will be a 2D array of shape (..., 2, 4) if ``transpose`` is False.
-            If ``dp`` is False, the output will be None.
-
-        Returns
-        -------
-        intrinsic_result : IntrinsicResult
-
-            The result of the intrinsic transformation containing the image points and the jacobian matrices.
-            This object has the following attributes:
-
-            image_points : numpy.ndarray
-                The transformed image points in pixels. It will be a 2D array of shape (..., 2) if ``transpose`` is False.
-
-            jacobian_dx : Optional[numpy.ndarray]
-                The Jacobian of the image points with respect to the distorted points if ``dx`` is True. Otherwise None.
-                It will be a 2D array of shape (..., 2, 2) if ``transpose`` is False.
-
-            jacobian_dp : Optional[numpy.ndarray]
-                The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None.
-                It will be a 2D array of shape (..., 2, 4) if ``transpose`` is False.
-
-        Example
-        -------
-
-        Create an intrinsic object with a given intrinsic matrix:
-
-        .. code-block:: python
-
-            import numpy as np
-            from pydistort import Intrinsic
-
-            intrinsic_matrix = np.array([[1000, 0, 320],
-                                         [0, 1000, 240],
-                                         [0, 0, 1]])
-            intrinsic = Intrinsic(intrinsic_matrix)
-
-        Then you can use the intrinsic object to transform ``distorted_points`` to ``image_points``:
-
-        .. code-block:: python
-
-            distorted_points = np.array([[100, 200],
-                                         [150, 250],
-                                         [200, 300]]) # shape (3, 2)
-            result = intrinsic.transform(distorted_points, dx=True, dp=True)
-
-            result.image_points # shape (3, 2) -> image points in pixels
-            result.jacobian_dx # shape (3, 2, 2) -> jacobian of the image points with respect to the distorted points
-            result.jacobian_dp # shape (3, 2, 4) -> jacobian of the image points with respect to the intrinsic parameters
-            result.jacobian_df # shape (3, 2, 2) -> jacobian of the image points with respect to the focal length (extracted from jacobian_dp)
-            result.jacobian_dc # shape (3, 2, 2) -> jacobian of the image points with respect to the principal point (extracted from jacobian_dp)
-                                        
-        """
-        # Check the boolean parameters
-        if not isinstance(transpose, bool):
-            raise ValueError("The transpose parameter must be a boolean.")
-        if not isinstance(dx, bool):
-            raise ValueError("The dx parameter must be a boolean.")
-        if not isinstance(dp, bool):
-            raise ValueError("The dp parameter must be a boolean.")
-        
-        # Check if the intrinsic matrix is set
-        if not self.is_set():
-            raise ValueError("The intrinsic matrix is not set. Please set the intrinsic matrix before using this method.")
-        
-        # Create the array of points
-        points = numpy.asarray(distorted_points, dtype=numpy.float64) 
-
-        # Transpose the points if needed
-        if transpose:
-            points = numpy.moveaxis(points, 0, -1) # (2, ...) -> (..., 2)
-
-        # Extract the original shape
-        shape = points.shape # (..., 2)
-
-        # Flatten the points along the last axis
-        points_flat = points.reshape(-1, shape[-1]) # shape (..., 2) -> shape (Npoints, 2)
-        shape_flat = points_flat.shape
-
-        # Check the shape of the points
-        if points_flat.ndim !=2 or points_flat.shape[1] != 2:
-            raise ValueError(f"The points must be in the shape (Npoints, 2) or (2, Npoints) if ``transpose`` is True. Got {points_flat.shape} instead and transpose is {transpose}.")
-        
-        image_points_flat, jacobian_flat_dx, jacobian_flat_dp = self._transform(points_flat, dx=dx, dp=dp) # shape (Npoints, 2), shape (Npoints, 2, 2), shape (Npoints, 2, 4)
-
-        # Reshape the image points back to the original shape
-        image_points = image_points_flat.reshape(shape) # (Npoints, 2) -> (..., 2)
-        jacobian_dx = jacobian_flat_dx.reshape((*shape, 2)) if dx else None # (Npoints, 2, 2) -> (..., 2, 2)
-        jacobian_dp = jacobian_flat_dp.reshape((*shape, 4)) if dp else None # (Npoints, 2, 4) -> (..., 2, 4)
-
-        # Transpose the points back to the original shape if needed
-        if transpose:
-            image_points = numpy.moveaxis(image_points, -1, 0) # (..., 2) -> (2, ...)
-            jacobian_dx = numpy.moveaxis(jacobian_dx, -2, 0) if dx else None # (..., 2, 2) -> (2, ..., 2)
-            jacobian_dp = numpy.moveaxis(jacobian_dp, -2, 0) if dp else None # (..., 2, 4) -> (2, ..., 4)
-
-        # Return the image points and the jacobian matrices
-        result = IntrinsicResult(image_points, jacobian_dx, jacobian_dp)
-        return result
-    
-    
-    def _inverse_transform(self, image_points: numpy.ndarray, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
-        r"""
-        This methos allow to bypass the check on the input points made in the inverse_transform method.
-
-        .. note::
-
-            For ``_inverse_transform`` the input is always in the shape (Npoints, 2) with float64 type.
-            The output must be (Npoints, 2) for the distorted points and (Npoints, 2, 2) for the jacobian with respect to the image points and (Npoints, 2, 4) for the jacobian with respect to the intrinsic parameters.
+            This method is not designed to be used directly for the transformation of points.
+            No checks are performed on the input points, so it is the user's responsibility to ensure that the input points are valid.
 
         Parameters
         ----------
         image_points : numpy.ndarray
-            Array of image points to be transformed with shape (Npoints, 2).
+            The image points to be transformed. Shape (Npoints, 2).
 
         dx : bool, optional
-            If True, the Jacobian of the distorted points with respect to the image points is computed. Default is False.
-            The output will be a 2D array of shape (Npoints, 2, 2).
+            If True, compute the Jacobian of the distorted points with respect to the image points. Default is False.
 
         dp : bool, optional
-            If True, the Jacobian of the distorted points with respect to the intrinsic parameters is computed. Default is False.
-            The output will be a 2D array of shape (Npoints, 2, 4).
+            If True, compute the Jacobian of the distorted points with respect to the intrinsic parameters. Default is False.
 
         Returns
         -------
         distorted_points : numpy.ndarray
-            The transformed distorted points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).
+            The transformed distorted points in the camera coordinate system. Shape (Npoints, 2).
 
         jacobian_dx : Optional[numpy.ndarray]
-            The Jacobian of the distorted points with respect to the image points if ``dx`` is True. Otherwise None.
-            It will be a 2D array of shape (Npoints, 2, 2).
-
+            The Jacobian of the distorted points with respect to the image points if ``dx`` is True. Otherwise None. Shape (Npoints, 2, 2), where the last dimension represents (dx, dy).
+        
         jacobian_dp : Optional[numpy.ndarray]
-            The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None.
-            It will be a 2D array of shape (Npoints, 2, 4).
+            The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (Npoints, 2, 4), where the last dimension represents (dfx, dfy, dcx, dcy).
         """
-         # Extract the useful coordinates
+        # Extract the useful coordinates
         x_I = image_points[:, 0] # shape (Npoints,)
         y_I = image_points[:, 1] # shape (Npoints,)
 
@@ -898,177 +807,6 @@ class Intrinsic(object):
 
         return distorted_points_flat, jacobian_flat_dx, jacobian_flat_dp
 
-
-    def inverse_transform(self, image_points: numpy.ndarray, transpose: bool = False, dx: bool = False, dp: bool = False) -> InverseIntrinsicResult:
-        r"""
-        Transform the given ``image points`` to ``distorted points`` using the inverse intrinsic transformation.
-
-        The given points ``image points`` are assumed to be in the image coordinate system and expressed in pixels with shape (..., 2).
-        
-        .. note::
-
-            ``...`` in the shape of the arrays means that the array can have any number of dimensions.
-            Classically, the ``...`` can be replaced by :math:`N` which is the number of points.
-
-        The equations used to transform the points are:
-
-        .. math::
-
-            x_D = \frac{x_I - c_x}{f_x} \\
-        
-        .. math::
-
-            y_D = \frac{y_I - c_y}{f_y}
-
-        The output points ``distorted points`` are in normalized coordinates and expressed in the camera coordinate system with shape (..., 2).
-
-        .. warning::
-
-            The points are converting to float type before applying the intrinsic matrix.
-
-        The method also computes 2 Jacobian matrices if requested:
-
-        - ``dx``: Jacobian of the distorted points with respect to the image points.
-        - ``dp``: Jacobian of the distorted points with respect to the intrinsic parameters.
-
-        The jacobian matrice with respect to the image points is a (..., 2, 2) matrix where :
-
-        .. code-block:: python
-
-            jacobian_dx[..., 0, 0]  # ∂x_D/∂x_I -> Jacobian of the coordinates x_D with respect to the coordinates x_I.
-            jacobian_dx[..., 0, 1]  # ∂x_D/∂y_I
-
-            jacobian_dx[..., 1, 0]  # ∂y_D/∂x_I -> Jacobian of the coordinates y_D with respect to the coordinates x_I.
-            jacobian_dx[..., 1, 1]  # ∂y_D/∂y_I
-
-        The Jacobian matrice with respect to the intrinsic parameters is a (..., 2, 4) matrix where :
-
-        .. code-block:: python
-
-            jacobian_dp[..., 0, 0]  # ∂x_D/∂fx -> Jacobian of the coordinates x_D with respect to the focal length in pixels in x direction (fx).
-            jacobian_dp[..., 0, 1]  # ∂x_D/∂fy
-            jacobian_dp[..., 0, 2]  # ∂x_D/∂cx
-            jacobian_dp[..., 0, 3]  # ∂x_D/∂cy
-
-            jacobian_dp[..., 1, 0]  # ∂y_D/∂fx -> Jacobian of the coordinates y_D with respect to the focal length in pixels in x direction (fx).
-            jacobian_dp[..., 1, 1]  # ∂y_D/∂fy
-            jacobian_dp[..., 1, 2]  # ∂y_D/∂cx
-            jacobian_dp[..., 1, 3]  # ∂y_D/∂cy
-
-        Parameters
-        ----------
-        image_points : numpy.ndarray
-            Array of image points to be transformed with shape (..., 2).
-
-        transpose : bool, optional
-            If True, the input points are assume to have shape (2, ...).
-            In this case, the output points will have shape (2, ...) as well and the jacobian matrices will have shape (2, ..., 2) and (2, ..., 4) respectively.
-            Default is False.
-
-        dx : bool, optional
-            If True, the Jacobian of the distorted points with respect to the image points is computed. Default is False.
-            The output will be a 2D array of shape (..., 2, 2) if ``transpose`` is False.
-            If ``dx`` is False, the output will be None.
-        
-        dp : bool, optional
-            If True, the Jacobian of the distorted points with respect to the intrinsic parameters is computed. Default is False.
-            The output will be a 2D array of shape (..., 2, 4) if ``transpose`` is False.
-            If ``dp`` is False, the output will be None.
-
-        Returns
-        -------
-        inverse_intrinsic_result : InverseIntrinsicResult
-
-            The result of the inverse intrinsic transformation containing the distorted points and the jacobian matrices.
-            This object has the following attributes:
-
-            distorted_points : numpy.ndarray
-                The transformed distorted points in normalized coordinates. It will be a 2D array of shape (..., 2) if ``transpose`` is False.
-
-            jacobian_dx : Optional[numpy.ndarray]
-                The Jacobian of the distorted points with respect to the image points if ``dx`` is True. Otherwise None.
-                It will be a 2D array of shape (..., 2, 2) if ``transpose`` are False.
-
-            jacobian_dp : Optional[numpy.ndarray]
-                The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None.
-                It will be a 2D array of shape (..., 2, 4) if ``transpose`` are False.
-
-        Example
-        -------
-
-        Create an intrinsic object with a given intrinsic matrix:
-
-        .. code-block:: python
-
-            import numpy as np
-            from pydistort import Intrinsic
-
-            intrinsic_matrix = np.array([[1000, 0, 320],
-                                         [0, 1000, 240],
-                                         [0, 0, 1]])
-            intrinsic = Intrinsic(intrinsic_matrix)
-
-        Then you can use the intrinsic object to transform ``image_points`` to ``distorted_points``:
-
-        .. code-block:: python
-
-            image_points = np.array([[100, 200],
-                                     [150, 250],
-                                     [200, 300]]) # shape (3, 2)
-            result = intrinsic.inverse_transform(image_points, dx=True, dp=True)
-
-            result.distorted_points # shape (3, 2) -> distorted points in normalized coordinates
-            result.jacobian_dx # shape (3, 2, 2) -> jacobian of the distorted points with respect to the image points
-            result.jacobian_dp # shape (3, 2, 4) -> jacobian of the distorted points with respect to the intrinsic parameters
-            result.jacobian_df # shape (3, 2, 2) -> jacobian of the distorted points with respect to the focal length (extracted from jacobian_dp)
-            result.jacobian_dc # shape (3, 2, 2) -> jacobian of the distorted points with respect to the principal point (extracted from jacobian_dp)
-        """
-        # Check the boolean parameters
-        if not isinstance(transpose, bool):
-            raise ValueError("The transpose parameter must be a boolean.")
-        if not isinstance(dx, bool):
-            raise ValueError("The dx parameter must be a boolean.")
-        if not isinstance(dp, bool):
-            raise ValueError("The dp parameter must be a boolean.")
-    
-        # Check if the intrinsic matrix is set
-        if not self.is_set():
-            raise ValueError("The intrinsic matrix is not set. Please set the intrinsic matrix before using this method.")
-        
-        # Create the array of points
-        points = numpy.asarray(image_points, dtype=numpy.float64)
-
-        # Transpose the points if needed
-        if transpose:
-            points = numpy.moveaxis(points, 0, -1) # (2, ...) -> (..., 2)
-
-        # Extract the original shape
-        shape = points.shape # (..., 2)
-
-        # Flatten the points along the last axis
-        points_flat = points.reshape(-1, shape[-1]) # shape (..., 2) -> shape (Npoints, 2)
-        shape_flat = points_flat.shape
-
-        # Check the shape of the points
-        if points_flat.ndim !=2 or points_flat.shape[1] != 2:
-            raise ValueError(f"The points must be in the shape (Npoints, 2) or (2, Npoints) if ``transpose`` is True. Got {points_flat.shape} instead and transpose is {transpose}.")
-        
-        distorted_points_flat, jacobian_flat_dx, jacobian_flat_dp = self._inverse_transform(points_flat, dx=dx, dp=dp) # shape (Npoints, 2), shape (Npoints, 2, 2), shape (Npoints, 2, 4)
-
-        # Reshape the distorted points back to the original shape
-        distorted_points = distorted_points_flat.reshape(shape) # (Npoints, 2) -> (..., 2)
-        jacobian_dx = jacobian_flat_dx.reshape((*shape, 2)) if dx else None # (Npoints, 2, 2) -> (..., 2, 2)
-        jacobian_dp = jacobian_flat_dp.reshape((*shape, 4)) if dp else None # (Npoints, 2, 4) -> (..., 2, 4)
-
-        # Transpose the points back to the original shape if needed
-        if transpose:
-            distorted_points = numpy.moveaxis(distorted_points, -1, 0) # (..., 2) -> (2, ...)
-            jacobian_dx = numpy.moveaxis(jacobian_dx, -2, 0) if dx else None # (..., 2, 2) -> (2, ..., 2)
-            jacobian_dp = numpy.moveaxis(jacobian_dp, -2, 0) if dp else None # (..., 2, 4) -> (2, ..., 4)
-
-        # Return the distorted points and the jacobian matrices
-        result = InverseIntrinsicResult(distorted_points, jacobian_dx, jacobian_dp)
-        return result
 
 
         

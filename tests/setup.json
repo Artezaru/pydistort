@@ -1,0 +1,8 @@
+{
+    "timer" : false,
+    "csv" : false,
+    "display" : true,
+    "warnings" : true,
+    "verbose" : true,
+    "verbose_level"  : 0
+}

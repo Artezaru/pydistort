@@ -3,7 +3,8 @@ from numbers import Integral, Number
 import numpy
 import cv2
 
-from .distortion import Distortion, DistortionResult, UndistortResult
+from .distortion import Distortion
+
 
 class Cv2Distortion(Distortion):
     r"""
@@ -94,7 +95,6 @@ class Cv2Distortion(Distortion):
         
     Examples
     --------
-
     Create an distortion object with a given model:
 
     .. code-block:: python
@@ -113,12 +113,19 @@ class Cv2Distortion(Distortion):
                                        [0.3, 0.4],
                                        [0.5, 0.6]]) # shape (3, 2)
 
-        result = distortion.distort(normalized_points) #alias transform is also available
-        result.distorted_points # shape (3, 2) -> distorted points in pixel coordinates
-        result.jacobian_dx # shape (3, 2, 3) -> jacobian of the distorted points with respect to the normalized points
-        result.jacobian_dp # shape (3, 2, Nparams) (here Nparams = 8) -> jacobian of the distorted points with respect to the distortion parameters.
+        result = distortion.transform(normalized_points): #alias distort is also available
+        distorted_points = result.distorted_points # shape (3, 2) -> distorted points in (normalized) image coordinates
+        print(distorted_points)
 
-    The distortion parameters are ordered as given below.
+    You can also access to the jacobian of the distortion transformation:
+
+    .. code-block:: python
+
+        result = distortion.transform(distorted_points, dx=True, dp=True)
+        distorted_points_dx = result.jacobian_dx  # Jacobian of the image points with respect to the distorted points # Shape (..., 2, 3)
+        distorted_points_dp = result.jacobian_dp  # Jacobian of the image points with respect to the intrinsic parameters # Shape (..., 2, Nparams)
+
+    The parameters are ordered as given in the model description above.
     """
     def __init__(self, parameters: Optional[numpy.ndarray] = None, Nparams: Optional[Integral] = None) -> None:
         super().__init__()
@@ -190,8 +197,6 @@ class Cv2Distortion(Distortion):
                 parameters = None
         self._parameters = parameters
 
-
-
     @property
     def Nparams(self) -> int:
         r"""
@@ -241,7 +246,9 @@ class Cv2Distortion(Distortion):
             self.parameters = numpy.concatenate((self.parameters, numpy.zeros(value - self.Nparams)))
     
 
-
+    # =================================================================
+    # Distortion Model Coefficients
+    # =================================================================
     @property
     def k1(self) -> float:
         r"""
@@ -1172,189 +1179,6 @@ class Cv2Distortion(Distortion):
         # Return the tilt matrix and the derivatives
         return R, Rdtx, Rdty, invR
     
-
-    # =================================================================
-    # Distortion methods with OpenCV
-    # =================================================================
-    def distort_opencv(self, normalized_points: numpy.ndarray, transpose: bool = False, **kwargs) -> DistortionResult:
-        r"""
-        This method achieves the distortion of the given ``normalized_points`` using the OpenCV function ``projectPoints``.
-
-        .. seealso::
-
-            - :meth:pydistort.Distortion.distort` to achieve the distortion using the internal method.
-
-        .. warnign::
-
-            The output of this method is similar than the output of the :meth:pydistort.Distortion.distort` method, but the jacobian with respect to the normalized points is not computed and 
-            the jacobian with respect to the distortion parameters is always computed.
-
-        Parameters
-        ----------
-        normalized_points : numpy.ndarray
-            Array of normalized points to be transformed with shape (..., 2).
-
-        transpose : bool, optional
-            If True, the input points are assume to have shape (2, ...).
-            In this case, the output points will have shape (2, ...) as well and the jacobian matrices will have shape (2, ..., 2) and (2, ..., Nparams) respectively.
-            Default is False.
-
-        kwargs : dict, optional
-            Additional keyword arguments to be passed to the distortion model.
-
-        Returns
-        -------
-        distortion_result : DistortionResult
-
-            The result of the distortion transformation containing the image points and the jacobian matrices.
-            This object has the following attributes:
-
-            image_points : numpy.ndarray
-                The transformed image points in pixels. It will be a 2D array of shape (..., 2) if ``transpose`` is False.
-
-            jacobian_dx : None
-                Always None. Use the :meth:pydistort.Distortion.distort` method to compute the jacobian with respect to the normalized points.
-
-            jacobian_dp : Optional[numpy.ndarray]
-                The Jacobian of the image points with respect to the distortion parameters.
-                It will be a 2D array of shape (..., 2, Nparams) if ``transpose`` is False.                     
-        """
-        # Check the boolean parameters
-        if not isinstance(transpose, bool):
-            raise ValueError("The transpose parameter must be a boolean.")
-        
-        # Check if the distortion parameters are set
-        if not self.is_set():
-            raise ValueError("The distortion parameters is not set. Please set the distortion parameters before using this method.")
-        
-        # Create the array of points
-        points = numpy.asarray(normalized_points, dtype=numpy.float64)
-
-        # Transpose the points if needed
-        if transpose:
-            points = numpy.moveaxis(points, 0, -1) # (2, ...) -> (..., 2)
-
-        # Extract the original shape
-        shape = points.shape # (..., 2)
-
-        # Flatten the points along the last axis
-        points_flat = points.reshape(-1, shape[-1]) # shape (..., 2) -> shape (Npoints, 2)
-        Npoints = points_flat.shape[0] # Npoints 
-
-        # Check the shape of the points
-        if points_flat.ndim !=2 or points_flat.shape[1] != 2:
-            raise ValueError(f"The points must be in the shape (Npoints, 2) or (2, Npoints) if ``transpose`` is True. Got {points_flat.shape} instead and transpose is {transpose}.")
-        
-        # Create the contiguous array of shape (Npoints, 1, 3) for cv2 compatibility
-        object_points = numpy.concatenate((points_flat, numpy.ones((points_flat.shape[0], 1))), axis=1)
-        object_points = numpy.ascontiguousarray(object_points.reshape(-1, 1, 3), dtype=numpy.float64)
-
-        # Apply the OpenCV distortion removing rvec, tvec and intrinsic matrix
-        rvec = numpy.zeros((3, 1), dtype=numpy.float64)
-        tvec = numpy.zeros((3, 1), dtype=numpy.float64)
-        intrinsic_matrix = numpy.eye(3, dtype=numpy.float64)
-        image_points, jacobian = cv2.projectPoints(object_points, rvec, tvec, intrinsic_matrix, self.parameters) # shape (Npoints, 1, 2)
-
-        # Reshape the image points to (2, Npoints)
-        distorted_points_flat = numpy.asarray(image_points[:,0,:], dtype=numpy.float64)
-        jacobian = numpy.asarray(jacobian, dtype=numpy.float64)[:, -self.Nparams:] # shape (2 * Npoints, Nparams)
-        jacobian_flat_dp = numpy.zeros((Npoints, 2, self.Nparams), dtype=numpy.float64)
-        jacobian_flat_dp[:, 0, :] = jacobian[0::2, :]
-        jacobian_flat_dp[:, 1, :] = jacobian[1::2, :]
-
-        # Reshape the image points back to the original shape
-        distorted_points = distorted_points_flat.reshape(shape) # (Npoints, 2) -> (..., 2)
-        jacobian_dp = jacobian_flat_dp.reshape((*shape, self.Nparams)) # (Npoints, 2, Nparams) -> (..., 2, Nparams)
-
-        # Transpose the points back to the original shape if needed
-        if transpose:
-            distorted_points = numpy.moveaxis(distorted_points, -1, 0) # (..., 2) -> (2, ...)
-            jacobian_dp = numpy.moveaxis(jacobian_dp, -2, 0) # (..., 2, Nparams) -> (2, ..., Nparams)
-
-        # Return the image points and the jacobian matrices
-        result = DistortionResult(distorted_points, None, jacobian_dp)
-        return result
-    
-    def undistort_opencv(self, distorted_points: numpy.ndarray, transpose: bool = False, **kwargs) -> UndistortResult:
-        r"""
-        This method achieves the undistortion of the given ``distorted_points`` using the OpenCV function ``undistortPoints``.
-
-        .. seealso::
-
-            - :meth:pydistort.Distortion.undistort` to achieve the undistortion using the internal method.
-
-        Parameters
-        ----------
-        distorted_points : numpy.ndarray
-            The distorted points to be undistorted with shape (..., 2).
-
-        transpose : bool, optional
-            If True, the input points are assume to have shape (2, ...).
-            In this case, the output points will have shape (2, ...) as well.
-            Default is False.
-
-        kwargs : dict, optional
-            Additional keyword arguments to be passed to the distortion model.
-
-        Returns
-        -------
-        undistort_result : UndistortResult
-
-            The result of the undistortion transformation containing the normalized points.
-            This object has the following attributes:
-
-            normalized_points : numpy.ndarray
-                The transformed normalized points in pixels. It will be a 2D array of shape (..., 2) if ``transpose`` is False.
-        """
-        # Check the boolean parameters
-        if not isinstance(transpose, bool):
-            raise ValueError("The transpose parameter must be a boolean.")
-        
-        # Check if the distortion parameters are set
-        if not self.is_set():
-            raise ValueError("The distortion parameters is not set. Please set the distortion parameters before using this method.")
-        
-        # Create the array of points
-        points = numpy.asarray(distorted_points, dtype=numpy.float64)
-
-        # Transpose the points if needed
-        if transpose:
-            points = numpy.moveaxis(points, 0, -1) # (2, ...) -> (..., 2)
-
-        # Extract the original shape
-        shape = points.shape
-
-        # Flatten the points along the last axis
-        points_flat = points.reshape(-1, shape[-1]) # shape (..., 2) -> shape (Npoints, 2)
-        Npoints = points_flat.shape[0]
-
-        # Check the shape of the points
-        if points_flat.ndim != 2 or points_flat.shape[1] != 2:
-            raise ValueError(f"The points must be in the shape (Npoints, 2) or (2, Npoints) if ``transpose`` is True. Got {points_flat.shape} instead and transpose is {transpose}.")
-        
-        # Create the contiguous array of shape (Npoints, 1, 2) for cv2 compatibility
-        distorted_points = numpy.ascontiguousarray(points_flat.reshape(-1, 1, 2), dtype=numpy.float64)
-
-        # Apply the OpenCV undistortion removing rvec, tvec and intrinsic matrix
-        Rmat = numpy.eye(3, dtype=numpy.float64)
-        Pmat = numpy.eye(3, dtype=numpy.float64)
-        intrinsic_matrix = numpy.eye(3, dtype=numpy.float64)
-        normalized_points = cv2.undistortPoints(distorted_points, intrinsic_matrix, self.parameters, Rmat, Pmat) # shape (Npoints, 1, 2)
-
-        # Reshape the normalized points to (Npoints, 2)
-        normalized_points_flat = numpy.asarray(normalized_points[:,0,:], dtype=numpy.float64)
-
-        # Reshape the normalized points back to the original shape
-        normalized_points = normalized_points_flat.reshape(shape) # (Npoints, 2) -> (..., 2)
-
-        # Transpose the points back to the original shape if needed
-        if transpose:
-            normalized_points = numpy.moveaxis(normalized_points, -1, 0)
-
-        # Return the normalized points
-        result = UndistortResult(normalized_points)
-        return result
-    
     # =================================================================
     # Display the distortion model
     # =================================================================
@@ -1396,18 +1220,24 @@ class Cv2Distortion(Distortion):
         return True 
     
     
-    def _distort(self, normalized_points: numpy.ndarray, dx: bool = False, dp: bool = False, **kwargs) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        From the abstract method to apply distortion to a set of points.
+        This method is called by the :meth:`pydistort.Transform.transform` method to perform the distortion transformation.
+        This method allows to transform the ``normalized_points`` to the ``distorted_points`` using the distortion model.
 
         .. note::
 
-            For ``_distort`` the output is always in the shape (Npoints, 2).
-            The output must be (Npoints, 2) for the distorted points and (Npoints, 2, 2) for the jacobian with respect to the normalized points and (Npoints, 2, Nparams) for the jacobian with respect to the distortion parameters.
+            For ``_transform`` the input must have shape (Npoints, 2) with float64 type.
+            The output has shape (Npoints, 2) for the image points and (Npoints, 2, 2) for the jacobian with respect to the normalized points and (Npoints, 2, 4) for the jacobian with respect to the distortion parameters.
 
-        .. seealso::
+        The equation used for the transformation is given in the main documentation of the class.
 
-            - :meth:pydistort.Cv2Distortion.distort_opencv` to achieve the distortion using OpenCV.
+        .. warning::
+
+            This method is not designed to be used directly for the transformation of points.
+            No checks are performed on the input points, so it is the user's responsibility to ensure that the input points are valid.
+
+        To achieve the distortion transformation using openCV, set the ``opencv`` parameter to True. (``jacobian_dx`` will not be computed in this case).
 
         Parameters
         ----------
@@ -1421,6 +1251,11 @@ class Cv2Distortion(Distortion):
         dp : bool, optional
             If True, the Jacobian of the distorted points with respect to the distortion parameters is computed. Default is False.
             The output will be a 2D array of shape (Npoints, 2, Nparams).
+        
+        opencv : bool, optional
+            If True, the distortion transformation is achieved using the OpenCV function ``projectPoints``.
+            If False, the distortion transformation is achieved using the internal method.
+            Default is False.
 
         Returns
         -------
@@ -1435,6 +1270,12 @@ class Cv2Distortion(Distortion):
             The Jacobian of the distorted points with respect to the distortion parameters if ``dp`` is True. Otherwise None.
             It will be a 2D array of shape (Npoints, 2, Nparams).
         """
+        # USE THE OPEN CV DISTORTION IF REQUESTED
+        if not isinstance(opencv, bool):
+            raise TypeError("The opencv parameter must be a boolean.")
+        if opencv:
+            return self._transform_opencv(normalized_points, dx=dx, dp=dp)
+
         # Prepare the inputs data for distortion
         x_N = normalized_points[:, 0] # shape (Npoints,)
         y_N = normalized_points[:, 1] # shape (Npoints,)
@@ -1644,9 +1485,87 @@ class Cv2Distortion(Distortion):
         return distorted_points, dDdxy, dDdp
     
 
-    def _undistort(self, distorted_points: numpy.ndarray, max_iter: int = 10, eps: float = 1e-8, **kwargs) -> numpy.ndarray:
+    def _transform_opencv(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        From the abstract method to remove distortion from a set of points.
+        This method is called by the :meth:`pydistort.Transform.transform` method to perform the distortion transformation using OpenCV ``projectPoints`` function.
+        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.Transform.transform` method.
+
+        .. note::
+
+            For ``_transform_opencv`` the input must have shape (Npoints, 2) with float64 type.
+            The output has shape (Npoints, 2) for the image points and (Npoints, 2, Nparams) for the jacobian with respect to the distortion parameters.
+
+        The equation used for the transformation is given in the main documentation of the class.
+
+        .. warning::
+
+            This method is not designed to be used directly for the transformation of points.
+            No checks are performed on the input points, so it is the user's responsibility to ensure that the input points are valid.
+
+            The jacobian with respect to the normalized points is not computed in this case (always None).
+
+        Parameters
+        ----------
+        normalized_points : numpy.ndarray
+            Array of normalized points to be transformed with shape (Npoints, 2).
+
+        dx : bool, optional
+            [ALWAYS False]
+
+        dp : bool, optional
+            If True, the Jacobian of the distorted points with respect to the distortion parameters is computed. Default is False.
+            The output will be a 2D array of shape (Npoints, 2, Nparams).
+
+        Returns
+        -------
+        distorted_points : numpy.ndarray
+            The transformed distorted points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).
+
+        jacobian_dx : Optional[numpy.ndarray]
+            [ALWAYS None]
+
+        jacobian_dp : Optional[numpy.ndarray]
+            The Jacobian of the distorted points with respect to the distortion parameters if ``dp`` is True. Otherwise None.
+            It will be a 2D array of shape (Npoints, 2, Nparams).
+        """
+        if dx:
+            print("\n[WARNING]: Distortion with Opencv and dx=True. The jacobian wrt normalized poits cannot be computed with this method. They are always None.\n")
+        
+        Npoints = normalized_points.shape[0] # Npoints 
+
+        # Create the contiguous array of shape (Npoints, 1, 3) for cv2 compatibility
+        object_points = numpy.concatenate((normalized_points, numpy.ones((normalized_points.shape[0], 1))), axis=1)
+        object_points = numpy.ascontiguousarray(object_points.reshape(-1, 1, 3), dtype=numpy.float64)
+
+        # Apply the OpenCV distortion removing rvec, tvec and intrinsic matrix
+        rvec = numpy.zeros((3, 1), dtype=numpy.float64)
+        tvec = numpy.zeros((3, 1), dtype=numpy.float64)
+        intrinsic_matrix = numpy.eye(3, dtype=numpy.float64)
+        image_points, jacobian = cv2.projectPoints(object_points, rvec, tvec, intrinsic_matrix, self.parameters) # shape (Npoints, 1, 2)
+
+        # Reshape the image points to (2, Npoints)
+        distorted_points = numpy.asarray(image_points[:,0,:], dtype=numpy.float64)
+        if dp:
+            jacobian = numpy.asarray(jacobian, dtype=numpy.float64)[:, -self.Nparams:] # shape (2 * Npoints, Nparams)
+            jacobian_dp = numpy.zeros((Npoints, 2, self.Nparams), dtype=numpy.float64) # shape (Npoints, 2, Nparams)
+            jacobian_dp[:, 0, :] = jacobian[0::2, :] # shape (Npoints, Nparams)
+            jacobian_dp[:, 1, :] = jacobian[1::2, :] # shape (Npoints, Nparams)
+        else:
+            jacobian_dp = None
+
+        return distorted_points, None, jacobian_dp
+    
+
+
+    def _inverse_transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False, max_iter: int = 10, eps: float = 1e-8) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+        r"""
+        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse distortion transformation.
+        This method allows to transform the ``distorted_points`` to the ``normalized_points`` using the distortion model.
+
+        .. note::
+
+            For ``_inverse_transform`` the input must have shape (Npoints, 2) with float64 type.
+            The output has shape (Npoints, 2) and the jacobian are always None.
 
         To achieve the undistortion, an iterative algorithm is used to find the normalized points that correspond to the distorted points.
         The algorithm is based on the following equations:
@@ -1687,30 +1606,62 @@ class Cv2Distortion(Distortion):
             \frac{1+k_1 r^2 + k_2 r^4 + k_3 r^6}{1 + k_4 r^2 + k_5 r^4 + k_6 r^6}
             \end{bmatrix}
 
-        .. note::
+        .. warning::
 
-            For ``_undistort`` the input is always in the shape (Npoints, 2) with float64 type.
+            This method is not designed to be used directly for the transformation of points.
+            No checks are performed on the input points, so it is the user's responsibility to ensure that the input points are valid.
 
-        .. seealso::
+        To achieve the inverse distortion transformation using openCV, set the ``opencv`` parameter to True. 
 
-            - :meth:pydistort.Cv2Distortion.undistort_opencv` to achieve the undistortion using OpenCV.
+        .. warning::
+
+            Both OpenCV and the internal method use an iterative algorithm to find the normalized points that correspond to the distorted points.
+            In fact the jacobian with respect to the normalized points is not computed for this inverse transform (always None).
 
         Parameters
         ----------
         distorted_points : numpy.ndarray
             Array of distorted points to be transformed with shape (Npoints, 2).
 
+        dx : bool, optional
+            [ALWAYS False]
+
+        dp : bool, optional
+            [ALWAYS False]
+
+        opencv : bool, optional
+            If True, the inverse distortion transformation is achieved using the OpenCV function ``undistortPoints``.
+            If False, the inverse distortion transformation is achieved using the internal method.
+            Default is False.
+
         max_iter : int, optional
-            The maximum number of iterations for the optimization algorithm. Default is 100.
+            The maximum number of iterations for the optimization algorithm. Default is 10.
+            Use only if ``opencv`` is False.
 
         eps : float, optional
-            The tolerance for the optimization algorithm. Default is 1e-6.
+            The tolerance for the optimization algorithm. Default is 1e-8.
+            Use only if ``opencv`` is False.
 
         Returns
         -------
         normalized_points : numpy.ndarray
             The transformed normalized points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).
+
+        jacobian_dx : Optional[numpy.ndarray]
+            [ALWAYS None]
+
+        jacobian_dp : Optional[numpy.ndarray]
+            [ALWAYS None]
         """
+        # USE THE OPEN CV DISTORTION IF REQUESTED
+        if not isinstance(opencv, bool):
+            raise TypeError("The opencv parameter must be a boolean.")
+        if opencv:
+            return self._inverse_transform_opencv(distorted_points, dx=dx, dp=dp)
+        
+        if dx or dp:
+            print("\n[WARNING]: Undistortion with dx=True or dp=True. The jacobians cannot be computed with this method. They are always None.\n")
+
         # Prepare the inputs data for undistortion
         x_D = distorted_points[:, 0] # shape (Npoints,)
         y_D = distorted_points[:, 1] # shape (Npoints,)
@@ -1722,7 +1673,7 @@ class Cv2Distortion(Distortion):
         # Case of no parameters in the model
         if Nparams == 0:
             normalized_points = numpy.copy(distorted_points)
-            return normalized_points
+            return normalized_points, None, None
 
         # Get the tilt matrix [only if needed]
         if self.Nparams >= 14:
@@ -1794,7 +1745,7 @@ class Cv2Distortion(Distortion):
             normalized_points[mask, 1] = y_N.ravel() # shape (Nopt,)
 
             # Distortion convergence check
-            distorted_points_optimized, _, _ = self._distort(numpy.concatenate((x_N, y_N), axis=1), dx=False, dp=False) # shape (Nopt, 2)
+            distorted_points_optimized, _, _ = self._transform(numpy.concatenate((x_N, y_N), axis=1), dx=False, dp=False) # shape (Nopt, 2)
 
             # Compute the norm of the difference
             diff = numpy.linalg.norm(distorted_points_optimized - distorted_points[mask, :], axis=1) # shape (Nopt,)
@@ -1809,15 +1760,64 @@ class Cv2Distortion(Distortion):
             y_N = y_N[eps_mask] # shape (NewNopt, 1)
 
         # Return the normalized points
-        return normalized_points
+        return normalized_points, None, None
 
 
+    def _inverse_transform_opencv(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+        r"""
+        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse distortion transformation using OpenCV ``undistortPoints`` function.
+        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.Transform.inverse_transform` method.
+
+        .. note::
+
+            For ``_inverse_transform_opencv`` the input must have shape (Npoints, 2) with float64 type.
+            The output has shape (Npoints, 2) and the jacobian are always None.
+
+        The equation used for the transformation is given in the main documentation of the class.
+
+        .. warning::
+
+            This method is not designed to be used directly for the transformation of points.
+            No checks are performed on the input points, so it is the user's responsibility to ensure that the input points are valid.
+
+        Parameters
+        ----------
+        distorted_points : numpy.ndarray
+            Array of distorted points to be transformed with shape (Npoints, 2).
+
+        dx : bool, optional
+            [ALWAYS False]
+
+        dp : bool, optional
+            [ALWAYS False]
+
+        Returns
+        -------
+        normalized_points : numpy.ndarray
+            The transformed normalized points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).
+
+        jacobian_dx : Optional[numpy.ndarray]
+            [ALWAYS None]
+
+        jacobian_dp : Optional[numpy.ndarray]
+            [ALWAYS None]
+        """
+        if dx or dp:
+            print("\n[WARNING]: Undistortion with OpenCV and dx=True or dp=True. The jacobians cannot be computed with this method. They are always None.\n")
+        
+        # Create the contiguous array of shape (Npoints, 1, 2) for cv2 compatibility
+        distorted_points = numpy.ascontiguousarray(distorted_points.reshape(-1, 1, 2), dtype=numpy.float64)
+
+        # Apply the OpenCV undistortion removing rvec, tvec and intrinsic matrix
+        Rmat = numpy.eye(3, dtype=numpy.float64)
+        Pmat = numpy.eye(3, dtype=numpy.float64)
+        intrinsic_matrix = numpy.eye(3, dtype=numpy.float64)
+        normalized_points = cv2.undistortPoints(distorted_points, intrinsic_matrix, self.parameters, Rmat, Pmat) # shape (Npoints, 1, 2)
+
+        # Reshape the normalized points to (Npoints, 2)
+        normalized_points = numpy.asarray(normalized_points[:,0,:], dtype=numpy.float64)
+
+        # Return the normalized points and the jacobian
+        return normalized_points, None, None
 
 
-
-
-
-
-
-
-  

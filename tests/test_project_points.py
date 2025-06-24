@@ -3,50 +3,16 @@ import pytest
 from pydistort import Cv2Distortion, project_points, NoDistortion
 import cv2
 import time
+import csv
 
-def get_distortion(Nparams, mode):
-    """Create a Cv2Distortion object with specified parameters."""
-    distortion = Cv2Distortion(Nparams=Nparams)
+import sys
+import os
 
-    if mode == "strong_coefficients":
-        distortion.k1 = 47.6469
-        distortion.k2 = 605.372
-        distortion.p1 = 0.01304
-        distortion.p2 = -0.02737
-        distortion.k3 = -1799.929
-        if Nparams >= 8:
-            distortion.k4 = 47.765
-            distortion.k5 = 500.027
-            distortion.k6 = 1810.745
-        if Nparams >= 12:
-            distortion.s1 = -0.0277
-            distortion.s2 = 1.9759
-            distortion.s3 = -0.0208
-            distortion.s4 = 0.3596
-        if Nparams == 14:
-            distortion.taux = 2.0
-            distortion.tauy = 5.0
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-    elif mode == "weak_coefficients":
-        distortion.k1 = 1e-4
-        distortion.k2 = 1e-5
-        distortion.p1 = 1e-5
-        distortion.p2 = 1e-5
-        distortion.k3 = 1e-5
-        if Nparams >= 8:
-            distortion.k4 = 1e-5
-            distortion.k5 = 1e-5
-            distortion.k6 = 1e-5
-        if Nparams >= 12:
-            distortion.s1 = 1e-5
-            distortion.s2 = 1e-5
-            distortion.s3 = 1e-5
-            distortion.s4 = 1e-5
-        if Nparams == 14:
-            distortion.taux = 1e-5
-            distortion.tauy = 1e-5
+import setup
 
-    return distortion
+
 
 def print_jacobian_differences(jac1, jac2, rtol=1e-5, atol=1e-8):
     diff = np.abs(jac1 - jac2)
@@ -70,7 +36,7 @@ def print_jacobian_differences(jac1, jac2, rtol=1e-5, atol=1e-8):
 @pytest.mark.parametrize("mode", ["strong_coefficients", "weak_coefficients"])
 def test_pydistort_project_vs_opencv(Nparams, mode):
     """Compare Cv2Distortion.project_points and OpenCV projectPoints."""
-    distortion = get_distortion(Nparams, mode)
+    distortion = setup.CV2_DISTORTION(Nparams, mode)
 
     # Camera intrinsics
     fx, fy = 1000.0, 950.0
@@ -91,7 +57,7 @@ def test_pydistort_project_vs_opencv(Nparams, mode):
     ])
 
     # Project with your method
-    result = project_points(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion)
+    result = project_points(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, faster_dx=False, dp=True)
 
     # Project with OpenCV
     object_points = np.ascontiguousarray(points_3d.reshape(-1, 1, 3), dtype=np.float64)
@@ -99,9 +65,15 @@ def test_pydistort_project_vs_opencv(Nparams, mode):
 
     image_points_cv = np.asarray(image_points_cv[:,0,:], dtype=np.float64)
     jacobian_cv = np.asarray(jacobian_cv, dtype=np.float64) # shape (2 * Npoints, 10 + Nparams)
+    
     jacobian_dp_cv = np.zeros((points_3d.shape[0], 2, 10 + distortion.Nparams), dtype=np.float64)
     jacobian_dp_cv[:, 0, :] = jacobian_cv[0::2, :10 + distortion.Nparams] # shape (Npoints, 10 + Nparams)
     jacobian_dp_cv[:, 1, :] = jacobian_cv[1::2, :10 + distortion.Nparams] # shape (Npoints, 10 + Nparams)
+
+    jacobian_dx_cv = np.zeros((points_3d.shape[0], 2, 3), dtype=np.float64)
+    jacobian_dx_cv[:, 0, :] = jacobian_cv[0::2, 3:6] @ cv2.Rodrigues(rvec)[0]  # shape (Npoints, 3)
+    jacobian_dx_cv[:, 1, :] = jacobian_cv[1::2, 3:6] @ cv2.Rodrigues(rvec)[0]  # shape (Npoints, 3)
+
 
     # Comparaison
     np.testing.assert_allclose(result.image_points, image_points_cv, rtol=1e-5, atol=1e-8)
@@ -110,68 +82,153 @@ def test_pydistort_project_vs_opencv(Nparams, mode):
     except AssertionError as e:
         print_jacobian_differences(result.jacobian_dp, jacobian_dp_cv, rtol=1e-5, atol=1e-8)
         raise e
+    try:    
+        np.testing.assert_allclose(result.jacobian_dx, jacobian_dx_cv, rtol=1e-5, atol=1e-8)
+    except AssertionError as e:
+        print_jacobian_differences(result.jacobian_dx, jacobian_dx_cv, rtol=1e-5, atol=1e-8)
+        raise e
+    
+
+
+@pytest.mark.parametrize("Nparams", [5, 8, 12, 14])
+@pytest.mark.parametrize("mode", ["strong_coefficients", "weak_coefficients"])
+def test_pydistort_project_faster_vs_opencv(Nparams, mode):
+    """Compare Cv2Distortion.project_points and OpenCV projectPoints."""
+    distortion = setup.CV2_DISTORTION(Nparams, mode)
+
+    # Camera intrinsics
+    fx, fy = 1000.0, 950.0
+    cx, cy = 320.0, 240.0
+    K = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
+
+    # Rotation and translation
+    rvec = np.array([0.01, 0.02, 0.03])  # small rotation
+    tvec = np.array([0.1, -0.1, 0.2])    # small translation
+
+    # 3D points
+    points_3d = np.array([
+        [0.0, 0.0, 5.0],
+        [0.1, -0.1, 5.0],
+        [-0.1, 0.2, 5.0],
+        [0.2, 0.1, 5.0],
+        [-0.2, -0.2, 5.0]
+    ])
+
+    # Project with your method
+    result = project_points(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, faster_dx=True, dp=True)
+   
+    # Project with OpenCV
+    object_points = np.ascontiguousarray(points_3d.reshape(-1, 1, 3), dtype=np.float64)
+    image_points_cv, jacobian_cv = cv2.projectPoints(object_points, rvec, tvec, K, distortion.parameters)
+
+    image_points_cv = np.asarray(image_points_cv[:,0,:], dtype=np.float64)
+    jacobian_cv = np.asarray(jacobian_cv, dtype=np.float64) # shape (2 * Npoints, 10 + Nparams)
+    
+    jacobian_dp_cv = np.zeros((points_3d.shape[0], 2, 10 + distortion.Nparams), dtype=np.float64)
+    jacobian_dp_cv[:, 0, :] = jacobian_cv[0::2, :10 + distortion.Nparams] # shape (Npoints, 10 + Nparams)
+    jacobian_dp_cv[:, 1, :] = jacobian_cv[1::2, :10 + distortion.Nparams] # shape (Npoints, 10 + Nparams)
+
+    jacobian_dx_cv = np.zeros((points_3d.shape[0], 2, 3), dtype=np.float64)
+    jacobian_dx_cv[:, 0, :] = jacobian_cv[0::2, 3:6] @ cv2.Rodrigues(rvec)[0]  # shape (Npoints, 3)
+    jacobian_dx_cv[:, 1, :] = jacobian_cv[1::2, 3:6] @ cv2.Rodrigues(rvec)[0]  # shape (Npoints, 3)
+
+    # Comparaison
+    np.testing.assert_allclose(result.image_points, image_points_cv, rtol=1e-5, atol=1e-8)
+    try:
+        np.testing.assert_allclose(result.jacobian_dp, jacobian_dp_cv, rtol=1e-5, atol=1e-8)
+    except AssertionError as e:
+        if setup.VERBOSE() and setup.VERBOSE_LEVEL() >= 1:
+            print_jacobian_differences(result.jacobian_dp, jacobian_dp_cv, rtol=1e-5, atol=1e-8)
+        raise e
+    try:    
+        np.testing.assert_allclose(result.jacobian_dx, jacobian_dx_cv, rtol=1e-5, atol=1e-8)
+    except AssertionError as e:
+        if setup.VERBOSE() and setup.VERBOSE_LEVEL() >= 1:
+            print_jacobian_differences(result.jacobian_dx, jacobian_dx_cv, rtol=1e-5, atol=1e-8)
+        raise e
+
+
 
 
 @pytest.mark.parametrize("Nparams", [None])
 @pytest.mark.parametrize("mode", ["strong_coefficients"])
 def test_pydistort_project_vs_opencv_timer(Nparams, mode):
     """Compare project_points and opencv.projectPoints for various Nparams in time."""
-    pydistort_alljac_times = []
-    pydistort_times = []
-    pydistort_nojac_times = []
-    opencv_times = []
-    Nparams_list = [5, 8, 12, 14]
-    Npoints = 1_000_000
-    for Nparams in Nparams_list:
-        distortion = get_distortion(Nparams, mode)
+    if setup.TIMER():
+        pydistort_alljac_times = []
+        pydistort_alljac_faster_times = []
+        pydistort_times = []
+        pydistort_nojac_times = []
+        opencv_times = []
+        Nparams_list = [5, 8, 12, 14]
+        Npoints = 1_000_000
+        for Nparams in Nparams_list:
+            distortion = setup.CV2_DISTORTION(Nparams, mode)
 
-        # Camera intrinsics
-        fx, fy = 1000.0, 950.0
-        cx, cy = 320.0, 240.0
-        K = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
+            # Camera intrinsics
+            fx, fy = 1000.0, 950.0
+            cx, cy = 320.0, 240.0
+            K = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
 
-        # Rotation and translation
-        rvec = np.array([0.01, 0.02, 0.03])  # small rotation
-        tvec = np.array([0.1, -0.1, 0.2])    # small translation
+            # Rotation and translation
+            rvec = np.array([0.01, 0.02, 0.03])  # small rotation
+            tvec = np.array([0.1, -0.1, 0.2])    # small translation
 
-        # Test points
-        points = np.random.uniform(-1.0, 1.0, size=(Npoints, 2))  # shape (Npoints, 2)
-        points = np.concatenate((points, 5.0 * np.ones((Npoints, 1))), axis=1) # shape (Npoints, 3)
+            # Test points
+            points = np.random.uniform(-1.0, 1.0, size=(Npoints, 2))  # shape (Npoints, 2)
+            points = np.concatenate((points, 5.0 * np.ones((Npoints, 1))), axis=1) # shape (Npoints, 3)
 
-        # Distortion (analytic)
-        start_time = time.time()
-        result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True)
-        elapsed_time = time.time() - start_time
-        pydistort_alljac_times.append(elapsed_time)
+            # Projection (analytic)
+            start_time = time.perf_counter()
+            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=False)
+            elapsed_time = time.perf_counter() - start_time
+            pydistort_alljac_times.append(elapsed_time)
 
-        # Distortion (analytic)
-        start_time = time.time()
-        result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=True)
-        elapsed_time = time.time() - start_time
-        pydistort_times.append(elapsed_time)
+            # Projection (analytic, faster dx)
+            start_time = time.perf_counter()
+            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=True)
+            elapsed_time = time.perf_counter() - start_time
+            pydistort_alljac_faster_times.append(elapsed_time)
 
-        # Distortion (analytic)
-        start_time = time.time()
-        result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=False)
-        elapsed_time = time.time() - start_time
-        pydistort_nojac_times.append(elapsed_time)
+            # Projection (analytic)
+            start_time = time.perf_counter()
+            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=True)
+            elapsed_time = time.perf_counter() - start_time
+            pydistort_times.append(elapsed_time)
 
-        # Distortion (opencv)
-        start_time = time.time()
-        object_points = np.ascontiguousarray(points.reshape(-1, 1, 3), dtype=np.float64)
-        image_points_cv, jacobian_cv = cv2.projectPoints(object_points, rvec, tvec, K, distortion.parameters)
+            # Projection (analytic)
+            start_time = time.perf_counter()
+            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=False)
+            elapsed_time = time.perf_counter() - start_time
+            pydistort_nojac_times.append(elapsed_time)
 
-        image_points_cv = np.asarray(image_points_cv[:,0,:], dtype=np.float64)
-        jacobian_cv = np.asarray(jacobian_cv, dtype=np.float64) # shape (2 * Npoints, 10 + Nparams)
-        jacobian_dp_cv = np.zeros((points.shape[0], 2, 10 + distortion.Nparams), dtype=np.float64)
-        jacobian_dp_cv[:, 0, :] = jacobian_cv[0::2, :10 + distortion.Nparams] # shape (Npoints, 10 + Nparams)
-        jacobian_dp_cv[:, 1, :] = jacobian_cv[1::2, :10 + distortion.Nparams] # shape (Npoints, 10 + Nparams)
-        elapsed_time = time.time() - start_time
-        opencv_times.append(elapsed_time)
+            # Projection (opencv)
+            start_time = time.perf_counter()
+            object_points = np.ascontiguousarray(points.reshape(-1, 1, 3), dtype=np.float64)
+            image_points_cv, jacobian_cv = cv2.projectPoints(object_points, rvec, tvec, K, distortion.parameters)
 
-    # Print times in a table fomat:
-    print("\n\n ======== Projection Points CV2 Complete Time Comparison ========")
-    print(f"Npoints: {Npoints}")
-    print(f"{'Nparams':<15} {'pydistort (all Jacobians)':<30} {'pydistort (cv2 Jacobians)':<30} {'pydistort (no Jacobians)':<30} {'opencv':<30}")
-    for i, Nparams in enumerate(Nparams_list):
-        print(f"{Nparams:<15} {pydistort_alljac_times[i]:<30.4f} {pydistort_times[i]:<30.4f} {pydistort_nojac_times[i]:<30.4f} {opencv_times[i]:<30.4f}")
+            image_points_cv = np.asarray(image_points_cv[:,0,:], dtype=np.float64)
+            jacobian_cv = np.asarray(jacobian_cv, dtype=np.float64) # shape (2 * Npoints, 10 + Nparams)
+            jacobian_dp_cv = np.zeros((points.shape[0], 2, 10 + distortion.Nparams), dtype=np.float64)
+            jacobian_dp_cv[:, 0, :] = jacobian_cv[0::2, :10 + distortion.Nparams] # shape (Npoints, 10 + Nparams)
+            jacobian_dp_cv[:, 1, :] = jacobian_cv[1::2, :10 + distortion.Nparams] # shape (Npoints, 10 + Nparams)
+            elapsed_time = time.perf_counter() - start_time
+            opencv_times.append(elapsed_time)
+
+        # Print times in a table fomat:
+        if setup.VERBOSE():
+            print("\n\n ======== Projection Points CV2 Complete Time Comparison ========")
+            print(f"Npoints: {Npoints}")
+            print(f"{'Nparams':<15} {'pydistort (all Jacobians)':<30} {'pydistort (faster Jacobians)':<30} {'pydistort (cv2 Jacobians)':<30} {'pydistort (no Jacobians)':<30} {'opencv':<30}")
+            for i, Nparams in enumerate(Nparams_list):
+                print(f"{Nparams:<15} {pydistort_alljac_times[i]:<30.4f} {pydistort_alljac_faster_times[i]:<30.4f} {pydistort_times[i]:<30.4f} {pydistort_nojac_times[i]:<30.4f} {opencv_times[i]:<30.4f}")
+
+        if setup.CSV():
+            # Write times to a CSV file
+            csv_filename = "project_points_time_comparison.csv"
+            csv_filename = os.path.join(os.path.dirname(__file__), csv_filename)
+            with open(csv_filename, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(['Nparams', 'pydistort_alljac_times', 'pydistort_times', 'pydistort_nojac_times', 'opencv_times'])
+                for i, Nparams in enumerate(Nparams_list):
+                    writer.writerow([Nparams, pydistort_alljac_times[i], pydistort_times[i], pydistort_nojac_times[i], opencv_times[i]])

@@ -1,43 +1,113 @@
 from typing import Optional
-from numbers import Number
+from dataclasses import dataclass
 import numpy
 from py3dframe import Frame
 import cv2
 
-class ExtrinsicResult(object):
+from .transform import Transform, TransformResult, InverseTransformResult
+
+@dataclass
+class ExtrinsicResult(TransformResult):
     r"""
-    Class to represent the result of the 3D pose projection transformation.
+    Subclass of TransformResult to represent the result of the extrinsic transformation.
 
-    This class is used to store the result of projecting 3D points using a pose (rotation + translation),
-    along with optional Jacobians.
+    This class is used to store the result of transforming the ``world_3dpoints`` to ``normalized_points``, and the optional Jacobians.
 
-    .. note::
+    - ``transformed_points``: The transformed normalized points in the camera coordinate system.
+    - ``jacobian_dx``: The Jacobian of the normalized points with respect to the input 3D world points if ``dx`` is True. Otherwise None. Shape (..., 2, 3).
+    - ``jacobian_dp``: The Jacobian of the normalized points with respect to the pose parameters (rotation and translation) if ``dp`` is True. Otherwise None. Shape (..., 2, 6), where the last dimension represents (dr, dt).
 
-        ``...`` in the shape of the arrays means the array can have any number of leading dimensions.
-        For example, shape (..., 3) corresponds to arbitrary shapes of 3D points.
+    Some properties are provided for convenience:
 
-    Parameters
-    ----------
-    normalized_points : numpy.ndarray
-        The normalized points in the camera coordinate system. Shape (..., 2).
+    - ``normalized_points``: Alias for ``transformed_points`` to represent the transformed normalized points. Shape (..., 2).
+    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 2, 3).
+    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 2, 3).
 
-    jacobian_dx : Optional[numpy.ndarray]
-        The Jacobian of the normalized points with respect to the input 3D world points if ``dx`` is True. Otherwise None.
-        Shape (..., 2, 3).
+    .. warning::
 
-    jacobian_dp : Optional[numpy.ndarray]
-        The Jacobian of the normalized points with respect to the pose parameters (rotation and translation) if ``dp`` is True. Otherwise None.
-        Shape (..., 2, 6), where the last dimension represents (dr, dt).
+        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
+
     """
-    def __init__(self, normalized_points: numpy.ndarray, jacobian_dx: Optional[numpy.ndarray], jacobian_dp: Optional[numpy.ndarray]):
-        self.normalized_points = normalized_points
-        self.jacobian_dx = jacobian_dx
-        self.jacobian_dp = jacobian_dp
+    @property
+    def normalized_points(self) -> numpy.ndarray:
+        r"""
+        Get the transformed normalized points in the camera coordinate system.
+
+        Returns
+        -------
+        numpy.ndarray
+            The transformed normalized points. Shape (..., 2).
+        """
+        return self.transformed_points
 
     @property
     def jacobian_dr(self) -> Optional[numpy.ndarray]:
         r"""
-        Get the Jacobian of the camera points with respect to the rotation vector.
+        Get the Jacobian of the normalized points with respect to the rotation vector.
+
+        Returns
+        -------
+        Optional[numpy.ndarray]
+            The Jacobian with respect to rotation (dr). Shape (..., 2, 3).
+        """
+        if self.jacobian_dp is None:
+            return None
+        return self.jacobian_dp[..., 0:3]
+
+    @property
+    def jacobian_dt(self) -> Optional[numpy.ndarray]:
+        r"""
+        Get the Jacobian of the normalized points with respect to the translation vector.
+
+        Returns
+        -------
+        Optional[numpy.ndarray]
+            The Jacobian with respect to translation (dt). Shape (..., 2, 3).
+        """
+        if self.jacobian_dp is None:
+            return None
+        return self.jacobian_dp[..., 3:6]
+
+
+
+@dataclass
+class InverseExtrinsicResult(InverseTransformResult):
+    r"""
+    Subclass of InverseTransformResult to represent the result of the inverse extrinsic transformation.
+
+    This class is used to store the result of transforming the ``normalized_points`` back to ``world_3dpoints``, and the optional Jacobians.
+
+    - ``transformed_points``: The transformed world 3D points. Shape (..., 3).
+    - ``jacobian_dx``: The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None. Shape (..., 3, 2).
+    - ``jacobian_dp``: The Jacobian of the world 3D points with respect to the pose parameters (rotation and translation) if ``dp`` is True. Otherwise None. Shape (..., 3, 6), where the last dimension represents (dr, dt).
+
+    Some properties are provided for convenience:
+
+    - ``world_3dpoints``: Alias for ``transformed_points`` to represent the transformed world 3D points. Shape (..., 3).
+    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 3, 3).
+    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 3, 3).
+
+    .. warning::
+
+        If ``transpose`` is set to True during the inverse transformation, the output points will have shape (input_dim, ...) instead of (..., input_dim), same for the Jacobian matrices.
+
+    """
+    @property
+    def world_3dpoints(self) -> numpy.ndarray:
+        r"""
+        Get the transformed world 3D points.
+
+        Returns
+        -------
+        numpy.ndarray
+            The transformed world 3D points. Shape (..., 3).
+        """
+        return self.transformed_points
+    
+    @property
+    def jacobian_dr(self) -> Optional[numpy.ndarray]:
+        r"""
+        Get the Jacobian of the world 3D points with respect to the rotation vector.
 
         Returns
         -------
@@ -46,12 +116,12 @@ class ExtrinsicResult(object):
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 0:3]
-
+        return self.jacobian_dp[..., 0:3]
+    
     @property
     def jacobian_dt(self) -> Optional[numpy.ndarray]:
         r"""
-        Get the Jacobian of the camera points with respect to the translation vector.
+        Get the Jacobian of the world 3D points with respect to the translation vector.
 
         Returns
         -------
@@ -60,37 +130,42 @@ class ExtrinsicResult(object):
         """
         if self.jacobian_dp is None:
             return None
-        return self.jacobian_dp[..., :, 3:6]
+        return self.jacobian_dp[..., 3:6]
+    
 
 
 
 
-class Extrinsic(object):
+class Extrinsic(Transform):
     r"""
-    Class to represent the extrinsic parameters of a camera.
+    .. note::
 
-    This class defines the interface for extrinsic transformation for cameras.
+        This class represents the extrinsic transformation, which is the first step of the process.
 
-    In the pinhole camera model, the extrinsic transformation is represented by a rotation matrix and a translation vector.
-    The process to correspond a 3D-world point to a 2D-image point is as follows:
+    The process to correspond a 3D-world point to a 2D-image point in the stenopic camera model is as follows:
 
     1. The ``world_3dpoints`` (:math:`X_W`) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the ``camera_3dpoints`` (:math:`X_C`).
     2. The ``camera_3dpoints`` (:math:`X_C`) are normalized by dividing by the third coordinate to obtain the ``normalized_points`` (:math:`x_N`).
     3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).
     4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic matrix K to obtain the ``image_points`` (:math:`x_I`).
 
+    This tranformation can be decomposed into 3 main steps:
+
+    1. **Extrinsic**: Transform the ``world 3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
+    2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model.
+    3. **Intrinsic**: Transform the ``distorted_points`` to ``image_points`` using the intrinsic matrix K.
+
     .. note::
 
-        This class manage the transformation between the ``world_3dpoints`` and the ``normalized_points``.
         To manage only ``world_3dpoints`` to ``camera_3dpoints``, use the package py3dframe (https://github.com/Artezaru/py3dframe).
+
+    The equation used for the extrinsic transformation is:    
 
     .. math::
 
         \begin{align*}
         X_C &= R \cdot X_W + T \\
-        x_N &= \frac{X_C}{X_C[2]} \\
-        x_D &= \text{distort}(x_N, \lambda_1, \lambda_2, \lambda_3, \ldots) \\
-        x_I &= K \cdot x_D
+        x_N &= \frac{X_C}{Z_C} \\
         \end{align*}
 
     where :math:`R` is the rotation matrix, :math:`T` is the translation vector.
@@ -101,15 +176,14 @@ class Extrinsic(object):
 
     Parameters
     ----------
-    rvec : numpy.ndarray
-        The rotation vector of the camera. Shape (3,).
-    
-    tvec : numpy.ndarray
-        The translation vector of the camera. Shape (3,).
+    rvec : Optional[numpy.ndarray]
+        The rotation vector of the camera. Shape (3,). If None, the rotation vector is not set.
+
+    tvec : Optional[numpy.ndarray]
+        The translation vector of the camera. Shape (3,). If None, the translation vector is not set.
 
     Example
     -------
-
     Create an extrinsic object with a rotation vector and a translation vector:
 
     .. code-block:: python
@@ -127,8 +201,9 @@ class Extrinsic(object):
     .. code-block:: python
 
         world_3dpoints = np.array([[1, 2, 3],
-                                 [4, 5, 6],
-                                 [7, 8, 9]])
+                                   [4, 5, 6],
+                                   [7, 8, 9],
+                                   [10, 11, 12]])
 
         result = extrinsic.transform(world_3dpoints)
         normalized_points = result.normalized_points
@@ -138,14 +213,39 @@ class Extrinsic(object):
 
     .. code-block:: python
 
-        result = extrinsic.transform(distorted_points, dx=True, dp=True)
-        normalized_points_dx = result.jacobian_dx # Shape (..., 2, 3)
-        normalized_points_dp = result.jacobian_dp # Shape (..., 2, 6)
+        result = extrinsic.transform(world_3dpoints, dx=True, dp=True)
+        normalized_points_dx = result.jacobian_dx  # Shape (..., 2, 3)
+        normalized_points_dp = result.jacobian_dp  # Shape (..., 2, 6)
         print(normalized_points_dx) 
         print(normalized_points_dp)
 
+    The inverse transformation can be computed using the `inverse_transform` method:
+    By default, the depth is assumed to be 1.0 for all points, but you can provide a specific depth for each point with shape (...,).
+
+    .. code-block:: python
+
+        depth = np.array([1.0, 2.0, 3.0, 4.0])  # Example depth values for each point
+
+        inverse_result = extrinsic.inverse_transform(normalized_points, dx=True, dp=True, depth=depth)
+        world_3dpoints = inverse_result.transformed_points  # Shape (..., 3)
+        print(world_3dpoints)
+
+    .. note::
+
+        The jacobian with respect to the depth is not computed.
+    
+    .. seealso::
+
+        For more information about the transformation process, see:
+
+        - :meth:`pydistort.Extrinsic._transform` to transform the ``world_3dpoints`` to ``normalized_points``.
+        - :meth:`pydistort.Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.
+    
     """
     def __init__(self, rvec: Optional[numpy.ndarray] = None, tvec: Optional[numpy.ndarray] = None):
+        # Initialize the Transform base class
+        super().__init__()
+
         # Initialize the extrinsic parameters
         self._rvec = None
         self._tvec = None
@@ -154,6 +254,29 @@ class Extrinsic(object):
         self.rvec = rvec
         self.tvec = tvec
 
+    # =============================================
+    # Properties for ABC Transform Class
+    # =============================================
+    @property
+    def input_dim(self) -> int:
+        return 3 # The input is a 3D point (x, y, z)
+    
+    @property
+    def output_dim(self) -> int:
+        return 2 # The output is a 2D point (x, y)
+
+    @property
+    def Nparams(self) -> int:
+        return 6 # The number of parameters is 6 (3 for rotation and 3 for translation)
+    
+    @property
+    def result_class(self) -> type:
+        return ExtrinsicResult
+    
+    @property
+    def inverse_result_class(self) -> type:
+        return InverseExtrinsicResult
+    
     # =============================================
     # translation vector
     # =============================================
@@ -335,34 +458,51 @@ class Extrinsic(object):
             A string representation of the extrinsic parameters.
         """
         return f"Extrinsic Pose: rvec={self._rvec}, tvec={self._tvec}"
-
+    
     # =============================================
-    # Check if the extrinsic matrix is set
+    # Methods for ABC Transform Class
     # =============================================
     def is_set(self) -> bool:
         r"""
-        Check if the extrinsec parameters are set.
-
-        The extrinsic parameters are set if the rotation vector and the translation vector are not None.
+        Check if the extrinsic parameters are set.
 
         Returns
         -------
         bool
-            True if the extrinsic parameters are set, False otherwise.
+            True if both rotation vector and translation vector are set, False otherwise.
         """
         return self._rvec is not None and self._tvec is not None
-    
-    # =============================================
-    # Transformations
-    # =============================================
-    def _transform(self, world_3dpoints: numpy.ndarray, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+
+    def _transform(self, world_3dpoints: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This methos allow to bypass the check on the input points made in the transform method.
+        This method is called by the :meth:`pydistort.Transform.transform` method to perform the extrinsic transformation.
+        This method allows to transform the ``world_3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
 
         .. note::
 
-            For ``_transform`` the input is always in the shape (Npoints, 3) with float64 type.
-            The output must be (Npoints, 2) for the normalized points and (Npoints, 2, 3) for the jacobian with respect to the 3D world points and (Npoints, 2, 6) for the jacobian with respect to the extrinsic parameters.
+            For ``_transform`` the input must have shape (Npoints, 3) with float64 type.
+            The output has shape (Npoints, 2) for the normalized points and (Npoints, 2, 3) for the jacobian with respect to the 3D world points and (Npoints, 2, 6) for the jacobian with respect to the extrinsic parameters.
+
+        The equation used for the transformation is:
+
+        .. math::
+
+            [X_C, Y_C, Z_C]^T = R \cdot [X_W, Y_W, Z_W]^T + T
+        
+        .. math::
+
+            x_N = \frac{X_C}{Z_C}
+
+        .. math::
+
+            y_N = \frac{Y_C}{Z_C}
+
+        where :math:`R` is the rotation matrix, :math:`T` is the translation vector.
+
+        .. warning::
+
+            This method is not designed to be used directly for the transformation of points.
+            No checks are performed on the input points, so it is the user's responsibility to ensure that the input points are valid.
 
         Parameters
         ----------
@@ -376,9 +516,6 @@ class Extrinsic(object):
         dp : bool, optional
             If True, the Jacobian of the normalized points with respect to the pose parameters is computed. Default is False.
             The output will be a 2D array of shape (Npoints, 2, 6).
-
-        kwargs : dict, optional
-            Additional keyword arguments to be passed to the distortion model.
 
         Returns
         -------
@@ -395,7 +532,6 @@ class Extrinsic(object):
         """
         # Get the number of points
         Npoints = world_3dpoints.shape[0]
-
 
         # Get the rotation matrix and translation vector
         rmat, jacobian = cv2.Rodrigues(self._rvec)
@@ -465,188 +601,136 @@ class Extrinsic(object):
             jacobian_flat_dp = None
 
         return normalized_points_flat, jacobian_flat_dx, jacobian_flat_dp
+    
 
-
-
-    def transform(self, world_3dpoints: numpy.ndarray, transpose: bool = False, dx: bool = False, dp: bool = False) -> ExtrinsicResult:
+    def _inverse_transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, depth: Optional[numpy.ndarray] = None) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        Transform the given ``world 3dpoints`` to ``normalized points`` using the extrinsic parameters.
+        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse extrinsic transformation.
+        This method allows to transform the ``normalized_points`` back to ``world_3dpoints`` using the extrinsic parameters (rotation and translation).
 
-        The given points ``world 3dpoints`` are assumed to be in the world coordinate system and expressed in 3D coordinates with shape (..., 3).
-        
         .. note::
 
-            ``...`` in the shape of the arrays means that the array can have any number of dimensions.
-            Classically, the ``...`` can be replaced by :math:`N` which is the number of points.
+            For ``_inverse_transform`` the input must have shape (Npoints, 2) with float64 type.
+            The output has shape (Npoints, 3) for the world 3D points and (Npoints, 3, 2)
 
-        The equations used to transform the points are:
-
-        .. math::
-
-            [X_C, Y_C, Z_C]^T = R \cdot [X_W, Y_W, Z_W]^T + T
-        
-        .. math::
-
-            x_N = \frac{X_C}{Z_C}
+        The equation used for the transformation is:
 
         .. math::
 
-            y_N = \frac{Y_C}{Z_C}
+            [X_W, Y_W, Z_W]^T = R^{-1} \cdot ([X_N, Y_N, 1]^T \cdot Z_C - T)
 
-        where :math:`R` is the rotation matrix, :math:`T` is the translation vector.
+        where :math:`R^{-1}` is the inverse of the rotation matrix, :math:`T` is the translation vector.
 
-        The output points ``normalized points`` are in the camera coordinate system and expressed in 2D coordinates with shape (..., 2).
+        The depth parameter is used to scale the normalized points to the world 3D points.
+        By default, the depth is assumed to be 1.0 for all points, but you can provide a specific depth for each point with shape (...,).
 
         .. warning::
 
-            The points are converting to float type before applying the extrinsic transformation.
+            This method is not designed to be used directly for the transformation of points.
+            No checks are performed on the input points, so it is the user's responsibility to ensure that the input points are valid.
 
-        The method also computes 2 Jacobian matrices if requested:
-
-        - ``dx``: Jacobian of the normalized points with respect to the input 3D world points.
-        - ``dp``: Jacobian of the normalized points with respect to the pose parameters (rotation and translation).
-
-        The jacobian matrice with respect to the 3D points is a (..., 2, 3) matrix where :
-
-        .. code-block:: python
-
-            jacobian_dx[..., 0, 0]  # ∂x_N/∂X_W -> Jacobian of the coordinates x_N with respect to the coordinates X_W.
-            jacobian_dx[..., 0, 1]  # ∂x_N/∂Y_W 
-            jacobian_dx[..., 0, 2]  # ∂x_N/∂Z_W
-
-            jacobian_dx[..., 1, 0]  # ∂y_N/∂X_W -> Jacobian of the coordinates y_N with respect to the coordinates X_W.
-            jacobian_dx[..., 1, 1]  # ∂y_N/∂Y_W
-            jacobian_dx[..., 1, 2]  # ∂y_N/∂Z_W
-
-        The Jacobian matrice with respect to the pose parameters is a (..., 2, 6) matrix where :
-
-        .. code-block:: python
-
-            jacobian_dp[..., 0, :3]  # ∂x_N/∂rvec -> Jacobian of the coordinates x_N with respect to the rotation vector.
-            jacobian_dp[..., 0, 3:]  # ∂x_N/∂tvec -> Jacobian of the coordinates x_N with respect to the translation vector.
-
-            jacobian_dp[..., 1, :3]  # ∂y_N/∂rvec -> Jacobian of the coordinates y_N with respect to the rotation vector.
-            jacobian_dp[..., 1, 3:]  # ∂y_N/∂tvec -> Jacobian of the coordinates y_N with respect to the translation vector.
-
-            
         Parameters
         ----------
-        world_3dpoints : numpy.ndarray
-            Array of world 3dpoints to be transformed with shape (..., 3).
-
-        transpose : bool, optional
-            If True, the input points are assume to have shape (3, ...).
-            In this case, the output points will have shape (3, ...) as well and the jacobian matrices will have shape (3, ..., 2) and (3, ..., 6) respectively.
-            Default is False.
+        normalized_points : numpy.ndarray
+            Array of normalized points to be transformed with shape (Npoints, 2).
 
         dx : bool, optional
-            If True, the Jacobian of the normalized points with respect to the input 3D world points is computed. Default is False.
-            The output will be a 2D array of shape (..., 2, 2) if ``transpose`` is False.
-            If ``dx`` is False, the output will be None.
-
+            If True, the Jacobian of the world 3D points with respect to the input normalized points is computed. Default is False.
+            The output will be a 2D array of shape (Npoints, 3, 2).
+        
         dp : bool, optional
-            If True, the Jacobian of the normalized points with respect to the pose parameters is computed. Default is False.
-            The output will be a 2D array of shape (..., 2, 6) if ``transpose`` is False.
-            If ``dp`` is False, the output will be None.
+            If True, the Jacobian of the world 3D points with respect to the pose parameters is computed. Default is False.
+            The output will be a 2D array of shape (Npoints, 3, 6).
+
+        depth : Optional[numpy.ndarray], optional
+            The depth of the points in the world coordinate system. If None, the depth is assumed to be 1.0 for all points.
+            The shape should be (...,). If provided, it will be used to scale the normalized points to the world 3D points.
 
         Returns
         -------
-        extrinsic_result : ExtrinsicResult
+        world_3dpoints : numpy.ndarray
+            The transformed world 3D points. It will be a 2D array of shape (Npoints, 3).
 
-            The result of the extrinsic transformation containing the normalized points and the jacobian matrices.
-            This object has the following attributes:
-
-            normalized_points : numpy.ndarray
-                The transformed normalized points in the camera coordinate system. It will be a 2D array of shape (..., 2) if ``transpose`` is False.
-
-            jacobian_dx : Optional[numpy.ndarray]
-                The Jacobian of the normalized points with respect to the input 3D world points if ``dx`` is True. Otherwise None.
-                It will be a 2D array of shape (..., 2, 3) if ``transpose`` is False.
-
-            jacobian_dp : Optional[numpy.ndarray]
-                The Jacobian of the normalized points with respect to the pose parameters if ``dp`` is True. Otherwise None.
-                It will be a 2D array of shape (..., 2, 6) if ``transpose`` is False.
-
-        Example
-        -------
-
-        Create an extrinsic object with a given pose:
-
-        .. code-block:: python
-
-            import numpy as np
-            from pydistort import Extrinsic
-
-            rvec = np.array([0.1, 0.2, 0.3]) # rotation vector
-            tvec = np.array([0.5, 0.5, 0.5]) # translation vector
-
-            extrinsic = Extrinsic(rvec, tvec)
-            # or using py3dframe
-            extrinsic = Extrinsic() # Default constructor
-            extrinsic.frame = Frame(translation=tvec, rotation_vector=rvec, convention=0)
-
-        Then you can use the extrinsic object to transform ``world_3dpoints`` to ``normalized points``:
-
-        .. code-block:: python
-
-            world_3dpoints = np.array([[1, 2, 3],
-                                        [4, 5, 6],
-                                        [7, 8, 9]]) # shape (3, 3)
-
-            result = extrinsic.transform(world_3dpoints, dx=True, dp=True)
-
-            result.normalized_points # shape (3, 2) -> normalized points in camera coordinates
-            result.jacobian_dx # shape (3, 2, 3) -> jacobian of the normalized points with respect to the world points
-            result.jacobian_dp # shape (3, 2, 6) -> jacobian of the normalized points with respect to the pose parameters
-            result.jacobian_dr # shape (3, 2, 3) -> jacobian of the normalized points with respect to the rotation vector (extracted from jacobian_dp)
-            result.jacobian_dt # shape (3, 2, 3) -> jacobian of the normalized points with respect to the translation vector (extracted from jacobian_dp)
-
+        jacobian_dx : Optional[numpy.ndarray]
+            The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None.
+            It will be a 2D array of shape (Npoints, 3, 2) if ``transpose`` is False.
+        
+        jacobian_dp : Optional[numpy.ndarray]
+            The Jacobian of the world 3D points with respect to the pose parameters if ``dp`` is True. Otherwise None.
+            It will be a 2D array of shape (Npoints, 3, 6) if ``transpose`` is False.
         """
-        # Check the boolean parameters
-        if not isinstance(transpose, bool):
-            raise ValueError("The transpose parameter must be a boolean.")
-        if not isinstance(dx, bool):
-            raise ValueError("The dx parameter must be a boolean.")
-        if not isinstance(dp, bool):
-            raise ValueError("The dp parameter must be a boolean.")
-        
-        # Check if the extrinsic matrix is set
-        if not self.is_set():
-            raise ValueError("The extrinsic matrix is not set. Please set the extrinsic matrix before using this method.")
-        
-        # Create the array of points
-        points = numpy.asarray(world_3dpoints, dtype=numpy.float64) 
+        # Get the number of points
+        Npoints = normalized_points.shape[0]
 
-        # Transpose the points if needed
-        if transpose:
-            points = numpy.moveaxis(points, 0, -1) # (3, ...) -> (..., 3)
+        # Get the rotation matrix and translation vector
+        rmat, jacobian = cv2.Rodrigues(self._rvec)
+        rmat = numpy.asarray(rmat, dtype=numpy.float64) # shape (3, 3)
+        rmat_inv = rmat.T # Inverse of the rotation matrix (R^{-1} = R^{T})
+        jacobian = numpy.asarray(jacobian, dtype=numpy.float64) # shape (3, 9) [R11,R12,R13,R21,R22,R23,R31,R32,R33]
+        rmat_dr = jacobian.reshape(3, 3, 3).transpose(1, 2, 0) # shape (3, 3, 3) # [i, j, k] = dR[i,j]/drvec[k]
+        rmat_inv_dr = rmat_dr.transpose(1, 0, 2) # shape (3, 3, 3) # [i, j, k] = dR^{-1}[i,j]/drvec[k] = dR^{T}[i,j]/drvec[k] = dR[j,i]/drvec[k]
 
-        # Extract the original shape
-        shape = points.shape # (..., 3)
 
-        # Flatten the points along the last axis
-        points_flat = points.reshape(-1, shape[-1]) # shape (..., 3) -> shape (Npoints, 3)
-        shape_flat = points_flat.shape # (Npoints, 3)
-        Npoints = shape_flat[0] # Npoints
+        # ==================
+        # Check depth
+        # ==================
+        if depth is None:
+            depth = numpy.ones((Npoints,), dtype=numpy.float64)
+        else:
+            depth = numpy.asarray(depth, dtype=numpy.float64).flatten()
+            if depth.shape != (Npoints,):
+                raise ValueError("Depth must be a 1D array with the same number of points as normalized_points.")
 
-        # Check the shape of the points
-        if points_flat.ndim !=2 or points_flat.shape[1] != 3:
-            raise ValueError(f"The points must be in the shape (Npoints, 3) or (3, Npoints) if ``transpose`` is True. Got {points_flat.shape} instead and transpose is {transpose}.")
+        # ==================
+        # Camera points
+        # ==================
+        # Compute the camera points
+        X_C = normalized_points[:, 0] * depth # shape (Npoints,)
+        Y_C = normalized_points[:, 1] * depth # shape (Npoints,)
+        Z_C = depth # shape (Npoints,)
 
-        normalized_points_flat, jacobian_flat_dx, jacobian_flat_dp = self._transform(points_flat, dx=dx, dp=dp)
+        points_camera_flat = numpy.empty((Npoints, 3), dtype=numpy.float64) # shape (Npoints, 3)
+        points_camera_flat[:, 0] = X_C
+        points_camera_flat[:, 1] = Y_C
+        points_camera_flat[:, 2] = Z_C
 
-        # Reshape the normalized points back to the original shape (Warning shape is (..., 3) and not (..., 2))
-        normalized_points = normalized_points_flat.reshape((*shape[:-1], 2)) # shape (Npoints, 2) -> (..., 2)
-        jacobian_dx = jacobian_flat_dx.reshape((*shape[:-1], 2, 3)) if dx else None # shape (Npoints, 2, 3) -> (..., 2, 3)
-        jacobian_dp = jacobian_flat_dp.reshape((*shape[:-1], 2, 6)) if dp else None # shape (Npoints, 2, 6) -> (..., 2, 6)
+        # Compute the jacobian with respect to the normalized points
+        if dx:
+            points_camera_flat_dx = numpy.empty((Npoints, 3, 2), dtype=numpy.float64) # shape (Npoints, 3, 2)
+            points_camera_flat_dx[:, 0, 0] = depth # shape (Npoints, 2)
+            points_camera_flat_dx[:, 0, 1] = 0.0
+            points_camera_flat_dx[:, 1, 0] = 0.0
+            points_camera_flat_dx[:, 1, 1] = depth # shape (Npoints, 2)
+            points_camera_flat_dx[:, 2, 0] = 0.0
+            points_camera_flat_dx[:, 2, 1] = 0.0
 
-        # Transpose the points back to the original shape if needed
-        if transpose:
-            image_points = numpy.moveaxis(image_points, -1, 0) # (..., 2) -> (2, ...)
-            jacobian_dx = numpy.moveaxis(jacobian_dx, -2, 0) if dx else None # (..., 2, 2) -> (2, ..., 2)
-            jacobian_dp = numpy.moveaxis(jacobian_dp, -2, 0) if dp else None # (..., 2, 6) -> (2, ..., 6)
+        # ===================
+        # World points
+        # ===================
+        # Compute the world points
+        world_3dpoints_flat = (points_camera_flat - self._tvec[numpy.newaxis, :]) @ rmat_inv.T # shape (Npoints, 3)
+        X_W = world_3dpoints_flat[:, 0] # shape (Npoints,)
+        Y_W = world_3dpoints_flat[:, 1] # shape (Npoints,)
+        Z_W = world_3dpoints_flat[:, 2] # shape (Npoints,)
 
-        # Return the image points and the jacobian matrices
-        result = ExtrinsicResult(normalized_points, jacobian_dx, jacobian_dp)
-        return result
+        # Compute the jacobian with respect to the camera points
+        if dx:
+            world_3dpoints_flat_dx = numpy.empty((Npoints, 3, 2), dtype=numpy.float64) # shape (Npoints, 3, 2)
+            world_3dpoints_flat_dx[:, :, 0] = points_camera_flat_dx[:, :, 0] @ rmat_inv.T # shape (Npoints, 3)
+            world_3dpoints_flat_dx[:, :, 1] = points_camera_flat_dx[:, :, 1] @ rmat_inv.T # shape (Npoints, 3)
     
+        # Compute the jacobian with respect to the extrinsic parameters
+        if dp:
+            world_3dpoints_flat_dp = numpy.empty((Npoints, 3, 6), dtype=numpy.float64) # shape (Npoints, 3, 6)
+            for k in range(3):
+                world_3dpoints_flat_dp[:, :, k] = (points_camera_flat - self._tvec[numpy.newaxis, :]) @ rmat_inv_dr[:, :, k].T
+            world_3dpoints_flat_dp[:, :, 3] = -rmat_inv @ numpy.array([1.0, 0.0, 0.0], dtype=numpy.float64)[numpy.newaxis, :]
+            world_3dpoints_flat_dp[:, :, 4] = -rmat_inv @ numpy.array([0.0, 1.0, 0.0], dtype=numpy.float64)[numpy.newaxis, :]
+            world_3dpoints_flat_dp[:, :, 5] = -rmat_inv @ numpy.array([0.0, 0.0, 1.0], dtype=numpy.float64)[numpy.newaxis, :]
+
+        if not dx:
+            world_3dpoints_flat_dx = None
+        if not dp:
+            world_3dpoints_flat_dp = None
+
+        return world_3dpoints_flat, world_3dpoints_flat_dx, world_3dpoints_flat_dp

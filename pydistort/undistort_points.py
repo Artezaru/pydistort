@@ -1,43 +1,23 @@
 from typing import Optional
-from numbers import Number
 import numpy
-from py3dframe import Frame
-import cv2
 
-from .distortion import Distortion, NoDistortion
+
+from .distortion import Distortion
+from .no_distortion import NoDistortion
 from .intrinsic import Intrinsic
 from .extrinsic import Extrinsic
 
-class UndistortPointsResult:
-    r"""
-    Class to represent the result of the undistortion transformation from 2D image points to normalized points.
-
-    This class is used to store the result of undistorting 2D points,
-    with optional Jacobians.
-
-    .. note::
-
-        ``...`` in the shape of the arrays means the array can have any number of leading dimensions.
-        For example, shape (..., 3) corresponds to arbitrary shapes of 3D points.
-
-    Parameters
-    ----------
-    undistorted_points : numpy.ndarray
-        The undistorted points in the camera coordinate system. Shape (..., 2) if ``transpose`` is False, otherwise (2, ...).
-    """
-    def __init__(self, undistorted_points: numpy.ndarray):
-        self.undistorted_points = undistorted_points
 
 
 def undistort_points(
         image_points: numpy.ndarray,
         K: Optional[numpy.ndarray],
         distortion: Optional[Distortion],
-        R: Optional[numpy.ndarray]= None,
+        R: Optional[numpy.ndarray] = None,
         P: Optional[numpy.ndarray] = None,
         transpose: bool = False,
-        *kwargs
-    ) -> UndistortPointsResult:
+        **kwargs
+    ) -> numpy.ndarray:
     r"""
     Undistort 2D image points using the camera intrinsic and distortion coefficients.
 
@@ -54,10 +34,7 @@ def undistort_points(
     The given points ``image_points`` are assumed to be in the image coordinate system and expressed in 2D coordinates with shape (..., 2).
     If the user gives an identity matrix K, it equivalent to give directly the normalized points.
 
-    .. note::
-
-        ``...`` in the shape of the arrays means that the array can have any number of dimensions.
-        Classically, the ``...`` can be replaced by :math:`N` which is the number of points.
+    This method not compute the jacobians of the undistortion process, but it can be done by using the ``dx`` and ``dp`` flags in the intrinsic and distortion models.
 
     Parameters
     ----------
@@ -82,22 +59,20 @@ def undistort_points(
 
     transpose : bool, optional
         If True, the input points are assumed to be in the shape (2, ...) instead of (..., 2). Default is False.
-        In this case, the output points will be in the shape (3, ...) and the jacobians will be in the shape (3, ..., 2) and (3, ..., 10 + Nparams).
-
+        The output points will be in the same shape as the input points.
+    
     kwargs : optional
         Additional arguments to be passed to the distortion model "undistort" method.
         This is useful for some distortion models that require additional parameters.
 
     Returns
     -------
-    undistort_result : UndistortPointsResult
-        The result of the undistortion transformation.
-        This object has the following attributes:
+    numpy.ndarray
+        The undistorted 2D image points in the camera coordinate system. Shape (..., 2). If no ``P`` is given, the ``normalized_points`` are returned instead of the ``undistorted_points``.
 
-        - undistorted_points : numpy.ndarray, shape (..., 2), The undistorted 2D image points.
-
-    Exemples
+    Example
     --------
+    The following example shows how to undistort 2D image points using the intrinsic camera matrix and a distortion model.
 
     .. code-block:: python
 
@@ -120,16 +95,14 @@ def undistort_points(
         # Define the distortion model (optional)
         distortion = Cv2Distortion([0.1, 0.2, 0.3, 0.4, 0.5])
 
-        # Define the rotation matrix (optional)
-        R = numpy.eye(3)
-
-        # Define the new projection matrix (optional)
-        P = numpy.eye(3)
-
         # Undistort the 2D image points
-        result = undistort_points(image_points, K=K, distortion=distortion, R=R, P=P)
-        print("Undistorted image points:")
-        print(result.undistorted_points) # shape (5, 2)
+        normalized_points = undistort_points(image_points, K=K, distortion=distortion)
+
+    To return the undistorted points in the image coordinate system, you can provide a projection matrix P equal to the intrinsic matrix K:
+
+    .. code-block:: python
+
+        undistorted_points = undistort_points(image_points, K=K, distortion=distortion, P=K)
     
     """
     # Set the default values if None
@@ -205,7 +178,7 @@ def undistort_points(
     
     # Realize the transformation:
     distorted_points, _, _ = intrinsic._inverse_transform(points_flat, dx=False, dp=False) # shape (Npoints, 2) -> shape (Npoints, 2)
-    undistorted_points = distortion._undistort(distorted_points, dx=False, dp=False, *kwargs) # shape (Npoints, 2) -> shape (Npoints, 2)
+    undistorted_points, _, _ = distortion._inverse_transform(distorted_points, dx=False, dp=False, **kwargs) # shape (Npoints, 2) -> shape (Npoints, 2)
     
     if not numpy.allclose(rectification.rotation_vector, numpy.zeros((3,), dtype=numpy.float64)):
         undistorted_points, _, _ = rectification._transform(numpy.concatenate((undistorted_points, numpy.ones((Npoints, 1))), axis=1), dx=False, dp=False) # shape (Npoints, 3) -> shape (Npoints, 2)
@@ -220,9 +193,5 @@ def undistort_points(
     if transpose:
         undistorted_points = numpy.moveaxis(undistorted_points, -1, 0) # (..., 2) -> (2, ...)
     
-    # Return the result
-    result = UndistortPointsResult(
-        undistorted_points=undistorted_points
-    )
-    return result
+    return undistorted_points
 

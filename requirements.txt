@@ -1,2 +1,4 @@
 numpy
 opencv-python-headless
+scipy
+pyzernike @ git+https://github.com/Artezaru/pyzernike.git
