@@ -33,7 +33,7 @@ class ZernikeDistortion(Distortion):
 
     .. math::
 
-        \rho = \frac{1}{R} \sqrt{(x_{N} - x_{0})^2 + (y_{N} - y_{0})^2}
+        \rho = \sqrt{\left(\frac{x_{N} - x_{0}}{R_x}\right)^2 + \left(\frac{y_{N} - y_{0}}{R_y}\right)^2}
 
     .. math::
 
@@ -789,13 +789,9 @@ class ZernikeDistortion(Distortion):
 
             \frac{\partial Z_{nm}}{\partial y_{N}} = \frac{\partial Z_{nm}}{\partial \rho} \cdot \frac{\partial \rho}{\partial y_{N}} + \frac{\partial Z_{nm}}{\partial \theta} \cdot \frac{\partial \theta}{\partial y_{N}}
 
-        Where:
-
-
-
         .. seealso::
 
-            Package ``pyzernike`` (https://github.com/Artezaru/pyzernike) for the implementation of the Zernike polynomials.
+            Package ``pyzernike`` (https://github.com/Artezaru/pyzernike) for the implementation of the Zernike polynomials and their derivatives.
 
         .. warning::
 
