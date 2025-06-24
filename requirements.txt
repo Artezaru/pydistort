@@ -2,3 +2,4 @@ numpy
 opencv-python-headless
 scipy
 pyzernike @ git+https://github.com/Artezaru/pyzernike.git
+py3dframe @ git+https://github.com/Artezaru/py3dframe.git
