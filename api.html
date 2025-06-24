@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>API Reference &#8212; pydistort 1.0.0 documentation</title>
+    <title>API Reference &#8212; pydistort 1.0.1 documentation</title>
   
   
   
@@ -38,13 +38,14 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/documentation_options.js?v=292eb321"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Usage" href="usage.html" />
+    <link rel="next" title="pydistort.Transform" href="api_doc/transform.html" />
     <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -110,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 1.0.0 documentation</p>
+    <p class="title logo__title">pydistort 1.0.1 documentation</p>
   
 </a></div>
     
@@ -141,6 +142,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="usage.html">
     Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="warnings.html">
+    WARNINGS
   </a>
 </li>
 
@@ -237,6 +245,13 @@
   </a>
 </li>
 
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="warnings.html">
+    WARNINGS
+  </a>
+</li>
+
   </ul>
 </nav></div>
           
@@ -264,7 +279,27 @@
 <nav class="bd-docs-nav bd-links"
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
-  <div class="bd-toc-item navbar-nav"></div>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformation Classes:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="api_doc/transform.html">pydistort.Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/extrinsic.html">pydistort.Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/intrinsic.html">pydistort.Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/distortion.html">pydistort.Distortion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Distortion Models:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="api_doc/no_distortion.html">pydistort.NoDistortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_distortion.html">pydistort.Cv2Distortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="api_doc/project_points.html">pydistort.project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/undistort_points.html">pydistort.undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/undistort_image.html">pydistort.undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/distort_image.html">pydistort.distort_image</a></li>
+</ul>
+</div>
 </nav></div>
     </div>
   
@@ -322,9 +357,52 @@
                   
   <section id="api-reference">
 <h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h1>
-<p>The package <code class="docutils literal notranslate"><span class="pre">pydistort</span></code> is composed of the following functions, classes, and modules:</p>
-<p>TO WRITE</p>
-<p>To learn how to use the package effectively, refer to the documentation <a class="reference internal" href="usage.html"><span class="doc">Usage</span></a>.</p>
+<section id="transformations">
+<h2>Transformations<a class="headerlink" href="#transformations" title="Link to this heading">#</a></h2>
+<p>The package <cite>pydistort</cite> provides a set of tools for camera distortion modeling and correction, primarily using OpenCV.
+It includes classes and functions to handle various types of distortion parameters.</p>
+<p>The process to correspond a 3D-world point to a 2D-image point is as follows:</p>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_W\)</span>) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the <code class="docutils literal notranslate"><span class="pre">camera_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_C\)</span>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">camera_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_C\)</span>) are normalized by dividing by the third coordinate to obtain the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>) are distorted by the distortion model using the coefficients <span class="math notranslate nohighlight">\(\{\lambda_1, \lambda_2, \lambda_3, \ldots\}\)</span> to obtain the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> (<span class="math notranslate nohighlight">\(x_D\)</span>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> (<span class="math notranslate nohighlight">\(x_D\)</span>) are projected onto the image plane using the intrinsic matrix K to obtain the <code class="docutils literal notranslate"><span class="pre">image_points</span></code> (<span class="math notranslate nohighlight">\(x_I\)</span>).</p></li>
+</ol>
+<p>To processing is performed by the following classes:</p>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformation Classes:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/transform.html">pydistort.Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/extrinsic.html">pydistort.Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/intrinsic.html">pydistort.Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/distortion.html">pydistort.Distortion</a></li>
+</ul>
+</div>
+<p>Some distortion models are provided in the package, such as:</p>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Distortion Models:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/no_distortion.html">pydistort.NoDistortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_distortion.html">pydistort.Cv2Distortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
+</ul>
+</div>
+</section>
+<section id="global-functions">
+<h2>Global Functions<a class="headerlink" href="#global-functions" title="Link to this heading">#</a></h2>
+<p>The package also provides global functions for common tasks related to camera distortion and transformation.
+These functions are designed to simplify the process of applying transformations and corrections to camera images.</p>
+<p>These functions are inspired by the OpenCV functions <cite>cv2.projectPoints</cite> and <cite>cv2.undistortPoints</cite>, but they are designed to work with the <cite>pydistort</cite> package’s classes and methods.</p>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/project_points.html">pydistort.project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/undistort_points.html">pydistort.undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/undistort_image.html">pydistort.undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/distort_image.html">pydistort.distort_image</a></li>
+</ul>
+</div>
+</section>
 </section>
 
 
@@ -347,11 +425,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="usage.html"
+       href="api_doc/transform.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Usage</p>
+        <p class="prev-next-title">pydistort.Transform</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -365,6 +443,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transformations">Transformations</a><ul class="nav section-nav flex-column">
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#global-functions">Global Functions</a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
