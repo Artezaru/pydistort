@@ -1,0 +1,802 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pydistort.project_points &#8212; pydistort 1.0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/project_points';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydistort 1.0.1 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../warnings.html">
+    WARNINGS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../warnings.html">
+    WARNINGS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.project_points</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pydistort.project_points</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.no_distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoDistortion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Intrinsic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.extrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extrinsic</span>
+
+
+<div class="viewcode-block" id="ProjectPointsResult">
+<a class="viewcode-back" href="../../api_doc/project_points.html#pydistort.ProjectPointsResult">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProjectPointsResult</span><span class="p">(</span><span class="n">TransformResult</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Subclass of TransformResult to represent the result of the projection transformation from 3D world points to 2D image points.</span>
+
+<span class="sd">        This class is used to store the result of transforming the ``world_3dpoints`` to ``image_points``, and the optional Jacobians.</span>
+
+<span class="sd">    - ``transformed_points``: The transformed image points in the camera pixel coordinate system.</span>
+<span class="sd">    - ``jacobian_dx``: The Jacobian of the image points with respect to the input 3D world points if ``dx`` is True. Otherwise None. Shape (..., 2, 3).</span>
+<span class="sd">    - ``jacobian_dp``: The Jacobian of the image points with respect to the parameters (rotation, translation, distortion, intrinsic) if ``dp`` is True. Otherwise None. Shape (..., 2, 10 + Nparams). [rx, ry, rz, tx, ty, tz, fx, fy, cx, cy, d1, d2, ..., dNparams] where Nparams is the number of distortion parameters.</span>
+
+<span class="sd">    Some properties are provided for convenience:</span>
+
+<span class="sd">    - ``image_points``: Alias for ``transformed_points`` to represent the transformed image points. Shape (..., 2).</span>
+<span class="sd">    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 2, 3).</span>
+<span class="sd">    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 2, 3).</span>
+<span class="sd">    - ``jacobian_df``: Part of the Jacobian with respect to the focal length parameters. Shape (..., 2, 2).</span>
+<span class="sd">    - ``jacobian_dc``: Part of the Jacobian with respect to the principal point parameters. Shape (..., 2, 2).</span>
+<span class="sd">    - ``jacobian_ddis``: Part of the Jacobian with respect to the distortion coefficients. Shape (..., 2, Nparams).</span>
+
+<span class="sd">    .. warning::</span>
+
+<span class="sd">        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">image_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the transformed image points.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            The transformed image points in the camera pixel coordinate system. Shape (..., 2).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformed_points</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the jacobian of the image points with respect to the rotation vector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian with respect to rotation (dr). Shape (..., 2, 3).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the jacobian of the image points with respect to the translation vector.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian with respect to translation (dt). Shape (..., 2, 3).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the jacobian of the image points with respect to the focal length.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian with respect to focal lenght parameters (df). Shape (..., 2, 2).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the jacobian of the image points with respect to the principal point.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian with respect to principal point parameters (dc). Shape (..., 2, 2).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">8</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_ddis</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the jacobian of the image points with respect to the distortion coefficients.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Optional[numpy.ndarray]</span>
+<span class="sd">            The Jacobian with respect to distortion parameters (ddis). Shape (..., 2, Nparams).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">10</span><span class="p">:]</span></div>
+
+    
+
+
+
+
+
+<div class="viewcode-block" id="project_points">
+<a class="viewcode-back" href="../../api_doc/project_points.html#pydistort.project_points">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">project_points</span><span class="p">(</span>
+        <span class="n">world_3dpoints</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
+        <span class="n">rvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">tvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> 
+        <span class="n">K</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> 
+        <span class="n">distortion</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Distortion</span><span class="p">],</span> 
+        <span class="n">transpose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+        <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">faster_dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ProjectPointsResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Project 3D points to 2D image points using the camera intrinsic and extrinsic matrix and distortion coefficients.</span>
+
+<span class="sd">    The process to correspond a 3D-world point to a 2D-image point is as follows:</span>
+
+<span class="sd">    1. The ``world_3dpoints`` (:math:`X_W`) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the ``camera_3dpoints`` (:math:`X_C`).</span>
+<span class="sd">    2. The ``camera_3dpoints`` (:math:`X_C`) are normalized by dividing by the third coordinate to obtain the ``normalized_points`` (:math:`x_N`).</span>
+<span class="sd">    3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).</span>
+<span class="sd">    4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic matrix K to obtain the ``image_points`` (:math:`x_I`).</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \begin{align*}</span>
+<span class="sd">        X_C &amp;= R \cdot X_W + T \\</span>
+<span class="sd">        x_N &amp;= \frac{X_C}{Z_C} \\</span>
+<span class="sd">        x_D &amp;= \text{distort}(x_N, \lambda_1, \lambda_2, \lambda_3, \ldots) \\</span>
+<span class="sd">        x_I &amp;= K \cdot x_D</span>
+<span class="sd">        \end{align*}</span>
+
+<span class="sd">    where :math:`R` is the rotation matrix, :math:`T` is the translation vector et :math:`K` is the intrinsic camera matrix.</span>
+<span class="sd">    The intrinsic camera matrix is defined as:</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        K = \begin{pmatrix}</span>
+<span class="sd">        f_x &amp; 0 &amp; c_x \\</span>
+<span class="sd">        0 &amp; f_y &amp; c_y \\</span>
+<span class="sd">        0 &amp; 0 &amp; 1</span>
+<span class="sd">        \end{pmatrix}</span>
+
+<span class="sd">    The given points ``world 3dpoints`` are assumed to be in the world coordinate system and expressed in 3D coordinates with shape (..., 3).</span>
+<span class="sd">        </span>
+<span class="sd">    .. note::</span>
+
+<span class="sd">        ``...`` in the shape of the arrays means that the array can have any number of dimensions.</span>
+<span class="sd">        Classically, the ``...`` can be replaced by :math:`N` which is the number of points.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        The rotation matrix and the rotation vector must be given in the convention 0 of py3dframe.</span>
+<span class="sd">        (see https://github.com/Artezaru/py3dframe)</span>
+
+<span class="sd">    To compute the Jacobians of the image points with respect to the input 3D world points and the projection parameters, set the ``dx`` and ``dp`` parameters to True.</span>
+<span class="sd">    The Jacobians are computed using the chain rule of differentiation and are returned in the result object.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        For the Jacobian with respect to the input 3D world points, a faster method than the full chain rule can be used by setting the ``faster_dx`` parameter to True.</span>
+<span class="sd">        The method uses the fact that the Jacobian of the image points with respect to the input 3D world points can be computed directly as the matrix product of the jacobian with respect to the translation and the rotation matrix.</span>
+<span class="sd">        This method is only used if the ``dp`` parameter is set to True.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    world_3dpoints : numpy.ndarray</span>
+<span class="sd">        The 3D points in the world coordinate system. Shape (..., 3).</span>
+
+<span class="sd">    rvec : Optional[numpy.ndarray]</span>
+<span class="sd">        The rotation vector (or rotation matrix) of the camera. Shape (3,) or (3, 3).</span>
+<span class="sd">        If None, the identity rotation is used.</span>
+
+<span class="sd">    tvec : Optional[numpy.ndarray]</span>
+<span class="sd">        The translation vector of the camera. Shape (3,).</span>
+<span class="sd">        If None, the zero translation is used.</span>
+
+<span class="sd">    K : Optional[numpy.ndarray]</span>
+<span class="sd">        The intrinsic camera matrix (or vector). Shape (3, 3) or (4,).</span>
+<span class="sd">        If None, the identity intrinsic matrix is used.</span>
+
+<span class="sd">    distortion : Optional[Distortion]</span>
+<span class="sd">        The distortion model to be applied to the image points.</span>
+<span class="sd">        If None, a zero distortion is applied.</span>
+
+<span class="sd">    transpose : bool, optional</span>
+<span class="sd">        If True, the input points are assumed to be in the shape (3, ...) instead of (..., 3). Default is False.</span>
+<span class="sd">        In this case, the output points will be in the shape (2, ...) and the jacobians will be in the shape (2, ..., 3) and (2, ..., 10 + Nparams).</span>
+<span class="sd">        </span>
+<span class="sd">    dx : bool, optional</span>
+<span class="sd">        If True, compute the Jacobian of the image points with respect to the input 3D world points with shape (..., 2, 3).</span>
+<span class="sd">        If False, the Jacobian is not computed. default is False.</span>
+
+<span class="sd">    dp : bool, optional</span>
+<span class="sd">        If True, compute the Jacobian of the image points with respect to the projection parameters with shape (..., 2, 10 + Nparams).</span>
+<span class="sd">        If False, the Jacobian is not computed. Default is False.</span>
+
+<span class="sd">    faster_dx : bool, optional</span>
+<span class="sd">        If True, use a faster method to compute the Jacobian of the image points with respect to the input 3D world points.</span>
+<span class="sd">        Default is True.</span>
+<span class="sd">        This method is only processed if the ``dp`` parameter is set to True.</span>
+
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments to be passed to the distortion model&#39;s transform method.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ProjectPointsResult</span>
+<span class="sd">        The result of the projection transformation.</span>
+
+<span class="sd">        </span>
+<span class="sd">    Examples</span>
+<span class="sd">    ~~~~~~~~~~</span>
+
+<span class="sd">    Create a simple example to project 3D points to 2D image points using the intrinsic and extrinsic parameters of the camera.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        import numpy</span>
+<span class="sd">        from pydistort import project_points, Cv2Distortion</span>
+
+<span class="sd">        # Define the 3D points in the world coordinate system</span>
+<span class="sd">        world_3dpoints = numpy.array([[0.0, 0.0, 5.0],</span>
+<span class="sd">                                        [0.1, -0.1, 5.0],</span>
+<span class="sd">                                        [-0.1, 0.2, 5.0],</span>
+<span class="sd">                                        [0.2, 0.1, 5.0],</span>
+<span class="sd">                                        [-0.2, -0.2, 5.0]]) # shape (5, 3)</span>
+
+<span class="sd">        # Define the rotation vector and translation vector</span>
+<span class="sd">        rvec = numpy.array([0.01, 0.02, 0.03])  # small rotation</span>
+<span class="sd">        tvec = numpy.array([0.1, -0.1, 0.2])    # small translation</span>
+
+<span class="sd">        # Define the intrinsic camera matrix</span>
+<span class="sd">        K = numpy.array([[1000.0, 0.0, 320.0],</span>
+<span class="sd">                        [0.0, 1000.0, 240.0],</span>
+<span class="sd">                        [0.0, 0.0, 1.0]])</span>
+
+<span class="sd">        # Define the distortion model (optional)</span>
+<span class="sd">        distortion = Cv2Distortion([0.1, 0.2, 0.3, 0.4, 0.5])</span>
+
+<span class="sd">        # Project the 3D points to 2D image points</span>
+<span class="sd">        result = project_points(world_3dpoints, rvec=rvec, tvec=tvec, K=K, distortion=distortion)</span>
+<span class="sd">        print(&quot;Projected image points:&quot;)</span>
+<span class="sd">        print(result.image_points) # shape (5, 2)</span>
+
+<span class="sd">    You can also compute the Jacobians of the image points with respect to the input 3D world points and the projection parameters by setting the ``dx`` and ``dp`` parameters to True.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        # Project the 3D points to 2D image points with Jacobians</span>
+<span class="sd">        result = project_points(world_3dpoints, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True)</span>
+
+<span class="sd">        print(&quot;Jacobian with respect to 3D points:&quot;)</span>
+<span class="sd">        print(result.jacobian_dx) # shape (5, 2, 3)</span>
+<span class="sd">        print(&quot;Jacobian with respect to projection parameters:&quot;)</span>
+<span class="sd">        print(result.jacobian_dp) # shape (5, 2, 10 + Nparams)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Set the default values if None</span>
+    <span class="k">if</span> <span class="n">rvec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">tvec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">K</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">distortion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">distortion</span> <span class="o">=</span> <span class="n">NoDistortion</span><span class="p">()</span>
+
+    <span class="c1"># Create the intrinsic extrinsic and distortion objects</span>
+    <span class="n">tvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">tvec</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">rvec</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rvec</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">extrinsic</span> <span class="o">=</span> <span class="n">Extrinsic</span><span class="p">()</span>
+    <span class="n">extrinsic</span><span class="o">.</span><span class="n">translation_vector</span> <span class="o">=</span> <span class="n">tvec</span>
+    <span class="k">if</span> <span class="n">rvec</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">extrinsic</span><span class="o">.</span><span class="n">rotation_vector</span> <span class="o">=</span> <span class="n">rvec</span>
+    <span class="k">elif</span> <span class="n">rvec</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+        <span class="n">extrinsic</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">rvec</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;rvec must be of shape (3,) or (3, 3)&quot;</span><span class="p">)</span>
+
+    <span class="n">K</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">intrinsic</span> <span class="o">=</span> <span class="n">Intrinsic</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">K</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">intrinsic</span><span class="o">.</span><span class="n">intrinsic_vector</span> <span class="o">=</span> <span class="n">K</span>
+    <span class="k">elif</span> <span class="n">K</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
+        <span class="n">intrinsic</span><span class="o">.</span><span class="n">intrinsic_matrix</span> <span class="o">=</span> <span class="n">K</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;K must be of shape (4,) or (3, 3)&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distortion</span><span class="p">,</span> <span class="n">Distortion</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;distortion must be an instance of the Distortion class&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">intrinsic</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The intrinsic matrix K must be set&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">extrinsic</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The extrinsic matrix (rvec, tvec) must be set&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">distortion</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The distortion coefficients must be set&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">faster_dx</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;faster_dx must be a boolean value&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transpose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transpose must be a boolean value&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dx must be a boolean value&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dp</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;dp must be a boolean value&quot;</span><span class="p">)</span>        
+
+    <span class="c1"># Create the array of points</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">world_3dpoints</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> 
+
+    <span class="c1"># Transpose the points if needed</span>
+    <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># (3, ...) -&gt; (..., 3)</span>
+
+    <span class="c1"># Extract the original shape</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># (..., 3)</span>
+
+    <span class="c1"># Flatten the points along the last axis</span>
+    <span class="n">points_flat</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># shape (..., 3) -&gt; shape (Npoints, 3)</span>
+    <span class="n">shape_flat</span> <span class="o">=</span> <span class="n">points_flat</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># (Npoints, 3)</span>
+    <span class="n">Npoints</span> <span class="o">=</span> <span class="n">shape_flat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Npoints</span>
+
+    <span class="c1"># Check the shape of the points</span>
+    <span class="k">if</span> <span class="n">points_flat</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span><span class="mi">2</span> <span class="ow">or</span> <span class="n">points_flat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The points must be in the shape (Npoints, 3) or (3, Npoints) if ``transpose`` is True. Got </span><span class="si">{</span><span class="n">points_flat</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> instead and transpose is </span><span class="si">{</span><span class="n">transpose</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Initialize the jacobians</span>
+    <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="c1"># Realize the transformation:</span>
+    <span class="n">normalized_points</span><span class="p">,</span> <span class="n">extrinsic_jacobian_dx</span><span class="p">,</span> <span class="n">extrinsic_jacobian_dp</span> <span class="o">=</span> <span class="n">extrinsic</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">points_flat</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span> <span class="ow">or</span> <span class="p">(</span><span class="n">dx</span> <span class="ow">and</span> <span class="n">faster_dx</span><span class="p">))</span> <span class="c1"># (dx is requiered for propagation of dp)</span>
+    <span class="n">distorted_points</span><span class="p">,</span> <span class="n">distortion_jacobian_dx</span><span class="p">,</span> <span class="n">distortion_jacobian_dp</span> <span class="o">=</span> <span class="n">distortion</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">normalized_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dp</span> <span class="ow">or</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># (dx is requiered for propagation of dp)</span>
+    <span class="n">image_points_flat</span><span class="p">,</span> <span class="n">intrinsic_jacobian_dx</span><span class="p">,</span> <span class="n">intrinsic_jacobian_dp</span> <span class="o">=</span> <span class="n">intrinsic</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">distorted_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dp</span> <span class="ow">or</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span><span class="p">)</span> <span class="c1"># (dx is requiered for propagation of dp)</span>
+
+    <span class="c1"># Apply the chain rules to compute the Jacobians with respect to the projection parameters</span>
+    <span class="k">if</span> <span class="n">dp</span><span class="p">:</span>
+        <span class="n">Nparams</span> <span class="o">=</span> <span class="n">distortion</span><span class="o">.</span><span class="n">Nparams</span>
+        <span class="n">jacobian_flat_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">Nparams</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">jacobian_flat_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">6</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="n">intrinsic_jacobian_dp</span> <span class="c1"># (focal length and principal point)</span>
+        <span class="n">jacobian_flat_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">10</span><span class="p">:]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">intrinsic_jacobian_dx</span><span class="p">,</span> <span class="n">distortion_jacobian_dp</span><span class="p">)</span> <span class="c1"># (distortion coefficients)</span>
+        <span class="n">jacobian_flat_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">intrinsic_jacobian_dx</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">distortion_jacobian_dx</span><span class="p">,</span> <span class="n">extrinsic_jacobian_dp</span><span class="p">))</span> <span class="c1"># (rotation and translation)</span>
+    
+    <span class="c1"># Apply the chain rules to compute the Jacobians with respect to the input 3D world points</span>
+    <span class="k">if</span> <span class="n">dx</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">faster_dx</span> <span class="ow">and</span> <span class="n">dp</span><span class="p">:</span>
+            <span class="n">jacobian_flat_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">jacobian_flat_dx</span><span class="p">[:,</span><span class="mi">0</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">jacobian_flat_dp</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">@</span> <span class="n">extrinsic</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="c1"># shape (Npoints, 3)</span>
+            <span class="n">jacobian_flat_dx</span><span class="p">[:,</span><span class="mi">1</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">jacobian_flat_dp</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span> <span class="o">@</span> <span class="n">extrinsic</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="c1"># shape (Npoints, 3)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">jacobian_flat_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">intrinsic_jacobian_dx</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">distortion_jacobian_dx</span><span class="p">,</span> <span class="n">extrinsic_jacobian_dx</span><span class="p">))</span>
+
+    <span class="c1"># Reshape the normalized points back to the original shape (Warning shape is (..., 3) and not (..., 2))</span>
+    <span class="n">image_points</span> <span class="o">=</span> <span class="n">image_points_flat</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">*</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span> <span class="c1"># shape (Npoints, 2) -&gt; (..., 2)</span>
+    <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="n">jacobian_flat_dx</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">*</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="k">if</span> <span class="n">dx</span> <span class="k">else</span> <span class="kc">None</span> <span class="c1"># shape (Npoints, 2, 3) -&gt; (..., 2, 3)</span>
+    <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">jacobian_flat_dp</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">*</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">Nparams</span><span class="p">))</span> <span class="k">if</span> <span class="n">dp</span> <span class="k">else</span> <span class="kc">None</span> <span class="c1"># shape (Npoints, 2, 10 + Nparams) -&gt; (..., 2, 10 + Nparams)</span>
+
+    <span class="c1"># Transpose the points back to the original shape if needed</span>
+    <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+        <span class="n">image_points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">image_points</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># (..., 2) -&gt; (2, ...)</span>
+        <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">jacobian_dx</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">dx</span> <span class="k">else</span> <span class="kc">None</span> <span class="c1"># (..., 2, 2) -&gt; (2, ..., 2)</span>
+        <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">jacobian_dp</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">dp</span> <span class="k">else</span> <span class="kc">None</span> <span class="c1"># (..., 2, 4) -&gt; (2, ..., 4)</span>
+
+    <span class="c1"># Return the result</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">ProjectPointsResult</span><span class="p">(</span>
+        <span class="n">transformed_points</span><span class="o">=</span><span class="n">image_points</span><span class="p">,</span>
+        <span class="n">jacobian_dx</span><span class="o">=</span><span class="n">jacobian_dx</span><span class="p">,</span>
+        <span class="n">jacobian_dp</span><span class="o">=</span><span class="n">jacobian_dp</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span></div>
+
+
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2025, Artezaru.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

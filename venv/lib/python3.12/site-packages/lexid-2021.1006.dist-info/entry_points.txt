@@ -1,0 +1,4 @@
+
+        [console_scripts]
+        lexid_incr=lexid.__main__:main
+    

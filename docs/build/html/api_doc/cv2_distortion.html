@@ -1,0 +1,1236 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pydistort.Cv2Distortion &#8212; pydistort 1.0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=292eb321"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_doc/cv2_distortion';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pydistort.ZernikeDistortion" href="zernike_distortion.html" />
+    <link rel="prev" title="pydistort.NoDistortion" href="no_distortion.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydistort 1.0.1 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../warnings.html">
+    WARNINGS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../warnings.html">
+    WARNINGS
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformation Classes:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="transform.html">pydistort.Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extrinsic.html">pydistort.Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.Distortion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Distortion Models:</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="no_distortion.html">pydistort.NoDistortion</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.Cv2Distortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="undistort_points.html">pydistort.undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="undistort_image.html">pydistort.undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="distort_image.html">pydistort.distort_image</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.Cv2Distortion</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pydistort-cv2distortion">
+<h1>pydistort.Cv2Distortion<a class="headerlink" href="#pydistort-cv2distortion" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">Cv2Distortion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Nparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Integral</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/cv2_distortion.html#Cv2Distortion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Distortion" title="Link to this definition">#</a></dt>
+<dd><p>Class to apply distortion with the OpenCV distortion model.</p>
+<p>Distort the given <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> using the distortion model to obtain the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code>.</p>
+<div class="math notranslate nohighlight">
+\[x_D = \text{distort}(x_N, \lambda_1, \lambda_2, \lambda_3, \ldots)\]</div>
+<p>The model of OpenCV is the following one:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+x_D \\
+y_D
+\end{bmatrix}
+=
+\begin{bmatrix}
+x_N \frac{1+k_1 r^2 + k_2 r^4 + k_3 r^6}{1 + k_4 r^2 + k_5 r^4 + k_6 r^6} + 2p_1 x_N y_N + p_2 (r^2 + 2x_N^2) + s_1 r^2 + s_2 r^4 \\
+y_N \frac{1+k_1 r^2 + k_2 r^4 + k_3 r^6}{1 + k_4 r^2 + k_5 r^4 + k_6 r^6} + p_1 (r^2 + 2y_N^2) + 2p_2 x_N y_N + s_3 r^2 + s_4 r^4
+\end{bmatrix}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(r^2 = x_N^2 + y_N^2\)</span> and <span class="math notranslate nohighlight">\(k_i\)</span> are the radial distortion coefficients, <span class="math notranslate nohighlight">\(p_i\)</span> are the tangential distortion coefficients and <span class="math notranslate nohighlight">\(s_i\)</span> are the thin prism distortion coefficients.</p>
+<p>Then a perspective transformation is applied using <span class="math notranslate nohighlight">\(\tau_x\)</span> and <span class="math notranslate nohighlight">\(\tau_y\)</span> to obtain the final distorted points.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+x_D \\
+y_D \\
+1
+\end{bmatrix}
+=
+\begin{bmatrix}
+R_{33}(\tau) &amp; 0 &amp; -R_{13}(\tau) \\
+0 &amp; R_{33}(\tau) &amp; -R_{23}(\tau) \\
+0 &amp; 0 &amp; 1
+\end{bmatrix}
+R(\tau)
+\begin{bmatrix}
+x_D \\
+y_D \\
+1
+\end{bmatrix}\end{split}\]</div>
+<p>where :</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}R(\tau) = \begin{bmatrix}
+cos(\tau_y) &amp; sin(\tau_x)sin(\tau_y) &amp; -cos(\tau_x)sin(\tau_y) \\
+0 &amp; cos(\tau_x) &amp; sin(\tau_x) \\
+sin(\tau_y) &amp; -sin(\tau_x)cos(\tau_y) &amp; cos(\tau_x)cos(\tau_y)
+\end{bmatrix}\end{split}\]</div>
+<p>and <span class="math notranslate nohighlight">\(R_{ij}(\tau)\)</span> are the elements of the rotation matrix.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://docs.opencv.org/3.4/d9/d0c/group__calib3d.html">https://docs.opencv.org/3.4/d9/d0c/group__calib3d.html</a> for the OpenCV documentation</p></li>
+</ul>
+</div>
+<p>OpenCV can use various models for distortion,</p>
+<ul class="simple">
+<li><p>N = 4 parameters : <span class="math notranslate nohighlight">\((k_1, k_2, p_1, p_2)\)</span> : radial and tangential distortion</p></li>
+<li><p>N = 5 parameters : <span class="math notranslate nohighlight">\((k_1, k_2, p_1, p_2, k_3)\)</span> : radial and tangential distortion with third order radial distortion</p></li>
+<li><p>N = 8 parameters : <span class="math notranslate nohighlight">\((k_1, k_2, p_1, p_2, k_3, k_4, k_5, k_6)\)</span> : radial and tangential distortion with fractional radial distortion</p></li>
+<li><p>N = 12 parameters : <span class="math notranslate nohighlight">\((k_1, k_2, p_1, p_2, k_3, k_4, k_5, k_6, s_1, s_2, s_3, s_4)\)</span> : radial and tangential distortion with thin prism distortion</p></li>
+<li><p>N = 14 parameters : <span class="math notranslate nohighlight">\((k_1, k_2, p_1, p_2, k_3, k_4, k_5, k_6, s_1, s_2, s_3, s_4, \tau_x, \tau_y)\)</span> : radial and tangential distortion with thin prism distortion and perspective transformation</p></li>
+</ul>
+<p>If the number of input parameters is not equal to the number of parameters required by the model, the other parameters are set to 0.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If the number of parameters <code class="docutils literal notranslate"><span class="pre">Nparams</span></code> is given during instantiation, the given parameters are truncated or extended to the given number of parameters.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parameters</strong> (<em>numpy.ndarray</em><em>, </em><em>optional</em>) – The parameters of the distortion model. If None, no distortion is applied. The default is None.</p></li>
+<li><p><strong>Nparams</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of parameters of the distortion model. If None, the number of parameters is set to the number of parameters of the model. The default is None.
+Must be in [0, 4, 5, 8, 12, 14] if given.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Create an distortion object with a given model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydistort</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cv2Distortion</span>
+
+<span class="c1"># Create a distortion object with 8 parameters</span>
+<span class="n">distortion</span> <span class="o">=</span> <span class="n">Cv2Distortion</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]))</span> <span class="c1"># Model with 8 parameters</span>
+</pre></div>
+</div>
+<p>Then you can use the distortion object to distort <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">normalized_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                               <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span>
+                               <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">]])</span> <span class="c1"># shape (3, 2)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">distortion</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">normalized_points</span><span class="p">):</span> <span class="c1">#alias distort is also available</span>
+<span class="n">distorted_points</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">distorted_points</span> <span class="c1"># shape (3, 2) -&gt; distorted points in (normalized) image coordinates</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">distorted_points</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can also access to the jacobian of the distortion transformation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">distortion</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">distorted_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">distorted_points_dx</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">jacobian_dx</span>  <span class="c1"># Jacobian of the image points with respect to the distorted points # Shape (..., 2, 3)</span>
+<span class="n">distorted_points_dp</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">jacobian_dp</span>  <span class="c1"># Jacobian of the image points with respect to the intrinsic parameters # Shape (..., 2, Nparams)</span>
+</pre></div>
+</div>
+<p>The parameters are ordered as given in the model description above.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.Nparams">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Nparams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.Nparams" title="Link to this definition">#</a></dt>
+<dd><p>Get the number of parameters of the distortion model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of parameters of the distortion model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.Cv2Distortion._abc_impl" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion._compute_tilt_matrix">
+<span class="sig-name descname"><span class="pre">_compute_tilt_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_distortion.html#Cv2Distortion._compute_tilt_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Distortion._compute_tilt_matrix" title="Link to this definition">#</a></dt>
+<dd><p>Compute the tilt matrix for the perspective transformation for N = 14 (only).</p>
+<p>The tilt matrix is computed using the following equation:</p>
+<div class="math notranslate nohighlight">
+\[R_{\text{tilt}}{\tau} = R_Z[R_Y R_X] R_Y R_X\]</div>
+<p>where <span class="math notranslate nohighlight">\(R_X\)</span> and <span class="math notranslate nohighlight">\(R_Y\)</span> are the rotation matrices along X and Y respectively, and <span class="math notranslate nohighlight">\(R_Z\)</span> is the rotation matrix along Z.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}R_X = \begin{pmatrix}
+    1 &amp; 0 &amp; 0 \\
+    0 &amp; \cos(\tau_x) &amp; \sin(\tau_x) \\
+    0 &amp; -\sin(\tau_x) &amp; \cos(\tau_x)
+\end{pmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}R_Y = \begin{pmatrix}
+    \cos(\tau_y) &amp; 0 &amp; -\sin(\tau_y) \\
+    0 &amp; 1 &amp; 0 \\
+    \sin(\tau_y) &amp; 0 &amp; \cos(\tau_y)
+\end{pmatrix}\end{split}\]</div>
+<p>and we note that the rotation matrix along Z is given by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}R_z[R] = \begin{pmatrix}
+    R_{33} &amp; 0 &amp; -R_{13} \\
+    0 &amp; R_{33} &amp; -R_{23} \\
+    0 &amp; 0 &amp; 1
+\end{pmatrix}\end{split}\]</div>
+<p>The derivatives of the tilt matrix with respect to <span class="math notranslate nohighlight">\(\tau_x\)</span> and <span class="math notranslate nohighlight">\(\tau_y\)</span> are also computed.
+The derivatives are computed using the following equations:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial R_{\text{tilt}}}{\partial \tau_x} = R_Z [R_Y \frac{\partial R_X}{\partial \tau_x}, 0] R_Y R_X + R_Z [R_Y R_X, 1] R_Y \frac{\partial R_X}{\partial \tau_x}\]</div>
+<div class="math notranslate nohighlight">
+\[\frac{\partial R_{\text{tilt}}}{\partial \tau_y} = R_Z [\frac{\partial R_Y}{\partial \tau_y} R_X, 0] R_Y R_X + R_Z [R_Y R_X, 1] \frac{\partial R_Y}{\partial \tau_y} R_X\]</div>
+<p>Finnally, the inverse of the tilt matrix is computed using the following equation:</p>
+<div class="math notranslate nohighlight">
+\[R_{\text{tilt}}^{-1} = (Ry Rx).T &#64; invRz[Ry Rx]\]</div>
+<p>Where <span class="math notranslate nohighlight">\(invRz\)</span> is the inverse of the rotation matrix along Z given by:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}(R_z[R])^{-1} = \begin{pmatrix}
+    1/R_{33} &amp; 0 &amp; R_{13}/R_{33} \\
+    0 &amp; 1/R_{33} &amp; R_{23}/R_{33} \\
+    0 &amp; 0 &amp; 1
+\end{pmatrix}\end{split}\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the model is not set to 14 parameters, the method returns a identity matrix and the derivatives are set to zero.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the derivatives of the tilt matrix are computed. The default is True.
+If False, the derivatives are set to None.</p></li>
+<li><p><strong>inv</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the inverse of the tilt matrix is computed. The default is True.
+If False, the inverse of the tilt matrix is set to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>numpy.ndarray</em> – The tilt matrix.</p></li>
+<li><p><em>numpy.ndarray</em> – The derivative of the tilt matrix with respect to <span class="math notranslate nohighlight">\(\tau_x\)</span> if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True, else None.</p></li>
+<li><p><em>numpy.ndarray</em> – The derivative of the tilt matrix with respect to <span class="math notranslate nohighlight">\(\tau_y\)</span> if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True, else None.</p></li>
+<li><p><em>numpy.ndarray</em> – The inverse of the tilt matrix if <code class="docutils literal notranslate"><span class="pre">inv</span></code> is True, else None.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion._inverse_transform">
+<span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distorted_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opencv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_distortion.html#Cv2Distortion._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Distortion._inverse_transform" title="Link to this definition">#</a></dt>
+<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.Transform.inverse_transform" title="pydistort.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.inverse_transform()</span></code></a> method to perform the inverse distortion transformation.
+This method allows to transform the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> to the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> using the distortion model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">_inverse_transform</span></code> the input must have shape (Npoints, 2) with float64 type.
+The output has shape (Npoints, 2) and the jacobian are always None.</p>
+</div>
+<p>To achieve the undistortion, an iterative algorithm is used to find the normalized points that correspond to the distorted points.
+The algorithm is based on the following equations:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+x_N [\text{it }k+1]\\
+y_N [\text{it }k+1]
+\end{bmatrix}
+=
+\begin{bmatrix}
+(x_D - \Delta x [\text{it }k]) / \text{Rad} [\text{it }k] \\
+(y_D - \Delta y [\text{it }k]) / \text{Rad}[\text{it }k]
+\end{bmatrix}\end{split}\]</div>
+<p>Where <span class="math notranslate nohighlight">\(\Delta x [\text{it }k]\)</span> and :math:Delta y [text{it }k] are the tangential and prism distortion contributions to the distorted points computed at iteration :math:k.
+And <span class="math notranslate nohighlight">\(\text{Rad} [\text{it }k]\)</span> is the radial distortion contribution to the distorted points computed at iteration :math:k.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+\Delta x
+\Delta y
+\end{bmatrix}
+=
+\begin{bmatrix}
+2 p_1 x_N y_N + p_2 (r^2 + 2x_N^2) + s_1 r^2 + s_2 r^4 \\
+2 p_2 x_N y_N + p_1 (r^2 + 2y_N^2) + s_3 r^2 + s_4 r^4
+\end{bmatrix}\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{bmatrix}
+\text{Rad}_x \\
+\text{Rad}_y
+\end{bmatrix}
+=
+\begin{bmatrix}
+\frac{1+k_1 r^2 + k_2 r^4 + k_3 r^6}{1 + k_4 r^2 + k_5 r^4 + k_6 r^6} \\
+\frac{1+k_1 r^2 + k_2 r^4 + k_3 r^6}{1 + k_4 r^2 + k_5 r^4 + k_6 r^6}
+\end{bmatrix}\end{split}\]</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method is not designed to be used directly for the transformation of points.
+No checks are performed on the input points, so it is the user’s responsibility to ensure that the input points are valid.</p>
+</div>
+<p>To achieve the inverse distortion transformation using openCV, set the <code class="docutils literal notranslate"><span class="pre">opencv</span></code> parameter to True.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Both OpenCV and the internal method use an iterative algorithm to find the normalized points that correspond to the distorted points.
+In fact the jacobian with respect to the normalized points is not computed for this inverse transform (always None).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distorted_points</strong> (<em>numpy.ndarray</em>) – Array of distorted points to be transformed with shape (Npoints, 2).</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – [ALWAYS False]</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – [ALWAYS False]</p></li>
+<li><p><strong>opencv</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the inverse distortion transformation is achieved using the OpenCV function <code class="docutils literal notranslate"><span class="pre">undistortPoints</span></code>.
+If False, the inverse distortion transformation is achieved using the internal method.
+Default is False.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of iterations for the optimization algorithm. Default is 10.
+Use only if <code class="docutils literal notranslate"><span class="pre">opencv</span></code> is False.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>optional</em>) – The tolerance for the optimization algorithm. Default is 1e-8.
+Use only if <code class="docutils literal notranslate"><span class="pre">opencv</span></code> is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – The transformed normalized points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).</p></li>
+<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – [ALWAYS None]</p></li>
+<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – [ALWAYS None]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion._inverse_transform_opencv">
+<span class="sig-name descname"><span class="pre">_inverse_transform_opencv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distorted_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_distortion.html#Cv2Distortion._inverse_transform_opencv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Distortion._inverse_transform_opencv" title="Link to this definition">#</a></dt>
+<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.Transform.inverse_transform" title="pydistort.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.inverse_transform()</span></code></a> method to perform the inverse distortion transformation using OpenCV <code class="docutils literal notranslate"><span class="pre">undistortPoints</span></code> function.
+To use this method, set the <code class="docutils literal notranslate"><span class="pre">opencv</span></code> parameter to True in the <a class="reference internal" href="transform.html#pydistort.Transform.inverse_transform" title="pydistort.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.inverse_transform()</span></code></a> method.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">_inverse_transform_opencv</span></code> the input must have shape (Npoints, 2) with float64 type.
+The output has shape (Npoints, 2) and the jacobian are always None.</p>
+</div>
+<p>The equation used for the transformation is given in the main documentation of the class.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method is not designed to be used directly for the transformation of points.
+No checks are performed on the input points, so it is the user’s responsibility to ensure that the input points are valid.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distorted_points</strong> (<em>numpy.ndarray</em>) – Array of distorted points to be transformed with shape (Npoints, 2).</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – [ALWAYS False]</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – [ALWAYS False]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – The transformed normalized points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).</p></li>
+<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – [ALWAYS None]</p></li>
+<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – [ALWAYS None]</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion._transform">
+<span class="sig-name descname"><span class="pre">_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opencv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_distortion.html#Cv2Distortion._transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Distortion._transform" title="Link to this definition">#</a></dt>
+<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.Transform.transform" title="pydistort.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.transform()</span></code></a> method to perform the distortion transformation.
+This method allows to transform the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> to the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> using the distortion model.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">_transform</span></code> the input must have shape (Npoints, 2) with float64 type.
+The output has shape (Npoints, 2) for the image points and (Npoints, 2, 2) for the jacobian with respect to the normalized points and (Npoints, 2, 4) for the jacobian with respect to the distortion parameters.</p>
+</div>
+<p>The equation used for the transformation is given in the main documentation of the class.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method is not designed to be used directly for the transformation of points.
+No checks are performed on the input points, so it is the user’s responsibility to ensure that the input points are valid.</p>
+</div>
+<p>To achieve the distortion transformation using openCV, set the <code class="docutils literal notranslate"><span class="pre">opencv</span></code> parameter to True. (<code class="docutils literal notranslate"><span class="pre">jacobian_dx</span></code> will not be computed in this case).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – Array of normalized points to be transformed with shape (Npoints, 2).</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the Jacobian of the distorted points with respect to the normalized points is computed. Default is False.
+The output will be a 2D array of shape (Npoints, 2, 2).</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the Jacobian of the distorted points with respect to the distortion parameters is computed. Default is False.
+The output will be a 2D array of shape (Npoints, 2, Nparams).</p></li>
+<li><p><strong>opencv</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the distortion transformation is achieved using the OpenCV function <code class="docutils literal notranslate"><span class="pre">projectPoints</span></code>.
+If False, the distortion transformation is achieved using the internal method.
+Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>distorted_points</strong> (<em>numpy.ndarray</em>) – The transformed distorted points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).</p></li>
+<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – The Jacobian of the distorted points with respect to the normalized points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None.
+It will be a 2D array of shape (Npoints, 2, 2).</p></li>
+<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – The Jacobian of the distorted points with respect to the distortion parameters if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None.
+It will be a 2D array of shape (Npoints, 2, Nparams).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion._transform_opencv">
+<span class="sig-name descname"><span class="pre">_transform_opencv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_distortion.html#Cv2Distortion._transform_opencv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Distortion._transform_opencv" title="Link to this definition">#</a></dt>
+<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.Transform.transform" title="pydistort.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.transform()</span></code></a> method to perform the distortion transformation using OpenCV <code class="docutils literal notranslate"><span class="pre">projectPoints</span></code> function.
+To use this method, set the <code class="docutils literal notranslate"><span class="pre">opencv</span></code> parameter to True in the <a class="reference internal" href="transform.html#pydistort.Transform.transform" title="pydistort.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.transform()</span></code></a> method.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">_transform_opencv</span></code> the input must have shape (Npoints, 2) with float64 type.
+The output has shape (Npoints, 2) for the image points and (Npoints, 2, Nparams) for the jacobian with respect to the distortion parameters.</p>
+</div>
+<p>The equation used for the transformation is given in the main documentation of the class.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method is not designed to be used directly for the transformation of points.
+No checks are performed on the input points, so it is the user’s responsibility to ensure that the input points are valid.</p>
+<p>The jacobian with respect to the normalized points is not computed in this case (always None).</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – Array of normalized points to be transformed with shape (Npoints, 2).</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – [ALWAYS False]</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the Jacobian of the distorted points with respect to the distortion parameters is computed. Default is False.
+The output will be a 2D array of shape (Npoints, 2, Nparams).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>distorted_points</strong> (<em>numpy.ndarray</em>) – The transformed distorted points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).</p></li>
+<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – [ALWAYS None]</p></li>
+<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – The Jacobian of the distorted points with respect to the distortion parameters if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None.
+It will be a 2D array of shape (Npoints, 2, Nparams).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.is_set">
+<span class="sig-name descname"><span class="pre">is_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_distortion.html#Cv2Distortion.is_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Distortion.is_set" title="Link to this definition">#</a></dt>
+<dd><p>Check if the distortion model is set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the distortion model is set, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.k1">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.k1" title="Link to this definition">#</a></dt>
+<dd><p>Get the first radial distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 4.
+Set the number of parameters to 4 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The first radial distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 4.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.k2">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.k2" title="Link to this definition">#</a></dt>
+<dd><p>Get the second radial distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 4.
+Set the number of parameters to 4 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The second radial distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 4.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.k3">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.k3" title="Link to this definition">#</a></dt>
+<dd><p>Get the third radial distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 5.
+Set the number of parameters to 5 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The third radial distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 5.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.k4">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k4</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.k4" title="Link to this definition">#</a></dt>
+<dd><p>Get the first fractional radial distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 8.
+Set the number of parameters to 8 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The first fractional radial distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 8.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.k5">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k5</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.k5" title="Link to this definition">#</a></dt>
+<dd><p>Get the second fractional radial distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 8.
+Set the number of parameters to 8 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The second fractional radial distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 8.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.k6">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">k6</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.k6" title="Link to this definition">#</a></dt>
+<dd><p>Get the third fractional radial distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 8.
+Set the number of parameters to 8 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The third fractional radial distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 8.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.make_empty">
+<span class="sig-name descname"><span class="pre">make_empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_distortion.html#Cv2Distortion.make_empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Distortion.make_empty" title="Link to this definition">#</a></dt>
+<dd><p>Set to zero the parameters of the distortion model.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.p1">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">p1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.p1" title="Link to this definition">#</a></dt>
+<dd><p>Get the first tangential distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 4.
+Set the number of parameters to 4 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The first tangential distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 4.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.p2">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">p2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.p2" title="Link to this definition">#</a></dt>
+<dd><p>Get the second tangential distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 4.
+Set the number of parameters to 4 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The second tangential distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 4.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.parameters">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.parameters" title="Link to this definition">#</a></dt>
+<dd><p>Get the parameters of the distortion model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The parameters of the distortion model.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.s1">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">s1</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.s1" title="Link to this definition">#</a></dt>
+<dd><p>Get the first thin prism distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 12.
+Set the number of parameters to 12 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The first thin prism distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 12.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.s2">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">s2</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.s2" title="Link to this definition">#</a></dt>
+<dd><p>Get the second thin prism distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 12.
+Set the number of parameters to 12 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The second thin prism distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 12.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.s3">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">s3</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.s3" title="Link to this definition">#</a></dt>
+<dd><p>Get the third thin prism distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 12.
+Set the number of parameters to 12 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The third thin prism distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 12.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.s4">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">s4</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.s4" title="Link to this definition">#</a></dt>
+<dd><p>Get the fourth thin prism distortion coefficient.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 12.
+Set the number of parameters to 12 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The fourth thin prism distortion coefficient.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 12.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.tau_x">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tau_x</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.tau_x" title="Link to this definition">#</a></dt>
+<dd><p>Get the x component of the perspective transformation.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 14.
+Set the number of parameters to 14 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The x component of the perspective transformation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 14.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Distortion.tau_y">
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tau_y</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Distortion.tau_y" title="Link to this definition">#</a></dt>
+<dd><p>Get the y component of the perspective transformation.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>An error is raised if the number of parameters is less than 14.
+Set the number of parameters to 14 or more before getting the value.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The y component of the perspective transformation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the number of parameters is less than 14.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="no_distortion.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pydistort.NoDistortion</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="zernike_distortion.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pydistort.ZernikeDistortion</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.Nparams"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.Nparams</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion._abc_impl"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion._abc_impl</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion._compute_tilt_matrix"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion._compute_tilt_matrix()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion._inverse_transform"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion._inverse_transform()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion._inverse_transform_opencv"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion._inverse_transform_opencv()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion._transform"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion._transform()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion._transform_opencv"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion._transform_opencv()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.is_set"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.is_set()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.k1"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.k1</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.k2"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.k2</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.k3"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.k3</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.k4"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.k4</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.k5"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.k5</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.k6"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.k6</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.make_empty"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.make_empty()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.p1"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.p1</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.p2"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.p2</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.parameters"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.parameters</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.s1"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.s1</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.s2"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.s2</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.s3"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.s3</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.s4"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.s4</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.tau_x"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.tau_x</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Distortion.tau_y"><code class="docutils literal notranslate"><span class="pre">Cv2Distortion.tau_y</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api_doc/cv2_distortion.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-2025, Artezaru.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
