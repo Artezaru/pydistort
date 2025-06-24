@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.distortion &#8212; pydistort 1.0.2 documentation</title>
+    <title>pydistort.distortion &#8212; pydistort 1.0.3 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=1ed6394b"></script>
+    <script src="../../_static/documentation_options.js?v=baaebd52"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/distortion';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 1.0.2 documentation</p>
+    <p class="title logo__title">pydistort 1.0.3 documentation</p>
   
 </a></div>
     
@@ -553,127 +553,7 @@
 <span class="sd">        str</span>
 <span class="sd">            A string representation of the distortion model.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Nparams</span><span class="si">}</span><span class="s2"> parameters: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not set&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
-    
-
-
-    <span class="c1"># =============================================</span>
-    <span class="c1"># I / O Methods for Distortion Class</span>
-    <span class="c1"># =============================================</span>
-<div class="viewcode-block" id="Distortion.to_file">
-<a class="viewcode-back" href="../../api_doc/distortion.html#pydistort.Distortion.to_file">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Save the distortion model to a file.</span>
-
-<span class="sd">        The file has the following format:</span>
-
-<span class="sd">        .. code-block:: text</span>
-
-<span class="sd">            # DISTORTION MODEL FILE</span>
-<span class="sd">            description : {description}</span>
-<span class="sd">            class : {class_name}</span>
-
-<span class="sd">            # FILE USAGE INFORMATION</span>
-<span class="sd">            package : pydistort</span>
-<span class="sd">            url : https://github.com/Artezaru/pydistort</span>
-
-<span class="sd">            # PARAMETERS SECTION (START)</span>
-<span class="sd">            0.2</span>
-<span class="sd">            0.1</span>
-<span class="sd">            0.05</span>
-<span class="sd">            # PARAMETERS SECTION (END)</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        filename : str</span>
-<span class="sd">            The name of the file to save the distortion model.</span>
-
-<span class="sd">        description : Optional[str], optional</span>
-<span class="sd">            A description of the distortion model, by default None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# DISTORTION MODEL FILE</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;description : </span><span class="si">{</span><span class="n">description</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">description</span> <span class="k">else</span> <span class="s2">&quot;description : None</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;class : </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# FILE USAGE INFORMATION</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;package : pydistort</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;url : https://github.com/Artezaru/pydistort</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# PARAMETERS SECTION (START)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# PARAMETERS SECTION (END)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
-
-    
-<div class="viewcode-block" id="Distortion.from_file">
-<a class="viewcode-back" href="../../api_doc/distortion.html#pydistort.Distortion.from_file">[docs]</a>
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">from_file</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">filename</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s1">&#39;Distortion&#39;</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Load the distortion model from a file.</span>
-
-<span class="sd">        The file should have the following format:</span>
-
-<span class="sd">        .. code-block:: text</span>
-
-<span class="sd">            # DISTORTION MODEL FILE</span>
-<span class="sd">            description : {description}</span>
-<span class="sd">            class : {class_name}</span>
-
-<span class="sd">            # FILE USAGE INFORMATION</span>
-<span class="sd">            package : pydistort</span>
-<span class="sd">            url : https://github.com/Artezaru/pydistort</span>
-
-<span class="sd">            # PARAMETERS SECTION (START)</span>
-<span class="sd">            0.2</span>
-<span class="sd">            0.1</span>
-<span class="sd">            0.05</span>
-<span class="sd">            # PARAMETERS SECTION (END)</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        filename : str</span>
-<span class="sd">            The name of the file to load the distortion model from.</span>
-<span class="sd">        </span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Distortion</span>
-<span class="sd">            An instance of the distortion model loaded from the file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
-
-        <span class="c1"># Search for the class name and parameters section</span>
-        <span class="n">class_name</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">parameters</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">in_parameters_section</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;class : &quot;</span><span class="p">):</span>
-                <span class="n">class_name</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;# PARAMETERS SECTION (START)&quot;</span><span class="p">):</span>
-                <span class="n">in_parameters_section</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="k">elif</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;# PARAMETERS SECTION (END)&quot;</span><span class="p">):</span>
-                <span class="n">in_parameters_section</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">elif</span> <span class="n">in_parameters_section</span><span class="p">:</span>
-                <span class="n">param</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">param</span><span class="p">:</span>
-                    <span class="n">parameters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">param</span><span class="p">))</span>
-
-        <span class="c1"># Check if the class name matches the expected class</span>
-        <span class="k">if</span> <span class="n">class_name</span> <span class="o">!=</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Expected class name &#39;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39;, but found &#39;</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s2">&#39; in the file.&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Create an instance of the class</span>
-        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
-        <span class="n">instance</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span> <span class="k">if</span> <span class="n">parameters</span> <span class="k">else</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">instance</span></div>
-</div>
-
-
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Nparams</span><span class="si">}</span><span class="s2"> parameters: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not set&#39;</span><span class="si">}</span><span class="s2">&quot;</span></div>
 
 </pre></div>
 
