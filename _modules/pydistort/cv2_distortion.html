@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.cv2_distortion &#8212; pydistort 1.0.3 documentation</title>
+    <title>pydistort.cv2_distortion &#8212; pydistort 2.0.0 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=baaebd52"></script>
+    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/cv2_distortion';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 1.0.3 documentation</p>
+    <p class="title logo__title">pydistort 2.0.0 documentation</p>
   
 </a></div>
     
@@ -138,13 +138,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../usage.html">
     Usage
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../warnings.html">
-    WARNINGS
   </a>
 </li>
 
@@ -239,13 +232,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../warnings.html">
-    WARNINGS
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -329,7 +315,7 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.objects.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
 
 
 <div class="viewcode-block" id="Cv2Distortion">
@@ -1561,7 +1547,7 @@
 <a class="viewcode-back" href="../../api_doc/cv2_distortion.html#pydistort.Cv2Distortion._transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">opencv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method is called by the :meth:`pydistort.Transform.transform` method to perform the distortion transformation.</span>
+<span class="sd">        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the distortion transformation.</span>
 <span class="sd">        This method allows to transform the ``normalized_points`` to the ``distorted_points`` using the distortion model.</span>
 
 <span class="sd">        .. note::</span>
@@ -1829,8 +1815,8 @@
 <a class="viewcode-back" href="../../api_doc/cv2_distortion.html#pydistort.Cv2Distortion._transform_opencv">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_transform_opencv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method is called by the :meth:`pydistort.Transform.transform` method to perform the distortion transformation using OpenCV ``projectPoints`` function.</span>
-<span class="sd">        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.Transform.transform` method.</span>
+<span class="sd">        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the distortion transformation using OpenCV ``projectPoints`` function.</span>
+<span class="sd">        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.objects.Transform.transform` method.</span>
 
 <span class="sd">        .. note::</span>
 
@@ -1904,7 +1890,7 @@
 <a class="viewcode-back" href="../../api_doc/cv2_distortion.html#pydistort.Cv2Distortion._inverse_transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distorted_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">opencv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-8</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse distortion transformation.</span>
+<span class="sd">        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse distortion transformation.</span>
 <span class="sd">        This method allows to transform the ``distorted_points`` to the ``normalized_points`` using the distortion model.</span>
 
 <span class="sd">        .. note::</span>
@@ -1962,6 +1948,11 @@
 
 <span class="sd">            Both OpenCV and the internal method use an iterative algorithm to find the normalized points that correspond to the distorted points.</span>
 <span class="sd">            In fact the jacobian with respect to the normalized points is not computed for this inverse transform (always None).</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">            This method is not as optimized as the parent method :meth:`pydistort.objects.Transform.optimized_input_points`.</span>
+<span class="sd">            This implementation is provided to fit the zero-order approximation of OpenCV&#39;s undistortion function.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -2113,8 +2104,8 @@
 <a class="viewcode-back" href="../../api_doc/cv2_distortion.html#pydistort.Cv2Distortion._inverse_transform_opencv">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform_opencv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distorted_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse distortion transformation using OpenCV ``undistortPoints`` function.</span>
-<span class="sd">        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.Transform.inverse_transform` method.</span>
+<span class="sd">        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse distortion transformation using OpenCV ``undistortPoints`` function.</span>
+<span class="sd">        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.objects.Transform.inverse_transform` method.</span>
 
 <span class="sd">        .. note::</span>
 

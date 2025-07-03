@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.ZernikeDistortion &#8212; pydistort 1.0.3 documentation</title>
+    <title>pydistort.ZernikeDistortion &#8212; pydistort 2.0.0 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=baaebd52"></script>
+    <script src="../_static/documentation_options.js?v=51b770b3"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 1.0.3 documentation</p>
+    <p class="title logo__title">pydistort 2.0.0 documentation</p>
   
 </a></div>
     
@@ -142,13 +142,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../usage.html">
     Usage
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../warnings.html">
-    WARNINGS
   </a>
 </li>
 
@@ -245,13 +238,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../warnings.html">
-    WARNINGS
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -281,10 +267,10 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformation Classes:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="transform.html">pydistort.Transform</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extrinsic.html">pydistort.Extrinsic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.Intrinsic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.Distortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform.html">pydistort.objects.Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extrinsic.html">pydistort.objects.Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.objects.Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.objects.Distortion</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Distortion Models:</span></p>
 <ul class="current nav bd-sidenav">
@@ -522,66 +508,35 @@ This radius is used to normalize the points in the unit circle. If given, <code 
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pydistort.ZernikeDistortion._inverse_transform">
-<span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distorted_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/zernike_distortion.html#ZernikeDistortion._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.ZernikeDistortion._inverse_transform" title="Link to this definition">#</a></dt>
-<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.Transform.inverse_transform" title="pydistort.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.inverse_transform()</span></code></a> method to perform the inverse distortion transformation.
-This method allows to transform the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> to the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> using the distortion model.</p>
+<span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distorted_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/zernike_distortion.html#ZernikeDistortion._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.ZernikeDistortion._inverse_transform" title="Link to this definition">#</a></dt>
+<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.objects.Transform.inverse_transform" title="pydistort.objects.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Transform.inverse_transform()</span></code></a> method to perform the inverse distortion transformation.
+This method allows to transform the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> back to the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> using the distortion model.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>For <code class="docutils literal notranslate"><span class="pre">_inverse_transform</span></code> the input must have shape (Npoints, 2) with float64 type.
-The output has shape (Npoints, 2) and the jacobian are always None.</p>
+The output has shape (Npoints, 2) for the normalized points and the jacobian are always None.</p>
 </div>
-<p>To achieve the undistortion, an iterative algorithm is used to find the normalized points that correspond to the distorted points.
-The algorithm is based on the following equations:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{bmatrix}
-x_N [\text{it }k+1]\\
-y_N [\text{it }k+1]
-\end{bmatrix}
-=
-\begin{bmatrix}
-x_D - \Delta x [\text{it }k] \\
-y_D - \Delta y [\text{it }k]
-\end{bmatrix}\end{split}\]</div>
-<p>Where <span class="math notranslate nohighlight">\(\Delta x [\text{it }k]\)</span> and :math:Delta y [text{it }k] are the corrections applied to the distorted points at iteration <span class="math notranslate nohighlight">\(k\)</span>.
-The corrections are computed using the following equations:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{bmatrix}
-\Delta x [\text{it }k]\\
-\Delta y [\text{it }k]
-\end{bmatrix}
-=
-\begin{bmatrix}
-\sum_{n=0}^{N_{zer}} \sum_{m=-n}^{n} C^{x}_{n,m} Z_{nm}(\rho, \theta) [\text{it }k] \\
-\sum_{n=0}^{N_{zer}} \sum_{m=-n}^{n} C^{y}_{n,m} Z_{nm}(\rho, \theta) [\text{it }k]
-\end{bmatrix}\end{split}\]</div>
-<p>Where <span class="math notranslate nohighlight">\(Z_{nm}(\rho, \theta) [\text{it }k]\)</span> are the Zernike polynomials evaluated at the current normalized points.</p>
+<p>See the <code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.objetcs.Transform.optimize_input_points()</span></code> method for more details.
+The initial guess is setted to <span class="math notranslate nohighlight">\(\mathbf{x}_{N} = \mathbf{x}_{D} - U(\mathbf{x}_{D})`\)</span>, where <span class="math notranslate nohighlight">\(U(\mathbf{x}_{D})\)</span> is the distortion filed applied to the distorted points.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This method is not designed to be used directly for the transformation of points.
 No checks are performed on the input points, so it is the user’s responsibility to ensure that the input points are valid.</p>
 </div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The method use an iterative algorithm to find the normalized points that correspond to the distorted points.
-In fact the jacobian with respect to the normalized points is not computed for this inverse transform (always None).</p>
-</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>distorted_points</strong> (<em>numpy.ndarray</em>) – Array of distorted points to be transformed with shape (Npoints, 2).</p></li>
-<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – [ALWAYS False]</p></li>
-<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – [ALWAYS False]</p></li>
-<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of iterations for the optimization algorithm. Default is 10.
-Use only if <code class="docutils literal notranslate"><span class="pre">opencv</span></code> is False.</p></li>
-<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>optional</em>) – The tolerance for the optimization algorithm. Default is 1e-8.
-Use only if <code class="docutils literal notranslate"><span class="pre">opencv</span></code> is False.</p></li>
+<li><p><strong>distorted_points</strong> (<em>numpy.ndarray</em>) – Array of distorted points to be transformed back to normalized points with shape (Npoints, 2).</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – [Always False]</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – [Always False]</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – Additional keyword arguments to be passed to the optimization method.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – The transformed normalized points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).</p></li>
-<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – [ALWAYS None]</p></li>
-<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – [ALWAYS None]</p></li>
+<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – [Always None]</p></li>
+<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – [Always None]</p></li>
 </ul>
 </p>
 </dd>
@@ -591,7 +546,7 @@ Use only if <code class="docutils literal notranslate"><span class="pre">opencv<
 <dl class="py method">
 <dt class="sig sig-object py" id="pydistort.ZernikeDistortion._transform">
 <span class="sig-name descname"><span class="pre">_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/zernike_distortion.html#ZernikeDistortion._transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.ZernikeDistortion._transform" title="Link to this definition">#</a></dt>
-<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.Transform.transform" title="pydistort.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.transform()</span></code></a> method to perform the distortion transformation.
+<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.objects.Transform.transform" title="pydistort.objects.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Transform.transform()</span></code></a> method to perform the distortion transformation.
 This method allows to transform the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> to the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> using the distortion model.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>

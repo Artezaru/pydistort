@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.Transform &#8212; pydistort 1.0.3 documentation</title>
+    <title>pydistort.objects.Transform &#8212; pydistort 2.0.0 documentation</title>
   
   
   
@@ -38,14 +38,14 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=baaebd52"></script>
+    <script src="../_static/documentation_options.js?v=51b770b3"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_doc/transform';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pydistort.Extrinsic" href="extrinsic.html" />
+    <link rel="next" title="pydistort.objects.Extrinsic" href="extrinsic.html" />
     <link rel="prev" title="API Reference" href="../api.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 1.0.3 documentation</p>
+    <p class="title logo__title">pydistort 2.0.0 documentation</p>
   
 </a></div>
     
@@ -142,13 +142,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../usage.html">
     Usage
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../warnings.html">
-    WARNINGS
   </a>
 </li>
 
@@ -245,13 +238,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../warnings.html">
-    WARNINGS
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -281,10 +267,10 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformation Classes:</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.Transform</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extrinsic.html">pydistort.Extrinsic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.Intrinsic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.Distortion</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.objects.Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extrinsic.html">pydistort.objects.Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.objects.Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.objects.Distortion</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Distortion Models:</span></p>
 <ul class="nav bd-sidenav">
@@ -341,7 +327,7 @@
     
     <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API Reference</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.Transform</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.objects.Transform</span></li>
   </ul>
 </nav>
 </div>
@@ -358,12 +344,14 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="pydistort-transform">
-<h1>pydistort.Transform<a class="headerlink" href="#pydistort-transform" title="Link to this heading">#</a></h1>
+  <section id="pydistort-objects-transform">
+<h1>pydistort.objects.Transform<a class="headerlink" href="#pydistort-objects-transform" title="Link to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="pydistort.Transform">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">Transform</span></span><a class="reference internal" href="../_modules/pydistort/transform.html#Transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Transform" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.objects.</span></span><span class="sig-name descname"><span class="pre">Transform</span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#Transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Transform" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Transform is the base class to manage transformations from <span class="math notranslate nohighlight">\(\mathbb{R}^{input\_dim}\)</span> to <span class="math notranslate nohighlight">\(\mathbb{R}^{output\_dim}\)</span>.</p>
+<p>In this package, the transformations wiil be used to project 3D-world points onto a 2D-image plane in the stenopic camera model.</p>
 <p>The process to correspond a 3D-world point to a 2D-image point in the stenopic camera model is as follows:</p>
 <ol class="arabic simple">
 <li><p>The <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_W\)</span>) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the <code class="docutils literal notranslate"><span class="pre">camera_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_C\)</span>).</p></li>
@@ -382,30 +370,30 @@
 <ul class="simple">
 <li><p><cite>input_dim</cite>: (attribute) The dimension of the input points (should be 2 for 2D points).</p></li>
 <li><p><cite>output_dim</cite>: (attribute) The dimension of the output points (should be 2 for</p></li>
+<li><p><cite>parameters</cite> (attribute) The parameters of the transformation, if applicable.</p></li>
 <li><p><cite>Nparams</cite>: (attribute) The number of parameters for the transformation, if applicable.</p></li>
 <li><p><cite>_transform</cite>: (method) Apply the transformation to the given points.</p></li>
-<li><p><cite>_inverse_transform</cite>: (method) Apply the inverse transformation to the given points.</p></li>
 <li><p><cite>is_set</cite>: (method) Check if the transformation is set (i.e., if the parameters are initialized).</p></li>
+<li><p><cite>_inverse_transform</cite>: (method) Apply the inverse transformation to the given points.</p></li>
 </ul>
 <p>More details on the transformation methods are provided in the <cite>transform</cite> and <cite>inverse_transform</cite> methods.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#pydistort.Transform.transform" title="pydistort.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.transform()</span></code></a> for applying the transformation to points.</p></li>
-<li><p><a class="reference internal" href="#pydistort.Transform.inverse_transform" title="pydistort.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.Transform.inverse_transform()</span></code></a> for applying the inverse transformation to points.</p></li>
-<li><p><a class="reference internal" href="#pydistort.TransformResult" title="pydistort.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.TransformResult</span></code></a> for the result of the transformation.</p></li>
-<li><p><a class="reference internal" href="#pydistort.InverseTransformResult" title="pydistort.InverseTransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.InverseTransformResult</span></code></a> for the result of the inverse transformation.</p></li>
+<li><p><a class="reference internal" href="#pydistort.objects.Transform.transform" title="pydistort.objects.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Transform.transform()</span></code></a> for applying the transformation to points.</p></li>
+<li><p><a class="reference internal" href="#pydistort.objects.Transform.inverse_transform" title="pydistort.objects.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Transform.inverse_transform()</span></code></a> for applying the inverse transformation to points.</p></li>
+<li><p><a class="reference internal" href="#pydistort.objects.TransformResult" title="pydistort.objects.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.objects.TransformResult</span></code></a> for the result of the transformation.</p></li>
 </ul>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code class="docutils literal notranslate"><span class="pre">...</span></code> in the shape of the attributes indicates that the shape can have any number of leading dimensions, which is useful for batch processing of points.</p>
 </div>
-<p>If given, subclasses of <code class="docutils literal notranslate"><span class="pre">TransformResult</span></code> and <code class="docutils literal notranslate"><span class="pre">InverseTransformResult</span></code> should be used to return the results of the transformation and inverse transformation, respectively.
+<p>If given, subclasses of <code class="docutils literal notranslate"><span class="pre">TransformResult</span></code> should be used to return the results of the transformation and inverse transformation.
 The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> can be overridden to specify the result classes for the transformation and inverse transformation, respectively.</p>
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Transform.Nparams">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Nparams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.Transform.Nparams" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform.Nparams">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Nparams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.Transform.Nparams" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the number of parameters of the transformation.</p>
 <p>The number of parameters must be a non-negative integer representing the number of parameters of the transformation.</p>
 <dl class="field-list simple">
@@ -419,21 +407,21 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.Transform._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.Transform._abc_impl" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.objects.Transform._abc_impl" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pydistort.Transform._inverse_transform">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/transform.html#Transform._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Transform._inverse_transform" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform._inverse_transform">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#Transform._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Transform._inverse_transform" title="Link to this definition">#</a></dt>
 <dd><p>Apply the inverse transformation to the given points.</p>
 <p>This method must be implemented by subclasses to apply the inverse transformation to the input points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>points</strong> (<em>numpy.ndarray</em>) – The input points to be transformed. Shape (Npoints, output_dim).</p></li>
-<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the input points. Default is True.</p></li>
-<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is True.</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword arguments for the transformation.</p></li>
 </ul>
 </dd>
@@ -453,16 +441,16 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pydistort.Transform._transform">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/transform.html#Transform._transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Transform._transform" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform._transform">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#Transform._transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Transform._transform" title="Link to this definition">#</a></dt>
 <dd><p>Apply the transformation to the given points.</p>
 <p>This method must be implemented by subclasses to apply the transformation to the input points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>points</strong> (<em>numpy.ndarray</em>) – The input points to be transformed. Shape (Npoints, input_dim).</p></li>
-<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the input points. Default is True.</p></li>
-<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is True.</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword arguments for the transformation.</p></li>
 </ul>
 </dd>
@@ -482,8 +470,8 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Transform.input_dim">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.Transform.input_dim" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform.input_dim">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.Transform.input_dim" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the input dimension of the transformation.</p>
 <p>The input dimension must be a positive integer representing the number of dimensions of the input points.</p>
 <dl class="field-list simple">
@@ -497,10 +485,10 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Transform.inverse_result_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverse_result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.Transform.inverse_result_class" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform.inverse_result_class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverse_result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.objects.Transform.inverse_result_class" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the class used for the result of the inverse transformation.</p>
-<p>The default is <cite>InverseTransformResult</cite>, but subclasses can override this to return a different class.</p>
+<p>The default is <cite>TransformResult</cite>, but subclasses can override this to return a different class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The class used for the result of the inverse transformation.</p>
@@ -512,8 +500,8 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pydistort.Transform.inverse_transform">
-<span class="sig-name descname"><span class="pre">inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/transform.html#Transform.inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Transform.inverse_transform" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform.inverse_transform">
+<span class="sig-name descname"><span class="pre">inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#Transform.inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Transform.inverse_transform" title="Link to this definition">#</a></dt>
 <dd><p>The given points <code class="docutils literal notranslate"><span class="pre">points</span></code> are assumed to be with shape (…, output_dim) or (output_dim, …), depending on the value of <code class="docutils literal notranslate"><span class="pre">transpose</span></code>.</p>
 <p>The output <code class="docutils literal notranslate"><span class="pre">transformed_points</span></code> will have shape (…, input_dim) if <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is False, or (input_dim, …) if <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is True.</p>
 <div class="admonition warning">
@@ -546,7 +534,12 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </pre></div>
 </div>
 <p>The Jacobian matrices are computed only if <code class="docutils literal notranslate"><span class="pre">dx</span></code> or <code class="docutils literal notranslate"><span class="pre">dp</span></code> are set to True, respectively.</p>
-<p>The output will be a <cite>InverseTransformResult</cite> object containing the transformed points and the Jacobian matrices if requested.</p>
+<p>The output will be a <cite>TransformResult</cite> object containing the transformed points and the Jacobian matrices if requested.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The _skip parameter is used to skip the checks for the transformation parameters and assume the points are given in the (Npoints, output_dim) float64 format.
+Please use this parameter with caution, as it may lead to unexpected results if the transformation parameters are not set correctly.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -554,6 +547,8 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 <li><p><strong>transpose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the input points are transposed to shape (output_dim, …). Default is False.</p></li>
 <li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</p></li>
 <li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</p></li>
+<li><p><strong>_skip</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, skip the checks for the transformation parameters and assume the points are given in the (Npoints, output_dim) float64 format.
+<cite>transpose</cite> is ignored if this parameter is set to True.</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword arguments for the transformation.</p></li>
 </ul>
 </dd>
@@ -561,31 +556,31 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 <dd class="field-even"><p>An object containing the transformed points and the Jacobian matrices if requested.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pydistort.InverseTransformResult" title="pydistort.InverseTransformResult">InverseTransformResult</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pydistort.objects.TransformResult" title="pydistort.objects.TransformResult">TransformResult</a></p>
 </dd>
 </dl>
 <section id="developer-notes">
 <h2>Developer Notes<a class="headerlink" href="#developer-notes" title="Link to this heading">#</a></h2>
 <p>The subclasses must implement the <cite>_inverse_transform</cite> method to apply the inverse transformation to the input points.</p>
 <p>The <cite>_inverse_transform</cite> method should:</p>
-<ul class="simple">
+<ul>
 <li><p>take the input points as a numpy array of shape (Npoints, output_dim)</p></li>
-<li><dl class="simple">
-<dt>return 3 numpy arrays:</dt><dd><ul>
+<li><p>return 3 numpy arrays:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p><cite>transformed_points</cite>: The transformed points of shape (Npoints, input_dim).</p></li>
 <li><p><cite>jacobian_dx</cite>: The Jacobian matrix with respect to the input points of shape (Npoints, input_dim, output_dim) if <cite>dx</cite> is True, otherwise None.</p></li>
 <li><p><cite>jacobian_dp</cite>: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, input_dim, Nparams) if <cite>dp</cite> is True, otherwise None.</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </li>
 </ul>
 </section>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pydistort.Transform.is_set">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydistort/transform.html#Transform.is_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Transform.is_set" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform.is_set">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#Transform.is_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Transform.is_set" title="Link to this definition">#</a></dt>
 <dd><p>Method to check if the transformation parameters are set.</p>
 <p>This method should return True if the transformation parameters are initialized, otherwise False.</p>
 <dl class="field-list simple">
@@ -598,9 +593,142 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.objects.Transform.optimize_input_points">
+<span class="sig-name descname"><span class="pre">optimize_input_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guess</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#Transform.optimize_input_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Transform.optimize_input_points" title="Link to this definition">#</a></dt>
+<dd><p>Optimize the input points of the transformation using the given output points.</p>
+<p>Estimate the optimized input points of the transformation such that the transformed input points match the output points.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method can only be used if the dimensions are the same, i.e. input_dim == dim.</p>
+</div>
+<p>Lets consider a set of output points <span class="math notranslate nohighlight">\(X_O\)</span> with shape (…, dim) and a set of input points <span class="math notranslate nohighlight">\(X_I\)</span> with shape (…, input_dim).
+We search <span class="math notranslate nohighlight">\(X_I = X_{I0} + \delta X_I\)</span> such that:</p>
+<div class="math notranslate nohighlight">
+\[X_O = \text{Transform}(X_I, \lambda) = T(X_I + \delta X_I, \lambda)\]</div>
+<p>We have:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{X} T (X_I, \lambda_0) \delta \lambda = X_O - T(X_I, \lambda_0)\]</div>
+<p>The corrections are computed using the following equations:</p>
+<div class="math notranslate nohighlight">
+\[J \delta X_I = R\]</div>
+<p>Where <span class="math notranslate nohighlight">\(J = \nabla_{X} T (X_I, \lambda_0)\)</span> is the Jacobian matrix of the transformation with respect to the input points, and <span class="math notranslate nohighlight">\(R = X_O - T(X_I, \lambda_0)\)</span> is the residual vector.</p>
+<p><span class="math notranslate nohighlight">\(X_{I0}\)</span> is the initial guess for the input points, if None, it use the output points as the initial guess.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">_skip</span></code> parameter is used to skip the checks for the transformation parameters and assume the output points are given in the (Npoints, dim) float64 format.
+Please use this parameter with caution, as it may lead to unexpected results if the transformation parameters are not set correctly.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_points</strong> (<em>numpy.ndarray</em>) – The output points to be matched. Shape (…, dim) (or (dim, …) if <cite>transpose</cite> is True).</p></li>
+<li><p><strong>guess</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The initial guess for the input points of the transformation with shape (…, dim). If None, the output points are used as the initial guess. Default is None.</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the output points are transposed to shape (dim, …). Default is False.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of iterations for the optimization. Default is 10.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>optional</em>) – The convergence threshold for the optimization. Default is 1e-8.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print the optimization progress and diagnostics. Default is False.</p></li>
+<li><p><strong>_skip</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, skip the checks for the transformation parameters and assume the output points are given in the (Npoints, dim) float64 format.
+The guess must be given in the (Npoints, dim) float64 format.
+<cite>transpose</cite> is ignored if this parameter is set to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The optimized input points of the transformation with shape (…, dim).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the output points do not have the expected shape, or if the input and output dimensions do not match the transformation’s input and output dimensions.</p></li>
+<li><p><strong>TypeError</strong> – If the output points or guess are not numpy arrays, or if the guess is not a numpy array.</p></li>
+<li><p><strong>Developer Notes</strong> – </p></li>
+<li><p><strong>~~~~~~~~~~~~~~~</strong> – </p></li>
+<li><p><strong>The subclasses must implement the _transform method to apply the transformation to the input points.</strong> – </p></li>
+<li><p><strong>The _transform method should return the transformed points and the Jacobian matrix with respect to the input points.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.objects.Transform.optimize_parameters">
+<span class="sig-name descname"><span class="pre">optimize_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guess</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cond_cutoff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_factor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim_eig_reduce_crit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#Transform.optimize_parameters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Transform.optimize_parameters" title="Link to this definition">#</a></dt>
+<dd><p>Optimize the parameters of the transformation using the given input and output points.</p>
+<p>Estimate the optimized parameters of the transformation such that the transformed input points match the output points.</p>
+<p>Lets consider a set of input points <span class="math notranslate nohighlight">\(X_I\)</span> with shape (…, input_dim) and a set of output points <span class="math notranslate nohighlight">\(X_O\)</span> with shape (…, output_dim).
+We search <span class="math notranslate nohighlight">\(\lambda = \lambda_0 + \delta \lambda\)</span> such that:</p>
+<div class="math notranslate nohighlight">
+\[X_O = \text{Transform}(X_I, \lambda) = T(X_I, \lambda_0 + \delta \lambda)\]</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The current parameters of the transformation are not directly modified.</p>
+</div>
+<p>We have:</p>
+<div class="math notranslate nohighlight">
+\[\nabla_{\lambda} T (X_I, \lambda_0) \delta \lambda = X_O - T(X_I, \lambda_0)\]</div>
+<p>The corrections are computed using the following equations:</p>
+<div class="math notranslate nohighlight">
+\[J^{T} J \delta \lambda = J^{T} R\]</div>
+<p>Where <span class="math notranslate nohighlight">\(J = \nabla_{\lambda} T (X_I, \lambda_0)\)</span> is the Jacobian matrix of the transformation with respect to the parameters, and <span class="math notranslate nohighlight">\(R = X_O - T(X_I, \lambda_0)\)</span> is the residual vector.</p>
+<p><span class="math notranslate nohighlight">\(\lambda_0\)</span> is the initial guess for the parameters, if None, the current parameters of the transformation are used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method can be used to optimize the parameters of any transformation that implements the <cite>_transform</cite> method.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">_skip</span></code> parameter is used to skip the checks for the transformation parameters and assume the input and output points are given in the (Npoints, input_dim) and (Npoints, output_dim) float64 format, respectively.
+Please use this parameter with caution, as it may lead to unexpected results if the transformation parameters are not set correctly.</p>
+</div>
+<p>For conditioning, the following steps are applied:</p>
+<ul class="simple">
+<li><p>First, a regularization term is added to the Jacobian matrix to improve stability: <span class="math notranslate nohighlight">\(J^{T} J + \text{regfactor} I\)</span>.</p></li>
+<li><p>Second, a dimensionality reduction is applied to the Jacobian matrix based on the eigenvalues. Lower eigenvalues <span class="math notranslate nohighlight">\(k_i\)</span> are removed if <span class="math notranslate nohighlight">\(\frac{k_i}{k_0} &lt; \text{dim\_eig\_reduce\_crit}\)</span> where <span class="math notranslate nohighlight">\(k_0\)</span> is the largest eigenvalue.</p></li>
+</ul>
+<p>The <cite>cond_cutoff</cite> parameter is used to detect ill-conditioned problems. If the condition number of the Jacobian matrix is greater than this value, a warning is raised and the optimization returns NaN array.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_points</strong> (<em>numpy.ndarray</em>) – The input points to be transformed. Shape (…, input_dim) (or (input_dim, …) if <cite>transpose</cite> is True).</p></li>
+<li><p><strong>output_points</strong> (<em>numpy.ndarray</em>) – The output points to be matched. Shape (…, output_dim) (or (output_dim, …) if <cite>transpose</cite> is True).</p></li>
+<li><p><strong>guess</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The initial guess for the parameters of the transformation with shape (Nparams,). If None, the current parameters of the transformation are used. Default is None.</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the input and output points are transposed to shape (input_dim, …) and (output_dim, …), respectively. Default is False.</p></li>
+<li><p><strong>max_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of iterations for the optimization. Default is 10.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>optional</em>) – The convergence threshold for the optimization. Default is 1e-8.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, print the optimization progress and diagnostics. Default is False.</p></li>
+<li><p><strong>cond_cutoff</strong> (<em>float</em><em>, </em><em>optional</em>) – The cutoff value for the condition number of the Jacobian matrix. If the condition number is greater than this value, the optimization will be considered unstable and will raise a warning and return NaN array. This is used to detect ill-conditioned problems. Default is 1e5.</p></li>
+<li><p><strong>reg_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – The regularization factor for the optimization. If greater than 0, it adds a tikhonov regularization term to the optimization problem to improve stability <span class="math notranslate nohighlight">\(J^{T} J + \text{regfactor} I\)</span>. Default is 0.0.</p></li>
+<li><p><strong>dim_eig_reduce_crit</strong> (<em>float</em><em>, </em><em>optional</em>) – The criterion for reducing the dimensionality of the Jacobian matrix based on the eigenvalues. lower eigenvalues <span class="math notranslate nohighlight">\(k_i\)</span> are removed if <span class="math notranslate nohighlight">\(\frac{k_i}{k_0} &lt; \text{dim_eig_reduce_crit}\)</span> where <span class="math notranslate nohighlight">\(k_0\)</span> is the largest eigenvalue.
+Default is 0.0, which means no dimensionality reduction is applied. Must be between 0.0 and 1.0.</p></li>
+<li><p><strong>_skip</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, skip the checks for the transformation parameters and assume the input and output points are given in the (Npoints, input_dim) and (Npoints, output_dim) float64 format, respectively.
+The guess must be given in the (Nparams,) float64 format.
+<cite>transpose</cite> is ignored if this parameter is set to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The optimized parameters of the transformation with shape (Nparams,).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the input and output points do not have the same number of points, or if the input and output dimensions do not match the transformation’s input and output dimensions.</p></li>
+<li><p><strong>TypeError</strong> – If the input and output points are not numpy arrays, or if the guess is not a numpy array.</p></li>
+<li><p><strong>Developer Notes</strong> – </p></li>
+<li><p><strong>~~~~~~~~~~~~~~~</strong> – </p></li>
+<li><p><strong>The subclasses must implement the _transform method to apply the transformation to the input points.</strong> – </p></li>
+<li><p><strong>The _transform method should return the transformed points and the Jacobian matrix with respect to the parameters</strong><strong> of </strong><strong>the transformation.</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Transform.output_dim">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.Transform.output_dim" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform.output_dim">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.Transform.output_dim" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the output dimension of the transformation.</p>
 <p>The output dimension must be a positive integer representing the number of dimensions of the output points.</p>
 <dl class="field-list simple">
@@ -614,8 +742,24 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Transform.result_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.Transform.result_class" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform.parameters">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.Transform.parameters" title="Link to this definition">#</a></dt>
+<dd><p>Property to return the parameters of the transformation.</p>
+<p>The parameters must be a numpy array of shape (Nparams,) where Nparams is the number of parameters of the transformation.</p>
+<p>If the transformation does not have parameters or they are not set, this property should return None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The parameters of the transformation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[numpy.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.objects.Transform.result_class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.objects.Transform.result_class" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the class used for the result of the transformation.</p>
 <p>The default is <cite>TransformResult</cite>, but subclasses can override this to return a different class.</p>
 <dl class="field-list simple">
@@ -629,8 +773,8 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pydistort.Transform.transform">
-<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/transform.html#Transform.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Transform.transform" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Transform.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#Transform.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Transform.transform" title="Link to this definition">#</a></dt>
 <dd><p>The given points <code class="docutils literal notranslate"><span class="pre">points</span></code> are assumed to be with shape (…, input_dim) or (input_dim, …), depending on the value of <code class="docutils literal notranslate"><span class="pre">transpose</span></code>.</p>
 <p>The output <code class="docutils literal notranslate"><span class="pre">transformed_points</span></code> will have shape (…, output_dim) if <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is False, or (output_dim, …) if <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is True.</p>
 <div class="admonition warning">
@@ -664,6 +808,11 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </div>
 <p>The Jacobian matrices are computed only if <code class="docutils literal notranslate"><span class="pre">dx</span></code> or <code class="docutils literal notranslate"><span class="pre">dp</span></code> are set to True, respectively.</p>
 <p>The output will be a <cite>TransformResult</cite> object containing the transformed points and the Jacobian matrices if requested.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The _skip parameter is used to skip the checks for the transformation parameters and assume the points are given in the (Npoints, input_dim) float64 format.
+Please use this parameter with caution, as it may lead to unexpected results if the transformation parameters are not set correctly.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -671,6 +820,8 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 <li><p><strong>transpose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the input points are transposed to shape (input_dim, …). Default is False.</p></li>
 <li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</p></li>
 <li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</p></li>
+<li><p><strong>_skip</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, skip the checks for the transformation parameters and assume the points are given in the (Npoints, input_dim) float64 format.
+<cite>transpose</cite> is ignored if this parameter is set to True.</p></li>
 <li><p><strong>**kwargs</strong> – Additional keyword arguments for the transformation.</p></li>
 </ul>
 </dd>
@@ -698,22 +849,148 @@ The attributes <cite>result_class</cite> and <cite>inverse_result_class</cite> c
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="pydistort.TransformResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">TransformResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/transform.html#TransformResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.TransformResult" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.TransformComposition">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.objects.</span></span><span class="sig-name descname"><span class="pre">TransformComposition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pydistort.objects.Transform" title="pydistort.objects.transform.Transform"><span class="pre">Transform</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#TransformComposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.TransformComposition" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pydistort.objects.Transform" title="pydistort.objects.transform.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transform</span></code></a></p>
+<p>A class to represent the composition of multiple transformations.</p>
+<p>This class allows to compose multiple transformations and apply them sequentially.
+It inherits from the <cite>Transform</cite> class and overrides the <cite>_transform</cite> and <cite>_inverse_transform</cite> methods to apply the composition of transformations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>transformations</strong> (<em>Sequence</em><em>[</em><a class="reference internal" href="#pydistort.objects.Transform" title="pydistort.objects.Transform"><em>Transform</em></a><em>]</em>) – A list of transformations to be composed. Each transformation must be an instance of the <cite>Transform</cite> class or its subclasses.</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.objects.TransformComposition.Nparams">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Nparams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.TransformComposition.Nparams" title="Link to this definition">#</a></dt>
+<dd><p>The total number of parameters in the composition of transformations.
+This is the sum of the number of parameters of each transformation in the composition.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydistort.objects.TransformComposition._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.objects.TransformComposition._abc_impl" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.objects.TransformComposition._inverse_transform">
+<span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#TransformComposition._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.TransformComposition._inverse_transform" title="Link to this definition">#</a></dt>
+<dd><p>Apply the inverse transformation to the given points.</p>
+<p>This method applies the inverse of each transformation in the composition sequentially to the input points.</p>
+<p>The jacobian matrices with respect to the input points and the parameters are computed using the chain rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>numpy.ndarray</em>) – The input points to be transformed. Shape (Npoints, output_dim).</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments for the transformations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A tuple containing:</p>
+<ul class="simple">
+<li><p><cite>transformed_points</cite>: The transformed points of shape (Npoints, input_dim).</p></li>
+<li><p><cite>jacobian_dx</cite>: The Jacobian matrix with respect to the input points of shape (Npoints, input_dim, output_dim) if <cite>dx</cite> is True, otherwise None.</p></li>
+<li><p><cite>jacobian_dp</cite>: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, input_dim, Nparams) if <cite>dp</cite> is True, otherwise None.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.objects.TransformComposition._transform">
+<span class="sig-name descname"><span class="pre">_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#TransformComposition._transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.TransformComposition._transform" title="Link to this definition">#</a></dt>
+<dd><p>Apply the composition of transformations to the given points.</p>
+<p>This method applies each transformation in the composition sequentially to the input points.</p>
+<p>The jacobian matrices with respect to the input points and the parameters are computed using the chain rule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>numpy.ndarray</em>) – The input points to be transformed. Shape (Npoints, input_dim).</p></li>
+<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</p></li>
+<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</p></li>
+<li><p><strong>**kwargs</strong> – Additional keyword arguments for the transformations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>A tuple containing:</p>
+<ul class="simple">
+<li><p><cite>transformed_points</cite>: The transformed points of shape (Npoints, output_dim).</p></li>
+<li><p><cite>jacobian_dx</cite>: The Jacobian matrix with respect to the input points of shape (Npoints, output_dim, input_dim) if <cite>dx</cite> is True, otherwise None.</p></li>
+<li><p><cite>jacobian_dp</cite>: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, output_dim, Nparams) if <cite>dp</cite> is True, otherwise None.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.objects.TransformComposition.input_dim">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.TransformComposition.input_dim" title="Link to this definition">#</a></dt>
+<dd><p>The input dimension of the first transformation in the composition.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.objects.TransformComposition.is_set">
+<span class="sig-name descname"><span class="pre">is_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#TransformComposition.is_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.TransformComposition.is_set" title="Link to this definition">#</a></dt>
+<dd><p>Check if the parameters of all transformations in the composition are set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if all transformations have their parameters set, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.objects.TransformComposition.output_dim">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.TransformComposition.output_dim" title="Link to this definition">#</a></dt>
+<dd><p>The output dimension of the last transformation in the composition.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.objects.TransformComposition.parameters">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.objects.TransformComposition.parameters" title="Link to this definition">#</a></dt>
+<dd><p>The parameters of the composition of transformations.
+This is a concatenation of the parameters of each transformation in the composition.</p>
+<p>If a transformation does not have parameters, it is represented by a zero array of its Nparams.
+The resulting array has shape (Nparams,).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pydistort.objects.TransformResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.objects.</span></span><span class="sig-name descname"><span class="pre">TransformResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/objects/transform.html#TransformResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.TransformResult" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class to represent the result of a transformation.</p>
 <p>This class is used to store the results of a transformation, including the transformed points and the Jacobian matrices.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pydistort.objects.Transform" title="pydistort.objects.Transform"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.objects.Transform</span></code></a> for the base class of all transformations.</p></li>
+<li><p><a class="reference internal" href="#pydistort.objects.Transform.transform" title="pydistort.objects.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Transform.transform()</span></code></a> for applying the transformation to points.</p></li>
+<li><p><a class="reference internal" href="#pydistort.objects.Transform.inverse_transform" title="pydistort.objects.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Transform.inverse_transform()</span></code></a> for applying the inverse transformation to points (<cite>output_dim</cite> and <cite>input_dim</cite> are swapped).</p></li>
+</ul>
+</div>
+<p>For a transformation from <span class="math notranslate nohighlight">\(\mathbb{R}^{input\_dim}\)</span> to <span class="math notranslate nohighlight">\(\mathbb{R}^{output\_dim}\)</span>, the input points are assumed to have shape (…, input_dim) and the output points will have shape (…, output_dim).</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">...</span></code> in the shape of the attributes indicates that the shape can have any number of leading dimensions, which is useful for batch processing of points.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the transformation, the output points will have shape (output_dim, …) instead of (…, output_dim), same for the Jacobian matrices.</p>
 </div>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.TransformResult.transformed_points">
-<span class="sig-name descname"><span class="pre">transformed_points</span></span><a class="headerlink" href="#pydistort.TransformResult.transformed_points" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.TransformResult.transformed_points">
+<span class="sig-name descname"><span class="pre">transformed_points</span></span><a class="headerlink" href="#pydistort.objects.TransformResult.transformed_points" title="Link to this definition">#</a></dt>
 <dd><p>The transformed points after applying the transformation.
 Shape (…, output_dim).</p>
 <dl class="field-list simple">
@@ -724,8 +1001,8 @@ Shape (…, output_dim).</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.TransformResult.jacobian_dx">
-<span class="sig-name descname"><span class="pre">jacobian_dx</span></span><a class="headerlink" href="#pydistort.TransformResult.jacobian_dx" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.TransformResult.jacobian_dx">
+<span class="sig-name descname"><span class="pre">jacobian_dx</span></span><a class="headerlink" href="#pydistort.objects.TransformResult.jacobian_dx" title="Link to this definition">#</a></dt>
 <dd><p>The Jacobian matrix with respect to the input points.
 Shape (…, output_dim, input_dim).</p>
 <dl class="field-list simple">
@@ -736,62 +1013,10 @@ Shape (…, output_dim, input_dim).</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.TransformResult.jacobian_dp">
-<span class="sig-name descname"><span class="pre">jacobian_dp</span></span><a class="headerlink" href="#pydistort.TransformResult.jacobian_dp" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.TransformResult.jacobian_dp">
+<span class="sig-name descname"><span class="pre">jacobian_dp</span></span><a class="headerlink" href="#pydistort.objects.TransformResult.jacobian_dp" title="Link to this definition">#</a></dt>
 <dd><p>The Jacobian matrix with respect to the parameters of the transformation.
 Shape (…, output_dim, Nparams).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pydistort.InverseTransformResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">InverseTransformResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/transform.html#InverseTransformResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.InverseTransformResult" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A class to represent the result of an inverse transformation.</p>
-<p>This class is used to store the results of an inverse transformation, including the transformed points and the Jacobian matrices.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">...</span></code> in the shape of the attributes indicates that the shape can have any number of leading dimensions, which is useful for batch processing of points.</p>
-</div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the inverse transformation, the output points will have shape (input_dim, …) instead of (…, input_dim), same for the Jacobian matrices.</p>
-</div>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.InverseTransformResult.transformed_points">
-<span class="sig-name descname"><span class="pre">transformed_points</span></span><a class="headerlink" href="#pydistort.InverseTransformResult.transformed_points" title="Link to this definition">#</a></dt>
-<dd><p>The transformed points after applying the inverse transformation.
-Shape (…, input_dim).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.InverseTransformResult.jacobian_dx">
-<span class="sig-name descname"><span class="pre">jacobian_dx</span></span><a class="headerlink" href="#pydistort.InverseTransformResult.jacobian_dx" title="Link to this definition">#</a></dt>
-<dd><p>The Jacobian matrix with respect to the input points.
-Shape (…, input_dim, output_dim).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.InverseTransformResult.jacobian_dp">
-<span class="sig-name descname"><span class="pre">jacobian_dp</span></span><a class="headerlink" href="#pydistort.InverseTransformResult.jacobian_dp" title="Link to this definition">#</a></dt>
-<dd><p>The Jacobian matrix with respect to the parameters of the transformation.
-Shape (…, input_dim, Nparams).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Optional[numpy.ndarray]</p>
@@ -827,7 +1052,7 @@ Shape (…, input_dim, Nparams).</p>
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pydistort.Extrinsic</p>
+        <p class="prev-next-title">pydistort.objects.Extrinsic</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -850,30 +1075,38 @@ Shape (…, input_dim, Nparams).</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform"><code class="docutils literal notranslate"><span class="pre">Transform</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform.Nparams"><code class="docutils literal notranslate"><span class="pre">Transform.Nparams</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform._abc_impl"><code class="docutils literal notranslate"><span class="pre">Transform._abc_impl</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform._inverse_transform"><code class="docutils literal notranslate"><span class="pre">Transform._inverse_transform()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform._transform"><code class="docutils literal notranslate"><span class="pre">Transform._transform()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform.input_dim"><code class="docutils literal notranslate"><span class="pre">Transform.input_dim</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Transform.inverse_result_class</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform.inverse_transform"><code class="docutils literal notranslate"><span class="pre">Transform.inverse_transform()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform.is_set"><code class="docutils literal notranslate"><span class="pre">Transform.is_set()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform.output_dim"><code class="docutils literal notranslate"><span class="pre">Transform.output_dim</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform.result_class"><code class="docutils literal notranslate"><span class="pre">Transform.result_class</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Transform.transform"><code class="docutils literal notranslate"><span class="pre">Transform.transform()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform"><code class="docutils literal notranslate"><span class="pre">Transform</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.Nparams"><code class="docutils literal notranslate"><span class="pre">Transform.Nparams</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform._abc_impl"><code class="docutils literal notranslate"><span class="pre">Transform._abc_impl</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform._inverse_transform"><code class="docutils literal notranslate"><span class="pre">Transform._inverse_transform()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform._transform"><code class="docutils literal notranslate"><span class="pre">Transform._transform()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.input_dim"><code class="docutils literal notranslate"><span class="pre">Transform.input_dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Transform.inverse_result_class</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.inverse_transform"><code class="docutils literal notranslate"><span class="pre">Transform.inverse_transform()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.is_set"><code class="docutils literal notranslate"><span class="pre">Transform.is_set()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.optimize_input_points"><code class="docutils literal notranslate"><span class="pre">Transform.optimize_input_points()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.optimize_parameters"><code class="docutils literal notranslate"><span class="pre">Transform.optimize_parameters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.output_dim"><code class="docutils literal notranslate"><span class="pre">Transform.output_dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.parameters"><code class="docutils literal notranslate"><span class="pre">Transform.parameters</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.result_class"><code class="docutils literal notranslate"><span class="pre">Transform.result_class</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Transform.transform"><code class="docutils literal notranslate"><span class="pre">Transform.transform()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.TransformResult"><code class="docutils literal notranslate"><span class="pre">TransformResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.TransformResult.transformed_points"><code class="docutils literal notranslate"><span class="pre">TransformResult.transformed_points</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.TransformResult.jacobian_dx"><code class="docutils literal notranslate"><span class="pre">TransformResult.jacobian_dx</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.TransformResult.jacobian_dp"><code class="docutils literal notranslate"><span class="pre">TransformResult.jacobian_dp</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformComposition"><code class="docutils literal notranslate"><span class="pre">TransformComposition</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformComposition.Nparams"><code class="docutils literal notranslate"><span class="pre">TransformComposition.Nparams</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformComposition._abc_impl"><code class="docutils literal notranslate"><span class="pre">TransformComposition._abc_impl</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformComposition._inverse_transform"><code class="docutils literal notranslate"><span class="pre">TransformComposition._inverse_transform()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformComposition._transform"><code class="docutils literal notranslate"><span class="pre">TransformComposition._transform()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformComposition.input_dim"><code class="docutils literal notranslate"><span class="pre">TransformComposition.input_dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformComposition.is_set"><code class="docutils literal notranslate"><span class="pre">TransformComposition.is_set()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformComposition.output_dim"><code class="docutils literal notranslate"><span class="pre">TransformComposition.output_dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformComposition.parameters"><code class="docutils literal notranslate"><span class="pre">TransformComposition.parameters</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.InverseTransformResult"><code class="docutils literal notranslate"><span class="pre">InverseTransformResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.InverseTransformResult.transformed_points"><code class="docutils literal notranslate"><span class="pre">InverseTransformResult.transformed_points</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.InverseTransformResult.jacobian_dx"><code class="docutils literal notranslate"><span class="pre">InverseTransformResult.jacobian_dx</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.InverseTransformResult.jacobian_dp"><code class="docutils literal notranslate"><span class="pre">InverseTransformResult.jacobian_dp</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformResult"><code class="docutils literal notranslate"><span class="pre">TransformResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformResult.transformed_points"><code class="docutils literal notranslate"><span class="pre">TransformResult.transformed_points</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformResult.jacobian_dx"><code class="docutils literal notranslate"><span class="pre">TransformResult.jacobian_dx</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.TransformResult.jacobian_dp"><code class="docutils literal notranslate"><span class="pre">TransformResult.jacobian_dp</span></code></a></li>
 </ul>
 </li>
 </ul>

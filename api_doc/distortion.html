@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.Distortion &#8212; pydistort 1.0.3 documentation</title>
+    <title>pydistort.objects.Distortion &#8212; pydistort 2.0.0 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=baaebd52"></script>
+    <script src="../_static/documentation_options.js?v=51b770b3"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pydistort.NoDistortion" href="no_distortion.html" />
-    <link rel="prev" title="pydistort.Intrinsic" href="intrinsic.html" />
+    <link rel="prev" title="pydistort.objects.Intrinsic" href="intrinsic.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 1.0.3 documentation</p>
+    <p class="title logo__title">pydistort 2.0.0 documentation</p>
   
 </a></div>
     
@@ -142,13 +142,6 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../usage.html">
     Usage
-  </a>
-</li>
-
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../warnings.html">
-    WARNINGS
   </a>
 </li>
 
@@ -245,13 +238,6 @@
   </a>
 </li>
 
-
-<li class="nav-item ">
-  <a class="nav-link nav-internal" href="../warnings.html">
-    WARNINGS
-  </a>
-</li>
-
   </ul>
 </nav></div>
           
@@ -281,10 +267,10 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformation Classes:</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="transform.html">pydistort.Transform</a></li>
-<li class="toctree-l1"><a class="reference internal" href="extrinsic.html">pydistort.Extrinsic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.Intrinsic</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.Distortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform.html">pydistort.objects.Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extrinsic.html">pydistort.objects.Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.objects.Intrinsic</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.objects.Distortion</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Distortion Models:</span></p>
 <ul class="nav bd-sidenav">
@@ -341,7 +327,7 @@
     
     <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API Reference</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.Distortion</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.objects.Distortion</span></li>
   </ul>
 </nav>
 </div>
@@ -358,11 +344,11 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="pydistort-distortion">
-<h1>pydistort.Distortion<a class="headerlink" href="#pydistort-distortion" title="Link to this heading">#</a></h1>
+  <section id="pydistort-objects-distortion">
+<h1>pydistort.objects.Distortion<a class="headerlink" href="#pydistort-objects-distortion" title="Link to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="pydistort.Distortion">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">Distortion</span></span><a class="reference internal" href="../_modules/pydistort/distortion.html#Distortion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Distortion" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Distortion">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.objects.</span></span><span class="sig-name descname"><span class="pre">Distortion</span></span><a class="reference internal" href="../_modules/pydistort/objects/distortion.html#Distortion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Distortion" title="Link to this definition">#</a></dt>
 <dd><div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This class represents the distortion transformation, which is the central step of the process.</p>
@@ -389,6 +375,9 @@
 <li><p>“Nparams”: property to return the number of distortion parameters.</p></li>
 <li><p>“is_set”: to check if the distortion parameters are set.</p></li>
 <li><p>“_transform”: to apply distortion to a set of points. The transformation is applied to the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>) to obtain the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> (<span class="math notranslate nohighlight">\(x_D\)</span>).</p></li>
+</ul>
+<p>The following methods are implemented in this class but can be overridden in the subclasses:</p>
+<ul class="simple">
 <li><p>“_inverse_transform”: to remove distortion from a set of points. The transformation is applied to the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> (<span class="math notranslate nohighlight">\(x_D\)</span>) to obtain the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>).</p></li>
 </ul>
 </div>
@@ -398,18 +387,18 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">undistort</span></code>: Alias for the <cite>inverse_transform</cite> method to remove distortion from a set of points.</p></li>
 </ul>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.Distortion._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.Distortion._abc_impl" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Distortion._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.objects.Distortion._abc_impl" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pydistort.Distortion.distort">
-<span class="sig-name descname"><span class="pre">distort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydistort.DistortionResult" title="pydistort.distortion.DistortionResult"><span class="pre">DistortionResult</span></a></span></span><a class="reference internal" href="../_modules/pydistort/distortion.html#Distortion.distort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Distortion.distort" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Distortion.distort">
+<span class="sig-name descname"><span class="pre">distort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydistort.objects.DistortionResult" title="pydistort.objects.distortion.DistortionResult"><span class="pre">DistortionResult</span></a></span></span><a class="reference internal" href="../_modules/pydistort/objects/distortion.html#Distortion.distort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Distortion.distort" title="Link to this definition">#</a></dt>
 <dd><p>Alias for the <cite>transform</cite> method to apply distortion to a set of points.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><cite>pydistort.Transform.transform</cite> for more details on the transformation process.</p></li>
+<li><p><cite>pydistort.objects.Transform.transform</cite> for more details on the transformation process.</p></li>
 </ul>
 </div>
 <dl class="field-list simple">
@@ -423,14 +412,14 @@
 <dd class="field-even"><p>The result of the distortion transformation.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pydistort.DistortionResult" title="pydistort.DistortionResult">DistortionResult</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pydistort.objects.DistortionResult" title="pydistort.objects.DistortionResult">DistortionResult</a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Distortion.input_dim">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.Distortion.input_dim" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Distortion.input_dim">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.Distortion.input_dim" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the input dimension of the transformation.</p>
 <p>The input dimension must be a positive integer representing the number of dimensions of the input points.</p>
 <dl class="field-list simple">
@@ -444,10 +433,10 @@
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Distortion.inverse_result_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverse_result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.Distortion.inverse_result_class" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Distortion.inverse_result_class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverse_result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.objects.Distortion.inverse_result_class" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the class used for the result of the inverse transformation.</p>
-<p>The default is <cite>InverseTransformResult</cite>, but subclasses can override this to return a different class.</p>
+<p>The default is <cite>TransformResult</cite>, but subclasses can override this to return a different class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The class used for the result of the inverse transformation.</p>
@@ -459,8 +448,8 @@
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Distortion.output_dim">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.Distortion.output_dim" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Distortion.output_dim">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.Distortion.output_dim" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the output dimension of the transformation.</p>
 <p>The output dimension must be a positive integer representing the number of dimensions of the output points.</p>
 <dl class="field-list simple">
@@ -474,23 +463,8 @@
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Distortion.parameters">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Distortion.parameters" title="Link to this definition">#</a></dt>
-<dd><p>Property to return the distortion parameters.</p>
-<p>This property should be implemented in the subclasses to return the distortion parameters as a numpy array.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The distortion parameters as a numpy array or None if not set.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>numpy.ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Distortion.result_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.Distortion.result_class" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Distortion.result_class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.objects.Distortion.result_class" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the class used for the result of the transformation.</p>
 <p>The default is <cite>TransformResult</cite>, but subclasses can override this to return a different class.</p>
 <dl class="field-list simple">
@@ -504,13 +478,13 @@
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pydistort.Distortion.undistort">
-<span class="sig-name descname"><span class="pre">undistort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydistort.InverseDistortionResult" title="pydistort.distortion.InverseDistortionResult"><span class="pre">InverseDistortionResult</span></a></span></span><a class="reference internal" href="../_modules/pydistort/distortion.html#Distortion.undistort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Distortion.undistort" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.Distortion.undistort">
+<span class="sig-name descname"><span class="pre">undistort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pydistort.objects.InverseDistortionResult" title="pydistort.objects.distortion.InverseDistortionResult"><span class="pre">InverseDistortionResult</span></a></span></span><a class="reference internal" href="../_modules/pydistort/objects/distortion.html#Distortion.undistort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Distortion.undistort" title="Link to this definition">#</a></dt>
 <dd><p>Alias for the <cite>inverse_transform</cite> method to remove distortion from a set of points.</p>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <ul class="simple">
-<li><p><cite>pydistort.Transform.inverse_transform</cite> for more details on the inverse transformation process.</p></li>
+<li><p><cite>pydistort.objects.Transform.inverse_transform</cite> for more details on the inverse transformation process.</p></li>
 </ul>
 </div>
 <dl class="field-list simple">
@@ -524,7 +498,7 @@
 <dd class="field-even"><p>The result of the inverse distortion transformation.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference internal" href="#pydistort.InverseDistortionResult" title="pydistort.InverseDistortionResult">InverseDistortionResult</a></p>
+<dd class="field-odd"><p><a class="reference internal" href="#pydistort.objects.InverseDistortionResult" title="pydistort.objects.InverseDistortionResult">InverseDistortionResult</a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -532,9 +506,9 @@
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="pydistort.DistortionResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">DistortionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/distortion.html#DistortionResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.DistortionResult" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="transform.html#pydistort.TransformResult" title="pydistort.transform.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformResult</span></code></a></p>
+<dt class="sig sig-object py" id="pydistort.objects.DistortionResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.objects.</span></span><span class="sig-name descname"><span class="pre">DistortionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/objects/distortion.html#DistortionResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.DistortionResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="transform.html#pydistort.objects.TransformResult" title="pydistort.objects.transform.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformResult</span></code></a></p>
 <p>Subclass of TransformResult to represent the result of the distortion transformation.</p>
 <p>This class is used to store the result of transforming the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> to <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code>, and the optional Jacobians.</p>
 <ul class="simple">
@@ -555,8 +529,8 @@
 <p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the transformation, the output points will have shape (output_dim, …) instead of (…, output_dim), same for the Jacobian matrices.</p>
 </div>
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.DistortionResult.distorted_points">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">distorted_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.DistortionResult.distorted_points" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.DistortionResult.distorted_points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">distorted_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.objects.DistortionResult.distorted_points" title="Link to this definition">#</a></dt>
 <dd><p>Get the transformed distorted points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -571,10 +545,10 @@
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="pydistort.InverseDistortionResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">InverseDistortionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/distortion.html#InverseDistortionResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.InverseDistortionResult" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="transform.html#pydistort.InverseTransformResult" title="pydistort.transform.InverseTransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">InverseTransformResult</span></code></a></p>
-<p>Subclass of InverseTransformResult to represent the result of the inverse distortion transformation.</p>
+<dt class="sig sig-object py" id="pydistort.objects.InverseDistortionResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.objects.</span></span><span class="sig-name descname"><span class="pre">InverseDistortionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/objects/distortion.html#InverseDistortionResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.InverseDistortionResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="transform.html#pydistort.objects.TransformResult" title="pydistort.objects.transform.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformResult</span></code></a></p>
+<p>Subclass of TransformResult to represent the result of the inverse distortion transformation.</p>
 <p>This class is used to store the result of transforming the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> back to <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code>, and the optional Jacobians.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">transformed_points</span></code>: The transformed normalized points in the camera coordinate system. Shape (…, 2).</p></li>
@@ -594,8 +568,8 @@
 <p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the transformation, the output points will have shape (output_dim, …) instead of (…, output_dim), same for the Jacobian matrices.</p>
 </div>
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.InverseDistortionResult.normalized_points">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalized_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.InverseDistortionResult.normalized_points" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.objects.InverseDistortionResult.normalized_points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalized_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.objects.InverseDistortionResult.normalized_points" title="Link to this definition">#</a></dt>
 <dd><p>Get the transformed normalized points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -627,7 +601,7 @@
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pydistort.Intrinsic</p>
+        <p class="prev-next-title">pydistort.objects.Intrinsic</p>
       </div>
     </a>
     <a class="right-next"
@@ -658,23 +632,22 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Distortion"><code class="docutils literal notranslate"><span class="pre">Distortion</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Distortion._abc_impl"><code class="docutils literal notranslate"><span class="pre">Distortion._abc_impl</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Distortion.distort"><code class="docutils literal notranslate"><span class="pre">Distortion.distort()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Distortion.input_dim"><code class="docutils literal notranslate"><span class="pre">Distortion.input_dim</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Distortion.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Distortion.inverse_result_class</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Distortion.output_dim"><code class="docutils literal notranslate"><span class="pre">Distortion.output_dim</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Distortion.parameters"><code class="docutils literal notranslate"><span class="pre">Distortion.parameters</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Distortion.result_class"><code class="docutils literal notranslate"><span class="pre">Distortion.result_class</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Distortion.undistort"><code class="docutils literal notranslate"><span class="pre">Distortion.undistort()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Distortion"><code class="docutils literal notranslate"><span class="pre">Distortion</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Distortion._abc_impl"><code class="docutils literal notranslate"><span class="pre">Distortion._abc_impl</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Distortion.distort"><code class="docutils literal notranslate"><span class="pre">Distortion.distort()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Distortion.input_dim"><code class="docutils literal notranslate"><span class="pre">Distortion.input_dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Distortion.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Distortion.inverse_result_class</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Distortion.output_dim"><code class="docutils literal notranslate"><span class="pre">Distortion.output_dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Distortion.result_class"><code class="docutils literal notranslate"><span class="pre">Distortion.result_class</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Distortion.undistort"><code class="docutils literal notranslate"><span class="pre">Distortion.undistort()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.DistortionResult"><code class="docutils literal notranslate"><span class="pre">DistortionResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.DistortionResult.distorted_points"><code class="docutils literal notranslate"><span class="pre">DistortionResult.distorted_points</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.DistortionResult"><code class="docutils literal notranslate"><span class="pre">DistortionResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.DistortionResult.distorted_points"><code class="docutils literal notranslate"><span class="pre">DistortionResult.distorted_points</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.InverseDistortionResult"><code class="docutils literal notranslate"><span class="pre">InverseDistortionResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.InverseDistortionResult.normalized_points"><code class="docutils literal notranslate"><span class="pre">InverseDistortionResult.normalized_points</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.InverseDistortionResult"><code class="docutils literal notranslate"><span class="pre">InverseDistortionResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.InverseDistortionResult.normalized_points"><code class="docutils literal notranslate"><span class="pre">InverseDistortionResult.normalized_points</span></code></a></li>
 </ul>
 </li>
 </ul>
