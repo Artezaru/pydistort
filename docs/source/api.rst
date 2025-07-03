@@ -14,7 +14,7 @@ The process to correspond a 3D-world point to a 2D-image point is as follows:
 3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).
 4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic matrix K to obtain the ``image_points`` (:math:`x_I`).
 
-To processing is performed by the following classes:
+To processing is performed by the following classes stored in the `pydistort.objects` module:
 
 .. toctree::
    :maxdepth: 1
@@ -24,6 +24,7 @@ To processing is performed by the following classes:
    ./api_doc/extrinsic.rst
    ./api_doc/intrinsic.rst
    ./api_doc/distortion.rst
+
 
 Some distortion models are provided in the package, such as:
 

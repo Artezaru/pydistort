@@ -2,11 +2,11 @@ from typing import Optional
 from dataclasses import dataclass
 import numpy
 
-from .transform import TransformResult
-from .distortion import Distortion
+from .objects.transform import TransformResult
+from .objects.distortion import Distortion
 from .no_distortion import NoDistortion
-from .intrinsic import Intrinsic
-from .extrinsic import Extrinsic
+from .objects.intrinsic import Intrinsic
+from .objects.extrinsic import Extrinsic
 
 
 @dataclass

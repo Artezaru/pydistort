@@ -1,15 +1,15 @@
-pydistort.Extrinsic
-=======================
+pydistort.objects.Extrinsic
+=============================
 
-.. autoclass:: pydistort.Extrinsic
+.. autoclass:: pydistort.objects.Extrinsic
     :members:
     :undoc-members:
     :private-members:
 
-.. autoclass:: pydistort.ExtrinsicResult
+.. autoclass:: pydistort.objects.ExtrinsicResult
     :members:
     :show-inheritance:
 
-.. autoclass:: pydistort.InverseExtrinsicResult
+.. autoclass:: pydistort.objects.InverseExtrinsicResult
     :members:
     :show-inheritance:

@@ -4,7 +4,7 @@ import numpy
 from py3dframe import Frame
 import cv2
 
-from .transform import Transform, TransformResult, InverseTransformResult
+from .transform import Transform, TransformResult
 
 @dataclass
 class ExtrinsicResult(TransformResult):
@@ -71,9 +71,9 @@ class ExtrinsicResult(TransformResult):
 
 
 @dataclass
-class InverseExtrinsicResult(InverseTransformResult):
+class InverseExtrinsicResult(TransformResult):
     r"""
-    Subclass of InverseTransformResult to represent the result of the inverse extrinsic transformation.
+    Subclass of TransformResult to represent the result of the inverse extrinsic transformation.
 
     This class is used to store the result of transforming the ``normalized_points`` back to ``world_3dpoints``, and the optional Jacobians.
 
@@ -189,7 +189,7 @@ class Extrinsic(Transform):
     .. code-block:: python
 
         import numpy as np
-        from pydistort import Extrinsic
+        from pydistort.objects import Extrinsic
 
         rvec = np.array([0.1, 0.2, 0.3])
         tvec = np.array([0.5, 0.5, 0.5])
@@ -238,8 +238,8 @@ class Extrinsic(Transform):
 
         For more information about the transformation process, see:
 
-        - :meth:`pydistort.Extrinsic._transform` to transform the ``world_3dpoints`` to ``normalized_points``.
-        - :meth:`pydistort.Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.
+        - :meth:`pydistort.objects.Extrinsic._transform` to transform the ``world_3dpoints`` to ``normalized_points``.
+        - :meth:`pydistort.objects.Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.
     
     """
     def __init__(self, rvec: Optional[numpy.ndarray] = None, tvec: Optional[numpy.ndarray] = None):
@@ -277,6 +277,34 @@ class Extrinsic(Transform):
     def inverse_result_class(self) -> type:
         return InverseExtrinsicResult
     
+    @property
+    def parameters(self) -> Optional[numpy.ndarray]:
+        r"""
+        Get or set the parameters of the extrinsic transformation.
+
+        The parameters are a numpy array of shape (6,) representing the rotation vector and translation vector concatenated.
+
+        Returns
+        -------
+        Optional[numpy.ndarray]
+            The parameters of the extrinsic transformation. Shape (6,).
+        """
+        if self._rvec is None or self._tvec is None:
+            return None
+        return numpy.concatenate((self._rvec, self._tvec), axis=0)
+    
+    @parameters.setter
+    def parameters(self, params: Optional[numpy.ndarray]) -> None:
+        if params is None:
+            self._rvec = None
+            self._tvec = None
+            return
+        params = numpy.asarray(params, dtype=numpy.float64).flatten()
+        if params.shape != (6,):
+            raise ValueError("Parameters must be a 1D array of shape (6,).")
+        self.rotation_vector = params[:3]  # First 3 elements are the rotation vector
+        self.translation_vector = params[3:]  # Last 3 elements are the translation vector
+
     # =============================================
     # translation vector
     # =============================================
@@ -293,7 +321,7 @@ class Extrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.Extrinsic.rotation_vector` or ``rvec`` to set the rotation vector of the extrinsic transformation.
+            - :meth:`pydistort.objects.Extrinsic.rotation_vector` or ``rvec`` to set the rotation vector of the extrinsic transformation.
 
         Returns
         -------
@@ -338,7 +366,7 @@ class Extrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.Extrinsic.translation_vector` or ``tvec`` to set the translation vector of the extrinsic transformation.
+            - :meth:`pydistort.objects.Extrinsic.translation_vector` or ``tvec`` to set the translation vector of the extrinsic transformation.
 
         Returns
         -------
@@ -475,7 +503,7 @@ class Extrinsic(Transform):
 
     def _transform(self, world_3dpoints: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.Transform.transform` method to perform the extrinsic transformation.
+        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the extrinsic transformation.
         This method allows to transform the ``world_3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
 
         .. note::
@@ -605,7 +633,7 @@ class Extrinsic(Transform):
 
     def _inverse_transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, depth: Optional[numpy.ndarray] = None) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse extrinsic transformation.
+        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse extrinsic transformation.
         This method allows to transform the ``normalized_points`` back to ``world_3dpoints`` using the extrinsic parameters (rotation and translation).
 
         .. note::

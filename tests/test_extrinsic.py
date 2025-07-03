@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from pydistort import Extrinsic
+from pydistort.objects import Extrinsic
 import time
 import cv2
 

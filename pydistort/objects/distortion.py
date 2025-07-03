@@ -3,7 +3,7 @@ from abc import abstractmethod
 from dataclasses import dataclass
 import numpy
 
-from .transform import Transform, TransformResult, InverseTransformResult
+from .transform import Transform, TransformResult
 
 
 
@@ -44,10 +44,12 @@ class DistortionResult(TransformResult):
         """
         return self.transformed_points
     
+
+
 @dataclass
-class InverseDistortionResult(InverseTransformResult):
+class InverseDistortionResult(TransformResult):
     r"""
-    Subclass of InverseTransformResult to represent the result of the inverse distortion transformation.
+    Subclass of TransformResult to represent the result of the inverse distortion transformation.
 
     This class is used to store the result of transforming the ``distorted_points`` back to ``normalized_points``, and the optional Jacobians.
 
@@ -113,6 +115,9 @@ class Distortion(Transform):
         - "Nparams": property to return the number of distortion parameters.
         - "is_set": to check if the distortion parameters are set.
         - "_transform": to apply distortion to a set of points. The transformation is applied to the ``normalized_points`` (:math:`x_N`) to obtain the ``distorted_points`` (:math:`x_D`).
+
+        The following methods are implemented in this class but can be overridden in the subclasses:
+
         - "_inverse_transform": to remove distortion from a set of points. The transformation is applied to the ``distorted_points`` (:math:`x_D`) to obtain the ``normalized_points`` (:math:`x_N`).
 
     Some aliases are provided for convenience:
@@ -149,7 +154,7 @@ class Distortion(Transform):
 
         .. seealso::
 
-            - `pydistort.Transform.transform` for more details on the transformation process.
+            - `pydistort.objects.Transform.transform` for more details on the transformation process.
 
         Parameters
         ----------
@@ -169,7 +174,7 @@ class Distortion(Transform):
 
         .. seealso::
 
-            - `pydistort.Transform.inverse_transform` for more details on the inverse transformation process.
+            - `pydistort.objects.Transform.inverse_transform` for more details on the inverse transformation process.
 
         Parameters
         ----------
@@ -183,24 +188,6 @@ class Distortion(Transform):
         """
         return self.inverse_transform(*args, **kwargs)
 
-    # =============================================
-    # Additive Properties for Distortion Class
-    # =============================================
-    @property
-    @abstractmethod
-    def parameters(self) -> Optional[numpy.ndarray]:
-        r"""
-        Property to return the distortion parameters.
-
-        This property should be implemented in the subclasses to return the distortion parameters as a numpy array.
-
-        Returns
-        -------
-        numpy.ndarray
-            The distortion parameters as a numpy array or None if not set.
-        """
-        raise NotImplementedError("The parameters property must be implemented in the subclass.")
-    
     # =============================================
     # Common Properties and Methods for Distortion Class
     # =============================================  

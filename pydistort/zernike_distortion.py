@@ -2,9 +2,9 @@ from typing import Optional, Tuple
 from numbers import Integral, Number
 import numpy
 import cv2
-from pyzernike import radial_polynomial, xy_zernike_polynomial
+from pyzernike import xy_zernike_polynomial_up_to_order, zernike_order_to_index
 
-from .distortion import Distortion, DistortionResult
+from .objects.distortion import Distortion, DistortionResult
 
 
 class ZernikeDistortion(Distortion):
@@ -749,7 +749,7 @@ class ZernikeDistortion(Distortion):
 
     def _transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.Transform.transform` method to perform the distortion transformation.
+        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the distortion transformation.
         This method allows to transform the ``normalized_points`` to the ``distorted_points`` using the distortion model.
 
         .. note::
@@ -848,14 +848,28 @@ class ZernikeDistortion(Distortion):
         x_D = x_N.copy()
         y_D = y_N.copy()
 
+        # Construct the derivatives to compute the Jacobian
+        if dx:
+            list_dx = [0, 1, 0]
+            list_dy = [0, 0, 1]
+        else:
+            list_dx = [0]
+            list_dy = [0]
+                
+        # Construct the zernike polynomial values and their derivatives
+        zernike_results = xy_zernike_polynomial_up_to_order(x_N, y_N, order=self.Nzer, Rx=self.radius_x, Ry=self.radius_y, x0=self.center[0], y0=self.center[1], x_derivative=list_dx, y_derivative=list_dy)
+
+        # Initialize the distorted points and jacobians
         for n in range(self.Nzer + 1):
             for m in range(-n, n + 1, 2):
+                zernike_index = zernike_order_to_index(n=[n], m=[m])[0]
                 # Get the Zernike polynomial value
-                Z_nm = xy_zernike_polynomial(x_N, y_N, n, m, Rx=self.radius_x, Ry=self.radius_y, x0=self.center[0], y0=self.center[1])
-                # Compute the dérivatives of the Zernike polynomial if requested
+                Z_nm = zernike_results[0][zernike_index]
+                
+                # Get the dérivatives of the Zernike polynomial if requested
                 if dx:
-                    Z_nm_dx = xy_zernike_polynomial(x_N, y_N, n, m, Rx=self.radius_x, Ry=self.radius_y, x0=self.center[0], y0=self.center[1], x_derivative=1)
-                    Z_nm_dy = xy_zernike_polynomial(x_N, y_N, n, m, Rx=self.radius_x, Ry=self.radius_y, x0=self.center[0], y0=self.center[1], y_derivative=1)
+                    Z_nm_dx = zernike_results[1][zernike_index]
+                    Z_nm_dy = zernike_results[2][zernike_index]
 
                 # Extract the coefficients for the x and y coordinates
                 index_x = self.get_index(n, m, 'x')
@@ -888,76 +902,45 @@ class ZernikeDistortion(Distortion):
         return distorted_points, jacobian_dx, jacobian_dp
     
 
-
-    def _inverse_transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, max_iter: int = 10, eps: float = 1e-8) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    
+    def _inverse_transform(
+        self,
+        distorted_points: numpy.ndarray,
+        *,
+        dx: bool = False,
+        dp: bool = False,
+        **kwargs
+    ) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse distortion transformation.
-        This method allows to transform the ``distorted_points`` to the ``normalized_points`` using the distortion model.
+        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse distortion transformation.
+        This method allows to transform the ``distorted_points`` back to the ``normalized_points`` using the distortion model.
 
         .. note::
 
             For ``_inverse_transform`` the input must have shape (Npoints, 2) with float64 type.
-            The output has shape (Npoints, 2) and the jacobian are always None.
+            The output has shape (Npoints, 2) for the normalized points and the jacobian are always None.
 
-        To achieve the undistortion, an iterative algorithm is used to find the normalized points that correspond to the distorted points.
-        The algorithm is based on the following equations:
-
-        .. math::
-            \begin{bmatrix}
-            x_N [\text{it }k+1]\\
-            y_N [\text{it }k+1]
-            \end{bmatrix}
-            = 
-            \begin{bmatrix}
-            x_D - \Delta x [\text{it }k] \\
-            y_D - \Delta y [\text{it }k]
-            \end{bmatrix}
-
-        Where :math:`\Delta x [\text{it }k]` and :math:\Delta y [\text{it }k] are the corrections applied to the distorted points at iteration :math:`k`.
-        The corrections are computed using the following equations:
-
-        .. math::
-
-            \begin{bmatrix}
-            \Delta x [\text{it }k]\\
-            \Delta y [\text{it }k]
-            \end{bmatrix}
-            =
-            \begin{bmatrix}
-            \sum_{n=0}^{N_{zer}} \sum_{m=-n}^{n} C^{x}_{n,m} Z_{nm}(\rho, \theta) [\text{it }k] \\
-            \sum_{n=0}^{N_{zer}} \sum_{m=-n}^{n} C^{y}_{n,m} Z_{nm}(\rho, \theta) [\text{it }k]
-            \end{bmatrix}
-
-        Where :math:`Z_{nm}(\rho, \theta) [\text{it }k]` are the Zernike polynomials evaluated at the current normalized points.
+        See the :meth:`pydistort.objects.objetcs.Transform.optimize_input_points` method for more details.
+        The initial guess is setted to :math:`\mathbf{x}_{N} = \mathbf{x}_{D} - U(\mathbf{x}_{D})``, where :math:`U(\mathbf{x}_{D})` is the distortion filed applied to the distorted points.
 
         .. warning::
 
             This method is not designed to be used directly for the transformation of points.
             No checks are performed on the input points, so it is the user's responsibility to ensure that the input points are valid.
 
-        .. warning::
-
-            The method use an iterative algorithm to find the normalized points that correspond to the distorted points.
-            In fact the jacobian with respect to the normalized points is not computed for this inverse transform (always None).
-
         Parameters
         ----------
         distorted_points : numpy.ndarray
-            Array of distorted points to be transformed with shape (Npoints, 2).
+            Array of distorted points to be transformed back to normalized points with shape (Npoints, 2).
 
         dx : bool, optional
-            [ALWAYS False]
-
+            [Always False]
+        
         dp : bool, optional
-            [ALWAYS False]
+            [Always False]
 
-        max_iter : int, optional
-            The maximum number of iterations for the optimization algorithm. Default is 10.
-            Use only if ``opencv`` is False.
-
-        eps : float, optional
-            The tolerance for the optimization algorithm. Default is 1e-8.
-            Use only if ``opencv`` is False.
+        **kwargs : dict, optional
+            Additional keyword arguments to be passed to the optimization method.
 
         Returns
         -------
@@ -965,58 +948,20 @@ class ZernikeDistortion(Distortion):
             The transformed normalized points in normalized coordinates. It will be a 2D array of shape (Npoints, 2).
 
         jacobian_dx : Optional[numpy.ndarray]
-            [ALWAYS None]
+            [Always None]
 
         jacobian_dp : Optional[numpy.ndarray]
-            [ALWAYS None]
+            [Always None]
+
         """
         if dx or dp:
             print("\n[WARNING]: Undistortion with dx=True or dp=True. The jacobians cannot be computed with this method. They are always None.\n")
 
-        # Prepare the inputs data for undistortion
-        x_D = distorted_points[:, 0] # shape (Npoints,)
-        y_D = distorted_points[:, 1] # shape (Npoints,)
-        Npoints = x_D.size # Number of points in computation
+        normalized_points = self.optimize_input_points(
+            distorted_points,
+            guess = 2 * distorted_points - self._transform(distorted_points, dx=False, dp=False)[0],
+            _skip = True,  # Skip the checks on the input points
+            **kwargs
+        )
 
-        # Check if the distortion model is set
-        if self.parameters is None:
-            # No distortion model is defined, return the distorted points as normalized points
-            return distorted_points.copy(), None, None
-
-        # Initialize the guess for the normalized points
-        normalized_points_itk = numpy.copy(distorted_points) # shape (Npoints [Nopt], 2)
-        Nopt = Npoints # Number of points in computation
-
-        # Prepare the output array:
-        normalized_points = numpy.empty((Npoints, 2), dtype=numpy.float64) # shape (Npoints, 2)
-
-        # Create the mask for the points in computation
-        mask = numpy.ones((Npoints,), dtype=numpy.bool) # shape (Npoints,)
-
-        # Run the iterative algorithm
-        for it in range(max_iter):
-            # Distortion of the normalized points
-            delta = self._transform(normalized_points_itk, dx=False, dp=False)[0] - distorted_points[mask, :] # shape (Nopt, 2)
-
-            # Update the normalized points (itk)
-            normalized_points_itk = normalized_points_itk - delta # shape (Nopt, 2)
-
-            # Update the normalized points
-            normalized_points[mask, :] = normalized_points_itk
-
-            # Distortion convergence check
-            distorted_points_optimized, _, _ = self._transform(normalized_points_itk, dx=False, dp=False) # shape (Nopt, 2)
-
-            # Compute the norm of the difference
-            diff = numpy.linalg.norm(distorted_points_optimized - distorted_points[mask, :], axis=1) # shape (Nopt,)
-            eps_mask = diff > eps # shape (Nopt,)
-            mask[mask] = numpy.logical_and(mask[mask], eps_mask)
-
-            # Crop the X_N and Y_N arrays
-            Nopt = numpy.sum(mask)
-            if Nopt == 0:
-                break
-            normalized_points_itk = normalized_points_itk[eps_mask, :] # shape (NewNopt, 2) 
-
-        # Return the normalized points
         return normalized_points, None, None

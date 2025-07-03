@@ -100,7 +100,7 @@ def test_pydistort_undistort_vs_opencv_timer(Nparams, mode):
 
         if setup.CSV():
             # Write times to a CSV file
-            csv_filename = "undistort_points_time_comparison.csv"
+            csv_filename = "Cv2Distortion_undistort_points_time_comparison.csv"
             csv_filename = os.path.join(os.path.dirname(__file__), csv_filename)
             with open(csv_filename, mode='w', newline='') as file:
                 writer = csv.writer(file)

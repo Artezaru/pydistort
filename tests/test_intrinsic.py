@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import time
 import cv2
-from pydistort import Intrinsic, IntrinsicResult  # Adjust if needed
+from pydistort.objects import Intrinsic, IntrinsicResult  # Adjust if needed
 
 @pytest.fixture
 def default_intrinsic():

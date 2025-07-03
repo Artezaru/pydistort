@@ -22,7 +22,6 @@ The documentation is divided into the following sections:
    ./installation
    ./api
    ./usage
-   ./warnings
 
 
 Author

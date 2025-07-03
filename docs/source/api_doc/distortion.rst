@@ -1,15 +1,15 @@
-pydistort.Distortion
-=======================
+pydistort.objects.Distortion
+================================
 
-.. autoclass:: pydistort.Distortion
+.. autoclass:: pydistort.objects.Distortion
     :members:
     :undoc-members:
     :private-members:
 
-.. autoclass:: pydistort.DistortionResult
+.. autoclass:: pydistort.objects.DistortionResult
     :members:
     :show-inheritance:
 
-.. autoclass:: pydistort.InverseDistortionResult
+.. autoclass:: pydistort.objects.InverseDistortionResult
     :members:
     :show-inheritance:

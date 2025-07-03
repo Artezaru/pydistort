@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import numpy
 from numbers import Number
 
-from .transform import Transform, TransformResult, InverseTransformResult
+from .transform import Transform, TransformResult
 
 @dataclass
 class IntrinsicResult(TransformResult):
@@ -74,9 +74,9 @@ class IntrinsicResult(TransformResult):
 
 
 @dataclass
-class InverseIntrinsicResult(InverseTransformResult):
+class InverseIntrinsicResult(TransformResult):
     r"""
-    Subclass of InverseTransformResult to represent the result of the inverse intrinsic transformation.
+    Subclass of TransformResult to represent the result of the inverse intrinsic transformation.
 
     This class is used to store the result of transforming the ``image_points`` back to ``distorted_points``, and the optional Jacobians.
 
@@ -186,7 +186,7 @@ class Intrinsic(Transform):
     .. code-block:: python
 
         import numpy as np
-        from pydistort import Intrinsic
+        from pydistort.objects import Intrinsic
 
         intrinsic_matrix = np.array([[1000, 0, 320],
                                      [0, 1000, 240],
@@ -225,8 +225,8 @@ class Intrinsic(Transform):
 
         For more information about the transformation process, see:
 
-        - :meth:`pydistort.Intrinsic._transform` to transform the ``distorted_points`` to ``image_points``.
-        - :meth:`pydistort.Intrinsic._inverse_transform` to transform the ``image_points`` back to ``distorted_points``.
+        - :meth:`pydistort.objects.Intrinsic._transform` to transform the ``distorted_points`` to ``image_points``.
+        - :meth:`pydistort.objects.Intrinsic._inverse_transform` to transform the ``image_points`` back to ``distorted_points``.
     
     """
     def __init__(self, intrinsic_matrix: Optional[numpy.ndarray] = None):
@@ -265,6 +265,26 @@ class Intrinsic(Transform):
     def inverse_result_class(self) -> type:
         return InverseIntrinsicResult
     
+    @property
+    def parameters(self) -> Optional[numpy.ndarray]:
+        r"""
+        Get the intrinsic parameters as a vector.
+
+        .. seealso::
+
+            - :meth:`pydistort.objects.Intrinsic.intrinsic_vector` or ``k`` to get the intrinsic vector of the camera.
+
+        Returns
+        -------
+        Optional[numpy.ndarray]
+            The intrinsic parameters as a vector of shape (4,). If any of the parameters are not set, returns None.
+        """
+        return self.intrinsic_vector
+    
+    @parameters.setter
+    def parameters(self, intrinsic_vector: Optional[numpy.ndarray]) -> None:
+        self.intrinsic_vector = intrinsic_vector
+    
     # =============================================
     # Focal length
     # =============================================
@@ -283,7 +303,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.Intrinsic.focal_length_y` or ``fy`` to set the focal length in pixels in y direction.
+            - :meth:`pydistort.objects.Intrinsic.focal_length_y` or ``fy`` to set the focal length in pixels in y direction.
 
         Returns
         -------
@@ -329,7 +349,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.Intrinsic.focal_length_x` or ``fx`` to set the focal length in pixels in x direction.
+            - :meth:`pydistort.objects.Intrinsic.focal_length_x` or ``fx`` to set the focal length in pixels in x direction.
 
         Returns
         -------
@@ -378,7 +398,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.Intrinsic.principal_point_y` or ``cy`` to set the principal point in pixels in y direction.
+            - :meth:`pydistort.objects.Intrinsic.principal_point_y` or ``cy`` to set the principal point in pixels in y direction.
 
         Returns
         -------
@@ -423,7 +443,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.Intrinsic.principal_point_x` or ``cx`` to set the principal point in pixels in x direction.
+            - :meth:`pydistort.objects.Intrinsic.principal_point_x` or ``cx`` to set the principal point in pixels in x direction.
 
         Returns
         -------
@@ -477,7 +497,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.Intrinsic.intrinsic_vector` or ``k`` to get the intrinsic vector of the camera.
+            - :meth:`pydistort.objects.Intrinsic.intrinsic_vector` or ``k`` to get the intrinsic vector of the camera.
 
         Returns
         -------
@@ -547,7 +567,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.Intrinsic.intrinsic_matrix` or ``K`` to set the intrinsic matrix of the camera.
+            - :meth:`pydistort.objects.Intrinsic.intrinsic_matrix` or ``K`` to set the intrinsic matrix of the camera.
 
         Returns
         -------
@@ -615,7 +635,7 @@ class Intrinsic(Transform):
 
     def _transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.Transform.transform` method to perform the intrinsic transformation.
+        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the intrinsic transformation.
         This method allows to transform the ``distorted_points`` to ``image_points`` using the intrinsic parameters.
 
         .. note::
@@ -712,7 +732,7 @@ class Intrinsic(Transform):
 
     def _inverse_transform(self, image_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.Transform.inverse_transform` method to perform the inverse intrinsic transformation.
+        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse intrinsic transformation.
         This method allows to transform the ``image_points`` back to ``distorted_points`` using the intrinsic parameters.
 
         .. note::

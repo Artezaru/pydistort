@@ -2,7 +2,7 @@
 
 ## Description
 
-Distortion models for cameras.
+Distortion models for cameras in stenope configuration.
 
 ## Authors
 

@@ -2,10 +2,10 @@ from typing import Optional
 import numpy
 
 
-from .distortion import Distortion
+from .objects.distortion import Distortion
 from .no_distortion import NoDistortion
-from .intrinsic import Intrinsic
-from .extrinsic import Extrinsic
+from .objects.intrinsic import Intrinsic
+from .objects.extrinsic import Extrinsic
 
 
 

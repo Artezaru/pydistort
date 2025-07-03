@@ -1,6 +1,6 @@
 {
-    "timer" : false,
-    "csv" : false,
+    "timer" : true,
+    "csv" : true,
     "display" : true,
     "warnings" : true,
     "verbose" : true,

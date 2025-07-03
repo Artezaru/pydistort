@@ -3,9 +3,9 @@ import numpy
 import cv2
 import scipy
 
-from .distortion import Distortion
+from .objects.distortion import Distortion
 from .no_distortion import NoDistortion
-from .intrinsic import Intrinsic
+from .objects.intrinsic import Intrinsic
 
 
 def distort_image(

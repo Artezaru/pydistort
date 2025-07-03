@@ -2,9 +2,9 @@ from typing import Optional
 import numpy
 import cv2
 
-from .distortion import Distortion
+from .objects.distortion import Distortion
 from .no_distortion import NoDistortion
-from .intrinsic import Intrinsic
+from .objects.intrinsic import Intrinsic
 
 
 def undistort_image(

@@ -1,7 +1,7 @@
 from typing import Optional, Tuple
 import numpy
 
-from .distortion import Distortion
+from .objects.distortion import Distortion
 
 class NoDistortion(Distortion):
     r"""

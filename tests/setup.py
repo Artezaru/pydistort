@@ -5,7 +5,8 @@ import json
 import cv2
 import numpy
 
-from pydistort import Cv2Distortion, Intrinsic, ZernikeDistortion
+from pydistort import Cv2Distortion, ZernikeDistortion
+from pydistort.objects import Intrinsic
 
 def CSV():
     """Return is setup.json has 'csv' set to True."""
