@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.distort_image &#8212; pydistort 2.0.0 documentation</title>
+    <title>pydistort.distort_image &#8212; pydistort 2.0.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=51b770b3"></script>
+    <script src="../../_static/documentation_options.js?v=f5cff4aa"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/distort_image';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.0 documentation</p>
+    <p class="title logo__title">pydistort 2.0.1 documentation</p>
   
 </a></div>
     
@@ -504,7 +504,7 @@
         <span class="n">distorted_image_points</span> <span class="o">=</span> <span class="n">distorted_image_points</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span> <span class="c1"># Switch to [Y, X] format, shape (Npoints, 2) [X&#39;, Y&#39;] -&gt; shape (Npoints, 2) [Y&#39;, X&#39;]</span>
 
         <span class="c1"># Create the values and the image (H, W, 1 * [C] * [D])</span>
-        <span class="n">values</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># shape (H, W, 1 * [C] * [D])</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (H, W, 1 * [C] * [D])</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># shape (H, W, 1 * [C] * [D]) -&gt; shape (Npoints, 1 * [C] * [D])</span>
 
         <span class="c1"># Create the mapping for scipy.interpolate.LinearNDInterpolator</span>
