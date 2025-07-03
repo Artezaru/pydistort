@@ -190,7 +190,7 @@ def distort_image(
         distorted_image_points = distorted_image_points[:, [1, 0]] # Switch to [Y, X] format, shape (Npoints, 2) [X', Y'] -> shape (Npoints, 2) [Y', X']
 
         # Create the values and the image (H, W, 1 * [C] * [D])
-        values = src.reshape(height, width, -1) # shape (H, W, 1 * [C] * [D])
+        values = src.reshape(height, width, -1).astype(numpy.float64) # shape (H, W, 1 * [C] * [D])
         values = values.reshape(-1, values.shape[-1])  # shape (H, W, 1 * [C] * [D]) -> shape (Npoints, 1 * [C] * [D])
 
         # Create the mapping for scipy.interpolate.LinearNDInterpolator
