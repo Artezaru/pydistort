@@ -305,3 +305,47 @@ def test_pydistort_project_zernike():
                 writer.writerow(['Nzer', 'pydistort_alljac_times', 'pydistort_alljac_faster_times', 'pydistort_times', 'pydistort_nojac_times'])
                 for i, Nzer in enumerate(Nzer_list):
                     writer.writerow([Nzer, pydistort_alljac_times[i], pydistort_alljac_faster_times[i], pydistort_times[i], pydistort_nojac_times[i]])
+
+
+
+
+from pydistort import project_points_bis
+
+@pytest.mark.parametrize("Nparams", [5, 8, 12, 14])
+@pytest.mark.parametrize("mode", ["strong_coefficients", "weak_coefficients"])
+def test_pydistort_project_bis_vs_classic_project(Nparams, mode):
+    """Compare project_points_bis and project_points."""
+    distortion = setup.CV2_DISTORTION(Nparams, mode)
+
+    # Camera intrinsics
+    fx, fy = 1000.0, 950.0
+    cx, cy = 320.0, 240.0
+    K = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
+
+    # Rotation and translation
+    rvec = np.array([0.01, 0.02, 0.03])
+    tvec = np.array([0.1, -0.1, 0.2])    # small translation
+
+    # 3D points
+    points_3d = np.array([
+        [0.0, 0.0, 5.0],
+        [0.1, -0.1, 5.0],
+        [-0.1, 0.2, 5.0],
+        [0.2, 0.1, 5.0],
+        [-0.2, -0.2, 5.0]
+    ])
+
+    # Project with classic method
+    result_classic = project_points(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True)
+
+    # Project with bis method
+    result_bis = project_points_bis(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True)
+
+    # Comparaison
+    np.testing.assert_allclose(result_classic.image_points, result_bis.image_points, rtol=1e-5, atol=1e-8, equal_nan=True)
+
+    np.testing.assert_allclose(result_classic.jacobian_dp[:,:,:6], result_bis.jacobian_dp[:,:,:6], rtol=1e-5, atol=1e-8, equal_nan=True)
+    np.testing.assert_allclose(result_classic.jacobian_dp[:,:,6:10], result_bis.jacobian_dp[:,:,6 + Nparams:], rtol=1e-5, atol=1e-8, equal_nan=True)
+    np.testing.assert_allclose(result_classic.jacobian_dp[:,:,10:], result_bis.jacobian_dp[:,:,6:6 + Nparams], rtol=1e-5, atol=1e-8, equal_nan=True)
+
+    np.testing.assert_allclose(result_classic.jacobian_dx, result_bis.jacobian_dx, rtol=1e-5, atol=1e-8, equal_nan=True)

@@ -15,7 +15,7 @@ __all__.extend(["ZernikeDistortion"])
 
 # Global Functions
 
-from .project_points import project_points, ProjectPointsResult
+from .project_points import project_points, ProjectPointsResult, project_points_bis
 __all__.extend(["project_points", "ProjectPointsResult"])
 
 from .undistort_points import undistort_points

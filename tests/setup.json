@@ -1,5 +1,5 @@
 {
-    "timer" : true,
+    "timer" : false,
     "csv" : true,
     "display" : true,
     "warnings" : true,

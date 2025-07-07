@@ -3,7 +3,7 @@ from typing import Optional, Tuple, Sequence
 from dataclasses import dataclass
 import numpy
 import copy
-
+import matplotlib.pyplot as plt
 
 @dataclass
 class TransformResult:
@@ -609,8 +609,9 @@ class Transform(ABC):
         verbose: bool = False,
         cond_cutoff: float = 1e5,
         reg_factor: float = 0.0,
-        dim_eig_reduce_crit: float = 0.0,
-        _skip: bool = False
+        precond_jacobi: bool = False,
+        _skip: bool = False,
+        _verbose_eigen: bool = False
     ) -> numpy.ndarray:
         r"""
         Optimize the parameters of the transformation using the given input and output points.
@@ -656,7 +657,7 @@ class Transform(ABC):
         For conditioning, the following steps are applied:
 
         - First, a regularization term is added to the Jacobian matrix to improve stability: :math:`J^{T} J + \text{regfactor} I`.
-        - Second, a dimensionality reduction is applied to the Jacobian matrix based on the eigenvalues. Lower eigenvalues :math:`k_i` are removed if :math:`\frac{k_i}{k_0} < \text{dim\_eig\_reduce\_crit}` where :math:`k_0` is the largest eigenvalue.
+        - Second, a preconditioner is applied to the Jacobian matrix to improve the conditioning of the problem.
         
         The `cond_cutoff` parameter is used to detect ill-conditioned problems. If the condition number of the Jacobian matrix is greater than this value, a warning is raised and the optimization returns NaN array.
 
@@ -689,14 +690,16 @@ class Transform(ABC):
         reg_factor : float, optional
             The regularization factor for the optimization. If greater than 0, it adds a tikhonov regularization term to the optimization problem to improve stability :math:`J^{T} J + \text{regfactor} I`. Default is 0.0.
 
-        dim_eig_reduce_crit : float, optional
-            The criterion for reducing the dimensionality of the Jacobian matrix based on the eigenvalues. lower eigenvalues :math:`k_i` are removed if :math:`\frac{k_i}{k_0} < \text{dim_eig_reduce_crit}` where :math:`k_0` is the largest eigenvalue. 
-            Default is 0.0, which means no dimensionality reduction is applied. Must be between 0.0 and 1.0.
+        precond_jacobi : bool, optional
+            If True, apply a preconditioner to the Jacobian matrix to improve the conditioning of the problem. This is done by applying the Jacobi preconditioner to the Jacobian matrix before solving the optimization problem. Default is False.
 
         _skip : bool, optional
             If True, skip the checks for the transformation parameters and assume the input and output points are given in the (Npoints, input_dim) and (Npoints, output_dim) float64 format, respectively.
             The guess must be given in the (Nparams,) float64 format.
             `transpose` is ignored if this parameter is set to True.
+
+        _verbose_eigen : bool, optional
+            If True, display the eigenvalues of the Jacobian matrix during the optimization process. Default is False.
 
         Returns
         -------
@@ -731,8 +734,8 @@ class Transform(ABC):
                 raise TypeError(f"cond_cutoff must be a positive float, got {cond_cutoff}")
             if not isinstance(reg_factor, float) or reg_factor < 0:
                 raise TypeError(f"reg_factor must be a non-negative float, got {reg_factor}")
-            if not isinstance(dim_eig_reduce_crit, float) or not (0.0 <= dim_eig_reduce_crit <= 1.0):
-                raise TypeError(f"dim_eig_reduce_crit must be a float between 0.0 and 1.0, got {dim_eig_reduce_crit}")
+            if not isinstance(precond_jacobi, bool):
+                raise TypeError(f"precond_jacobi must be a boolean, got {type(precond_jacobi)}")
 
             # Check if the transformation is set
             if not self.is_set():
@@ -824,7 +827,7 @@ class Transform(ABC):
             if verbose:
                 print("\n#=====================================================")
                 print(f"STARTING ITERATION {it+1} OF THE OPTIMIZATION PROCESS")
-                print("#=====================================================\n")
+                print("#=====================================================")
 
             # Construct the residual vector R and the Jacobian J
             R = output_points - transformed_points_itk  # shape (Npoints, output_dim)
@@ -852,34 +855,72 @@ class Transform(ABC):
 
 
             #===================================================
-            # Regularization and Dimensionality Reduction
+            # Regularization and conditioning part
             #===================================================
+
+            # Display the condition number of the Jacobian matrix without regularization
+            if verbose:
+                print(f"Iteration {it+1}: Condition number of JTJ before preconditionning and regularization: {numpy.linalg.cond(JTJ)}")
 
             # Add regularization if requested
             if reg_factor > 0.0:
                 JTJ += reg_factor * numpy.eye(self.Nparams, dtype=numpy.float64)
 
-            # Reducing the dimensionality of the Jacobian based on eigenvalues
-            if dim_eig_reduce_crit > 0.0 or verbose:
-                # Compute the eigenvalues and eigenvectors of JTJ
-                eigvals, eigvecs = numpy.linalg.eig(JTJ)
+                if verbose:
+                    print(f"Iteration {it+1}: Condition number of JTJ after regularization: {numpy.linalg.cond(JTJ)}")
+
+            # Apply preconditioning if requested
+            if precond_jacobi:
+                # Compute the diagonal of JTJ for Jacobi preconditioning
+                diag_JTJ = numpy.diag(JTJ)
+                
+                if numpy.any(diag_JTJ == 0):
+                    raise ValueError("Jacobi preconditioner cannot be applied because the diagonal of JTJ contains zeros.")
+
+                # Apply the Jacobi preconditioner
+                JTJ = JTJ / diag_JTJ[:, numpy.newaxis]  # Normalize each row by the diagonal element
+                JTR = JTR / diag_JTJ  # Normalize the residual vector by the diagonal elements
 
                 if verbose:
-                    print(f"Iteration {it+1}: Eigenvalues before reduction:\n{eigvals}\n")
+                    print(f"Iteration {it+1}: Condition number of JTJ after Jacobi preconditioning: {numpy.linalg.cond(JTJ)}")
 
-                if dim_eig_reduce_crit > 0.0:
-                    # Reduce the dimensionality based on the criterion
-                    eigmask = numpy.abs(eigvals / numpy.max(eigvals)) >= dim_eig_reduce_crit  # Keep eigenvalues that satisfy the criterion
+            # Display more information if _verbose is True.
+            if _verbose_eigen:
+                eigvals, eigvecs = numpy.linalg.eig(JTJ)
 
-                    if verbose:
-                        print(f"Iteration {it+1}: Number of eigenvalues kept: {numpy.sum(eigmask)} out of {self.Nparams}")
+                print(f"Iteration {it+1}: Eigenvalues of JTJ:\n{eigvals}")
 
-                    # Apply the mask to the eigenvalues (set the small eigenvalues to zero)
-                    eigvals[~eigmask] = 0.0
+                ordered_indices = numpy.argsort(eigvals)[::-1]  # Sort eigenvalues in descending order
+                ordered_eigvals = eigvals[ordered_indices]
+                ordered_eigvecs = eigvecs[:, ordered_indices]
+                ordered_cond_number = numpy.abs(ordered_eigvals[0] / ordered_eigvals) 
 
-                    # Reconstruct the reduced JTJ matrix
-                    JTJ = eigvecs @ numpy.diag(eigvals) @ eigvecs.T  # shape (Nparams, Nparams)
+                # Display the eigenvalues
+                fig_eig = plt.figure(figsize=(12,5))
+                ax_eigval = fig_eig.add_subplot(1, 2, 1)
+                ax_eigval.semilogy(ordered_eigvals, marker='o', color='blue', linestyle='None')
+                ax_eigval.set_title(f"Ordered Eigenvalues of JTJ (Iteration {it+1})")
+                ax_eigval.set_xlabel("Index")
+                ax_eigval.set_ylabel("Eigenvalue (log scale)", color='blue')
+                ax_eigval.tick_params(axis='y', labelcolor='blue')
+                ax_eigval.grid(True)
 
+                ax_cond = ax_eigval.twinx()
+                ax_cond.semilogy(ordered_cond_number, marker='x', linestyle='None', color='red')
+                ax_cond.set_ylabel("Condition Number |max(eig)/eig| (log scale)", color='red')
+                ax_cond.tick_params(axis='y', labelcolor='red')
+                ax_cond.grid(True, which='both', linestyle='--', linewidth=0.5)
+
+                # Display the eigenvectors
+                ax_eigvec = fig_eig.add_subplot(1, 2, 2)
+                ax_eigvec.imshow(numpy.real(ordered_eigvecs), aspect='auto', cmap='viridis')
+                fig_eig.colorbar(ax_eigvec.images[0], ax=ax_eigvec, orientation='vertical', label='Eigenvector Component')
+                ax_eigvec.set_title(f"Eigenvectors of JTJ (Iteration {it+1})")
+                ax_eigvec.set_xlabel("Eigenvector Index")
+                ax_eigvec.set_ylabel("Eigenvector Component")
+                ax_eigvec.grid(False)
+                plt.tight_layout()
+                plt.show()
 
             # ===================================================
             # Condition number check
@@ -903,13 +944,13 @@ class Transform(ABC):
             delta_itk = numpy.linalg.solve(JTJ, JTR) # shape (Nparams,)
 
             if verbose:
-                print(f"Iteration {it+1}: Delta parameters:\n{delta_itk}\n")
+                print(f"Iteration {it+1}: Delta parameters:\n{delta_itk}")
                 
             # Update the parameters of the object class
             object_class.parameters = object_class.parameters + delta_itk  # shape (Nparams,)
 
             if verbose:
-                print(f"Iteration {it+1}: Updated parameters:\n{object_class.parameters}\n")
+                print(f"Iteration {it+1}: Updated parameters:\n{object_class.parameters}")
         
         return object_class.parameters  # shape (Nparams,)
     
@@ -1149,6 +1190,12 @@ class TransformComposition(Transform):
     This class allows to compose multiple transformations and apply them sequentially.
     It inherits from the `Transform` class and overrides the `_transform` and `_inverse_transform` methods to apply the composition of transformations.
 
+    If the transformations to represent is :math:`T_n (T_{n-1}(...(T_1(X))))`, the transformations must be given in the order of application, i.e. from the first to the last transformation.
+
+    .. code-block:: python
+
+        transformations = [Transform1(), Transform2(), ..., TransformN()]
+
     Parameters
     ----------
     transformations : Sequence[Transform]
@@ -1315,9 +1362,9 @@ class TransformComposition(Transform):
             for index, t in enumerate(self.transformations):
                 end = start + t.Nparams
                 jacobian_dp_t = jacobian_dp_list[index]  # (Npoints, output_dim_t, Nparams_t)
-                for index_2, t_2 in enumerate(self.transformations[index + 1:]):
-                    # Compute the chain rule for the Jacobian with respect to the parameters
-                    jacobian_dp_t = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index_2], jacobian_dp_t)  # (Npoints, output_dim_t, Nparams_t)
+                for index_2 in range(index + 1, len(self.transformations)):
+                    # Compute the chain rule for the Jacobian with respect to the parameters including the dx for the next transformation
+                    jacobian_dp_t = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index_2], jacobian_dp_t)  # (Npoints, output_dim_t2, input_dim_t2) * (Npoints, output_dim_t, Nparams_t) -> (Npoints, output_dim_t2, Nparams_t)
                 jacobian_dp[:, :, start:end] = jacobian_dp_t  # (Npoints, output_dim_t, Nparams_t)
                 start = end
         else:
@@ -1402,7 +1449,7 @@ class TransformComposition(Transform):
             for index, t in enumerate(reversed(self.transformations)):
                 end = start + t.Nparams
                 jacobian_dp_t = jacobian_dp_list[index]  # (Npoints, input_dim_t, Nparams_t)
-                for index_2, t_2 in enumerate(reversed(self.transformations[index + 1:])):
+                for index_2 in range(index + 1, len(reversed(self.transformations))):
                     # Compute the chain rule for the Jacobian with respect to the parameters
                     jacobian_dp_t = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index_2], jacobian_dp_t)
                 jacobian_dp[:, :, start:end] = jacobian_dp_t  # (Npoints, input_dim_t, Nparams_t)
@@ -1427,3 +1474,96 @@ class TransformComposition(Transform):
         )
 
               
+
+
+
+
+
+
+
+
+
+
+class TransformInvertion(Transform):
+    r"""
+    A class to represent the inversion of a transformation.
+
+    This class allows to invert a transformation and apply it to the input points.
+    It inherits from the `Transform` class and overrides the `_transform` and `_inverse_transform` methods to apply the inverse transformation.
+
+    Parameters
+    ----------
+    transform : Transform
+        The transformation to be inverted. Must be an instance of the `Transform` class or its subclasses.
+
+    """
+    def __init__(self, transform: Transform):
+        super().__init__()
+        if not isinstance(transform, Transform):
+            raise TypeError(f"transform must be an instance of Transform, got {type(transform)}")
+        self.transform = transform
+
+    @property
+    def input_dim(self) -> int:
+        r"""
+        The input dimension is the output dimension of the transformation to be inverted.
+        """
+        return self.transform.output_dim
+    
+    @property
+    def output_dim(self) -> int:
+        r"""
+        The output dimension is the input dimension of the transformation to be inverted.
+        """
+        return self.transform.input_dim
+    
+    @property
+    def Nparams(self) -> int:
+        r"""
+        The number of parameters is the same as the number of parameters of the transformation to be inverted.
+        """
+        return self.transform.Nparams
+    
+    @property
+    def parameters(self) -> numpy.ndarray:
+        r"""
+        The parameters are the same as the parameters of the transformation to be inverted.
+        """
+        return self.transform.parameters
+    
+    @parameters.setter
+    def parameters(self, value: numpy.ndarray):
+        self.transform.parameters = value
+
+    def is_set(self) -> bool:
+        r"""
+        Check if the parameters of the transformation to be inverted are set.
+        """
+        return self.transform.is_set()
+    
+    def _transform(
+            self,
+            points: numpy.ndarray,
+            *,
+            dx: bool = False,
+            dp: bool = False,
+            **kwargs
+    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+        r"""
+        The transform method is the inverse of the transformation to be inverted.
+        """
+        return self.transform._inverse_transform(points, dx=dx, dp=dp, **kwargs)
+    
+
+    def _inverse_transform(
+            self,
+            points: numpy.ndarray,
+            *,
+            dx: bool = False,
+            dp: bool = False,
+            **kwargs
+    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+        r"""
+        The inverse transform method is the direct transformation of the transformation to be inverted.
+        """
+        return self.transform._transform(points, dx=dx, dp=dp, **kwargs)

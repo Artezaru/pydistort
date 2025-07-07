@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import cv2
 import os
 import csv
+import copy
 import skimage
 
 from pydistort import ZernikeDistortion, distort_image
@@ -115,7 +116,7 @@ real_distortion.radius = radius
 real_distortion.center = center
 
 # Distort the image
-distorted_image = distort_image(src=image, K=None, distortion=real_distortion, method="distort")
+distorted_image = distort_image(src=image, K=None, distortion=real_distortion, method="undistort")
 distorted_image = distorted_image.astype(numpy.uint8)
 
 # Save the distorted image
@@ -141,7 +142,7 @@ real_displacement_field = real_distorted_points - pixel_points
 # [Final noisy image]
 noise_gaussian_var = 0.01  # Variance for Gaussian noise
 noise_poisson = False  # Whether to add Poisson noise
-noise_salt_pepper_amount = 0.01  # Amount of salt & pepper noise
+noise_salt_pepper_amount = 0.0 # Amount of salt & pepper noise
 
 noisy_distorted_image = skimage.util.random_noise(distorted_image, mode="gaussian", var=noise_gaussian_var)
 if noise_poisson:
@@ -354,7 +355,9 @@ plt.tight_layout()
 # ============== OPTIMIZE THE DISTORTION PARAMETERS =============================
 # ===============================================================================
 
-Nzer = 7 # Maximum order of Zernike polynomials to use
+Nzer = 6 # Maximum order of Zernike polynomials to use
+real_distortion_cropped_extended = copy.deepcopy(real_distortion)
+real_distortion_cropped_extended.Nzer = Nzer
 
 optimized_real_distortion = ZernikeDistortion(Nzer=Nzer)
 optimized_real_distortion.radius = real_distortion.radius
@@ -364,30 +367,45 @@ optimized_flow_distortion = ZernikeDistortion(Nzer=Nzer)
 optimized_flow_distortion.radius = real_distortion.radius
 optimized_flow_distortion.center = real_distortion.center
 
+# Select the disk for points used in computation.
+radius_optimization = image_width / 2
+center_optimization = (image_width / 2, image_height / 2)
+mask_optimisation = numpy.sqrt((pixel_points[:,0] - center_optimization[0])**2 + (pixel_points[:,1] - center_optimization[1])**2) <= radius_optimization
+
+# Parameters for optimization
+mas_iter = 4
+eps = 1e-8
+reg_factor = 0.0
+precond_jacobi = True 
+cond_cutoff = 1e8
+
+
 # Optimize the distortion parameters using the pixels points and the associated distorted points
 optimized_real_parameters = optimized_real_distortion.optimize_parameters(
-    input_points=pixel_points,
-    output_points=real_distorted_points,
+    input_points=pixel_points[mask_optimisation, :],
+    output_points=real_distorted_points[mask_optimisation, :],
     guess=None, # Use the distortion parameters as initial guess (here zero because the object is initialized with default parameters)
-    max_iter=4,
-    eps=1e-8,
-    reg_factor=0.0, # Regularization factor (0.0 means no regularization)
-    cond_cutoff=1e5, # Cutoff for the condition number of the Jacobian matrix
-    dim_eig_reduce_crit=0.0, # Dimension reduction criterion for the eigenvalues (0.0 means no reduction) |lambda/lambda_max| < dim_eig_reduce_crit -> lambda set to zero
-    verbose=True
+    max_iter=mas_iter,
+    eps=eps,
+    reg_factor=reg_factor, # Regularization factor (0.0 means no regularization)
+    precond_jacobi=precond_jacobi, # Whether to use the Jacobi preconditioner
+    cond_cutoff=cond_cutoff, # Cutoff for the condition number of the Jacobian matrix
+    verbose=True,
+    _verbose_eigen=True, # Whether to display the eigenvalues and eigenvectors of the Jacobian matrix
 )
 
 # Optimize the flow distortion parameters using the pixels points and the associated distorted points
 optimized_flow_parameters = optimized_flow_distortion.optimize_parameters(
-    input_points=pixel_points,
-    output_points=flow_distorted_points,
+    input_points=pixel_points[mask_optimisation, :],
+    output_points=flow_distorted_points[mask_optimisation, :],
     guess=None, # Use the distortion parameters as initial guess (here zero because the object is initialized with default parameters)
-    max_iter=4,
-    eps=1e-8,
-    reg_factor=0.0, # Regularization factor (0.0 means no regularization)
-    cond_cutoff=1e5, # Cutoff for the condition number of the Jacobian matrix
-    dim_eig_reduce_crit=0.0, # Dimension reduction criterion for the eigenvalues (0.0 means no reduction) |lambda/lambda_max| < dim_eig_reduce_crit -> lambda set to zero
-    verbose=True
+    max_iter=mas_iter,
+    eps=eps,
+    reg_factor=reg_factor, # Regularization factor (0.0 means no regularization)
+    precond_jacobi=precond_jacobi, # Whether to use the Jacobi preconditioner
+    cond_cutoff=cond_cutoff, # Cutoff for the condition number of the Jacobian matrix
+    verbose=True,
+    _verbose_eigen = True
 )
 
 # Set the optimized parameters to the distortion objects
@@ -425,6 +443,14 @@ optimized_flow_displacement_field = optimized_flow_distorted_points - pixel_poin
 # ===============================================================================
 # ============== DISPLAY THE OPTIMIZED DISTORTION PARAMETERS ====================
 # ===============================================================================
+
+# Display the optimization mask
+fig_optimized_mask = plt.figure(figsize=(5, 5))
+ax1 = fig_optimized_mask.add_subplot(3, 3, 1)
+ax1.imshow(mask_optimisation.reshape(image_height, image_width), vmin=0.0, vmax=1.0)
+ax1.set_title("Mask for optimisation")
+ax1.axis('off')
+plt.tight_layout()
 
 # Display the displacement fields
 jump = 20
@@ -488,17 +514,17 @@ plt.tight_layout()
 # Display the flow displacement fields
 fig_optimized_flow_displacement_fields = plt.figure(figsize=(15, 15))
 ax1 = fig_optimized_flow_displacement_fields.add_subplot(3, 3, 1)
-ax1.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=numpy.linalg.norm(flow_displacement_field[::jump], axis=1), cmap='seismic', s=20, edgecolor='none', vmin=magn_vmin, vmax=magn_vmax)
+ax1.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=numpy.linalg.norm(real_displacement_field[::jump], axis=1), cmap='seismic', s=20, edgecolor='none', vmin=magn_vmin, vmax=magn_vmax)
 ax1_colorbar = plt.colorbar(ax1.collections[0], ax=ax1, orientation='vertical')
 ax1.set_title("Optical Flow Field (Magnitude)")
 ax1.set_aspect('equal')
 ax2 = fig_optimized_flow_displacement_fields.add_subplot(3, 3, 2)
-ax2.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=flow_displacement_field[::jump, 0], cmap='seismic', s=20, edgecolor='none', vmin=axis_vmin, vmax=axis_vmax)
+ax2.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=real_displacement_field[::jump, 0], cmap='seismic', s=20, edgecolor='none', vmin=axis_vmin, vmax=axis_vmax)
 ax2_colorbar = plt.colorbar(ax2.collections[0], ax=ax2, orientation='vertical')
 ax2.set_title("Optical Flow Field (X)")
 ax2.set_aspect('equal')
 ax3 = fig_optimized_flow_displacement_fields.add_subplot(3, 3, 3)
-ax3.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=flow_displacement_field[::jump, 1], cmap='seismic', s=20, edgecolor='none', vmin=axis_vmin, vmax=axis_vmax)
+ax3.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=real_displacement_field[::jump, 1], cmap='seismic', s=20, edgecolor='none', vmin=axis_vmin, vmax=axis_vmax)
 ax3_colorbar = plt.colorbar(ax3.collections[0], ax=ax3, orientation='vertical')
 ax3.set_title("Optical Flow Field (Y)")
 ax3.set_aspect('equal')
@@ -540,22 +566,21 @@ labels_x = [f"Cx({n}, {m})" for n in range(Nzer + 1) for m in range(-n, n + 1) i
 labels_y = [f"Cy({n}, {m})" for n in range(Nzer + 1) for m in range(-n, n + 1) if (n + m) % 2 == 0]
 x = numpy.arange(len(labels_x))  # Position of the bars on the x-axis
 x_width = 0.20  # Width of the bars
-Np_mid = int(optimized_real_distortion.Nparams / 2)
 
 fig_optimzed_parameters = plt.figure(figsize=(10,20))
 ax1 = fig_optimzed_parameters.add_subplot(2, 1, 1)
-ax1.bar(x - x_width, real_distortion.parameters_x[:Np_mid], width=x_width, label='Real Distortion (Cx)', color='blue')
-ax1.bar(x, optimized_real_distortion.parameters_x[:Np_mid], width=x_width, label='Optimized Real Distortion (Cx)', color='orange')
-ax1.bar(x + x_width, optimized_flow_distortion.parameters_x[:Np_mid], width=x_width, label='Optimized Flow Distortion (Cx)', color='green')
+ax1.bar(x - x_width, real_distortion_cropped_extended.parameters_x, width=x_width, label='Real Distortion (Cx)', color='blue')
+ax1.bar(x, optimized_real_distortion.parameters_x, width=x_width, label='Optimized Real Distortion (Cx)', color='orange')
+ax1.bar(x + x_width, optimized_flow_distortion.parameters_x, width=x_width, label='Optimized Flow Distortion (Cx)', color='green')
 ax1.set_xticks(x)
 ax1.set_xticklabels(labels_x, rotation=90)
 ax1.set_title("Optimized Distortion Parameters (Cx)")
 ax1.set_ylabel("Parameter Value")
 ax1.legend()
 ax2 = fig_optimzed_parameters.add_subplot(2, 1, 2)
-ax2.bar(x - x_width, real_distortion.parameters_y[:Np_mid], width=x_width, label='Real Distortion (Cy)', color='blue')
-ax2.bar(x, optimized_real_distortion.parameters_y[:Np_mid], width=x_width, label='Optimized Real Distortion (Cy)', color='orange')
-ax2.bar(x + x_width, optimized_flow_distortion.parameters_y[:Np_mid], width=x_width, label='Optimized Flow Distortion (Cy)', color='green')
+ax2.bar(x - x_width, real_distortion_cropped_extended.parameters_y, width=x_width, label='Real Distortion (Cy)', color='blue')
+ax2.bar(x, optimized_real_distortion.parameters_y, width=x_width, label='Optimized Real Distortion (Cy)', color='orange')
+ax2.bar(x + x_width, optimized_flow_distortion.parameters_y, width=x_width, label='Optimized Flow Distortion (Cy)', color='green')
 ax2.set_xticks(x)
 ax2.set_xticklabels(labels_y, rotation=90)
 ax2.set_title("Optimized Distortion Parameters (Cy)")

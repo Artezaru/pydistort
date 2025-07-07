@@ -2,7 +2,7 @@ from typing import Optional
 from dataclasses import dataclass
 import numpy
 
-from .objects.transform import TransformResult
+from .objects.transform import TransformResult, TransformComposition, TransformInvertion
 from .objects.distortion import Distortion
 from .no_distortion import NoDistortion
 from .objects.intrinsic import Intrinsic
@@ -394,3 +394,118 @@ def project_points(
     return result
 
 
+
+
+
+
+
+# TO TEST IF COMPOSETRANSFORM WORK ! 
+# def project_points_bis(
+#         world_3dpoints: numpy.ndarray, 
+#         rvec: Optional[numpy.ndarray],
+#         tvec: Optional[numpy.ndarray], 
+#         K: Optional[numpy.ndarray], 
+#         distortion: Optional[Distortion], 
+#         transpose: bool = False,
+#         dx: bool = False, 
+#         dp: bool = False,
+#         faster_dx: bool = True,
+#         **kwargs
+#     ) -> ProjectPointsResult:
+#     # Set the default values if None
+#     if rvec is None:
+#         rvec = numpy.zeros((3,), dtype=numpy.float64)
+#     if tvec is None:
+#         tvec = numpy.zeros((3,), dtype=numpy.float64)
+#     if K is None:
+#         K = numpy.array([[1.0, 0.0, 0.0],
+#                          [0.0, 1.0, 0.0],
+#                          [0.0, 0.0, 1.0]], dtype=numpy.float64)
+#     if distortion is None:
+#         distortion = NoDistortion()
+
+#     # Create the intrinsic extrinsic and distortion objects
+#     tvec = numpy.asarray(tvec, dtype=numpy.float64)
+#     rvec = numpy.asarray(rvec, dtype=numpy.float64)
+#     extrinsic = Extrinsic()
+#     extrinsic.translation_vector = tvec
+#     if rvec.size == 3:
+#         extrinsic.rotation_vector = rvec
+#     elif rvec.size == 9:
+#         extrinsic.rotation_matrix = rvec
+#     else:
+#         raise ValueError("rvec must be of shape (3,) or (3, 3)")
+
+#     K = numpy.asarray(K, dtype=numpy.float64)
+#     intrinsic = Intrinsic()
+#     if K.size == 4:
+#         intrinsic.intrinsic_vector = K
+#     elif K.size == 9:
+#         intrinsic.intrinsic_matrix = K
+#     else:
+#         raise ValueError("K must be of shape (4,) or (3, 3)")
+    
+#     if not isinstance(distortion, Distortion):
+#         raise ValueError("distortion must be an instance of the Distortion class")
+#     if not intrinsic.is_set():
+#         raise ValueError("The intrinsic matrix K must be set")
+#     if not extrinsic.is_set():
+#         raise ValueError("The extrinsic matrix (rvec, tvec) must be set")
+#     if not distortion.is_set():
+#         raise ValueError("The distortion coefficients must be set")
+    
+#     if not isinstance(faster_dx, bool):
+#         raise ValueError("faster_dx must be a boolean value")
+#     if not isinstance(transpose, bool):
+#         raise ValueError("transpose must be a boolean value")
+#     if not isinstance(dx, bool):
+#         raise ValueError("dx must be a boolean value")
+#     if not isinstance(dp, bool):
+#         raise ValueError("dp must be a boolean value")        
+
+#     # Create the array of points
+#     points = numpy.asarray(world_3dpoints, dtype=numpy.float64) 
+
+#     # Transpose the points if needed
+#     if transpose:
+#         points = numpy.moveaxis(points, 0, -1) # (3, ...) -> (..., 3)
+
+#     # Extract the original shape
+#     shape = points.shape # (..., 3)
+
+#     # Flatten the points along the last axis
+#     points_flat = points.reshape(-1, shape[-1]) # shape (..., 3) -> shape (Npoints, 3)
+#     shape_flat = points_flat.shape # (Npoints, 3)
+#     Npoints = shape_flat[0] # Npoints
+
+#     # Check the shape of the points
+#     if points_flat.ndim !=2 or points_flat.shape[1] != 3:
+#         raise ValueError(f"The points must be in the shape (Npoints, 3) or (3, Npoints) if ``transpose`` is True. Got {points_flat.shape} instead and transpose is {transpose}.")
+    
+#     # Initialize the jacobians
+#     jacobian_dx = None
+#     jacobian_dp = None
+
+#     # transform compisition:
+#     # extrinsic -> distortion -> intrinsic
+#     transform = TransformComposition([extrinsic, distortion, intrinsic])
+#     image_points_flat, jacobian_flat_dx, jacobian_flat_dp = transform._transform(points_flat, dx=dx, dp=dp, **kwargs)
+
+#     # Reshape the normalized points back to the original shape (Warning shape is (..., 3) and not (..., 2))
+#     image_points = image_points_flat.reshape((*shape[:-1], 2)) # shape (Npoints, 2) -> (..., 2)
+#     jacobian_dx = jacobian_flat_dx.reshape((*shape[:-1], 2, 3)) if dx else None # shape (Npoints, 2, 3) -> (..., 2, 3)
+#     jacobian_dp = jacobian_flat_dp.reshape((*shape[:-1], 2, jacobian_flat_dp.shape[-1])) if dp else None # shape (Npoints, 2, 10 + Nparams) -> (..., 2, 10 + Nparams)
+
+#     # Transpose the points back to the original shape if needed
+#     if transpose:
+#         image_points = numpy.moveaxis(image_points, -1, 0) # (..., 2) -> (2, ...)
+#         jacobian_dx = numpy.moveaxis(jacobian_dx, -2, 0) if dx else None # (..., 2, 2) -> (2, ..., 2)
+#         jacobian_dp = numpy.moveaxis(jacobian_dp, -2, 0) if dp else None # (..., 2, 4) -> (2, ..., 4)
+
+#     # Return the result
+#     result = ProjectPointsResult(
+#         transformed_points=image_points,
+#         jacobian_dx=jacobian_dx,
+#         jacobian_dp=jacobian_dp
+#     )
+#     return result
