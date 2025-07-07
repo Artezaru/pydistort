@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.objects.transform &#8212; pydistort 2.0.1 documentation</title>
+    <title>pydistort.objects.transform &#8212; pydistort 2.0.2 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=f5cff4aa"></script>
+    <script src="../../../_static/documentation_options.js?v=c2377ec0"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/objects/transform';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.1 documentation</p>
+    <p class="title logo__title">pydistort 2.0.2 documentation</p>
   
 </a></div>
     
@@ -315,7 +315,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
-
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
 <div class="viewcode-block" id="TransformResult">
 <a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.TransformResult">[docs]</a>
@@ -943,8 +943,9 @@
         <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="n">cond_cutoff</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e5</span><span class="p">,</span>
         <span class="n">reg_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="n">dim_eig_reduce_crit</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="n">_skip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">precond_jacobi</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">_skip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">_verbose_eigen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Optimize the parameters of the transformation using the given input and output points.</span>
@@ -990,7 +991,7 @@
 <span class="sd">        For conditioning, the following steps are applied:</span>
 
 <span class="sd">        - First, a regularization term is added to the Jacobian matrix to improve stability: :math:`J^{T} J + \text{regfactor} I`.</span>
-<span class="sd">        - Second, a dimensionality reduction is applied to the Jacobian matrix based on the eigenvalues. Lower eigenvalues :math:`k_i` are removed if :math:`\frac{k_i}{k_0} &lt; \text{dim\_eig\_reduce\_crit}` where :math:`k_0` is the largest eigenvalue.</span>
+<span class="sd">        - Second, a preconditioner is applied to the Jacobian matrix to improve the conditioning of the problem.</span>
 <span class="sd">        </span>
 <span class="sd">        The `cond_cutoff` parameter is used to detect ill-conditioned problems. If the condition number of the Jacobian matrix is greater than this value, a warning is raised and the optimization returns NaN array.</span>
 
@@ -1023,14 +1024,16 @@
 <span class="sd">        reg_factor : float, optional</span>
 <span class="sd">            The regularization factor for the optimization. If greater than 0, it adds a tikhonov regularization term to the optimization problem to improve stability :math:`J^{T} J + \text{regfactor} I`. Default is 0.0.</span>
 
-<span class="sd">        dim_eig_reduce_crit : float, optional</span>
-<span class="sd">            The criterion for reducing the dimensionality of the Jacobian matrix based on the eigenvalues. lower eigenvalues :math:`k_i` are removed if :math:`\frac{k_i}{k_0} &lt; \text{dim_eig_reduce_crit}` where :math:`k_0` is the largest eigenvalue. </span>
-<span class="sd">            Default is 0.0, which means no dimensionality reduction is applied. Must be between 0.0 and 1.0.</span>
+<span class="sd">        precond_jacobi : bool, optional</span>
+<span class="sd">            If True, apply a preconditioner to the Jacobian matrix to improve the conditioning of the problem. This is done by applying the Jacobi preconditioner to the Jacobian matrix before solving the optimization problem. Default is False.</span>
 
 <span class="sd">        _skip : bool, optional</span>
 <span class="sd">            If True, skip the checks for the transformation parameters and assume the input and output points are given in the (Npoints, input_dim) and (Npoints, output_dim) float64 format, respectively.</span>
 <span class="sd">            The guess must be given in the (Nparams,) float64 format.</span>
 <span class="sd">            `transpose` is ignored if this parameter is set to True.</span>
+
+<span class="sd">        _verbose_eigen : bool, optional</span>
+<span class="sd">            If True, display the eigenvalues of the Jacobian matrix during the optimization process. Default is False.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -1065,8 +1068,8 @@
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cond_cutoff must be a positive float, got </span><span class="si">{</span><span class="n">cond_cutoff</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reg_factor</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="n">reg_factor</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;reg_factor must be a non-negative float, got </span><span class="si">{</span><span class="n">reg_factor</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dim_eig_reduce_crit</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="p">(</span><span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">dim_eig_reduce_crit</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dim_eig_reduce_crit must be a float between 0.0 and 1.0, got </span><span class="si">{</span><span class="n">dim_eig_reduce_crit</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">precond_jacobi</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;precond_jacobi must be a boolean, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">precond_jacobi</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="c1"># Check if the transformation is set</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
@@ -1158,7 +1161,7 @@
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">#=====================================================&quot;</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STARTING ITERATION </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> OF THE OPTIMIZATION PROCESS&quot;</span><span class="p">)</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#=====================================================</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#=====================================================&quot;</span><span class="p">)</span>
 
             <span class="c1"># Construct the residual vector R and the Jacobian J</span>
             <span class="n">R</span> <span class="o">=</span> <span class="n">output_points</span> <span class="o">-</span> <span class="n">transformed_points_itk</span>  <span class="c1"># shape (Npoints, output_dim)</span>
@@ -1186,34 +1189,72 @@
 
 
             <span class="c1">#===================================================</span>
-            <span class="c1"># Regularization and Dimensionality Reduction</span>
+            <span class="c1"># Regularization and conditioning part</span>
             <span class="c1">#===================================================</span>
+
+            <span class="c1"># Display the condition number of the Jacobian matrix without regularization</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Condition number of JTJ before preconditionning and regularization: </span><span class="si">{</span><span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">JTJ</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="c1"># Add regularization if requested</span>
             <span class="k">if</span> <span class="n">reg_factor</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
                 <span class="n">JTJ</span> <span class="o">+=</span> <span class="n">reg_factor</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Nparams</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
-            <span class="c1"># Reducing the dimensionality of the Jacobian based on eigenvalues</span>
-            <span class="k">if</span> <span class="n">dim_eig_reduce_crit</span> <span class="o">&gt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="c1"># Compute the eigenvalues and eigenvectors of JTJ</span>
-                <span class="n">eigvals</span><span class="p">,</span> <span class="n">eigvecs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">JTJ</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Condition number of JTJ after regularization: </span><span class="si">{</span><span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">JTJ</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Apply preconditioning if requested</span>
+            <span class="k">if</span> <span class="n">precond_jacobi</span><span class="p">:</span>
+                <span class="c1"># Compute the diagonal of JTJ for Jacobi preconditioning</span>
+                <span class="n">diag_JTJ</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">JTJ</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">numpy</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">diag_JTJ</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Jacobi preconditioner cannot be applied because the diagonal of JTJ contains zeros.&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Apply the Jacobi preconditioner</span>
+                <span class="n">JTJ</span> <span class="o">=</span> <span class="n">JTJ</span> <span class="o">/</span> <span class="n">diag_JTJ</span><span class="p">[:,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>  <span class="c1"># Normalize each row by the diagonal element</span>
+                <span class="n">JTR</span> <span class="o">=</span> <span class="n">JTR</span> <span class="o">/</span> <span class="n">diag_JTJ</span>  <span class="c1"># Normalize the residual vector by the diagonal elements</span>
 
                 <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Eigenvalues before reduction:</span><span class="se">\n</span><span class="si">{</span><span class="n">eigvals</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Condition number of JTJ after Jacobi preconditioning: </span><span class="si">{</span><span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">JTJ</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">dim_eig_reduce_crit</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
-                    <span class="c1"># Reduce the dimensionality based on the criterion</span>
-                    <span class="n">eigmask</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">eigvals</span> <span class="o">/</span> <span class="n">numpy</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">eigvals</span><span class="p">))</span> <span class="o">&gt;=</span> <span class="n">dim_eig_reduce_crit</span>  <span class="c1"># Keep eigenvalues that satisfy the criterion</span>
+            <span class="c1"># Display more information if _verbose is True.</span>
+            <span class="k">if</span> <span class="n">_verbose_eigen</span><span class="p">:</span>
+                <span class="n">eigvals</span><span class="p">,</span> <span class="n">eigvecs</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eig</span><span class="p">(</span><span class="n">JTJ</span><span class="p">)</span>
 
-                    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Number of eigenvalues kept: </span><span class="si">{</span><span class="n">numpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">eigmask</span><span class="p">)</span><span class="si">}</span><span class="s2"> out of </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Nparams</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Eigenvalues of JTJ:</span><span class="se">\n</span><span class="si">{</span><span class="n">eigvals</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-                    <span class="c1"># Apply the mask to the eigenvalues (set the small eigenvalues to zero)</span>
-                    <span class="n">eigvals</span><span class="p">[</span><span class="o">~</span><span class="n">eigmask</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                <span class="n">ordered_indices</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">eigvals</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Sort eigenvalues in descending order</span>
+                <span class="n">ordered_eigvals</span> <span class="o">=</span> <span class="n">eigvals</span><span class="p">[</span><span class="n">ordered_indices</span><span class="p">]</span>
+                <span class="n">ordered_eigvecs</span> <span class="o">=</span> <span class="n">eigvecs</span><span class="p">[:,</span> <span class="n">ordered_indices</span><span class="p">]</span>
+                <span class="n">ordered_cond_number</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ordered_eigvals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">ordered_eigvals</span><span class="p">)</span> 
 
-                    <span class="c1"># Reconstruct the reduced JTJ matrix</span>
-                    <span class="n">JTJ</span> <span class="o">=</span> <span class="n">eigvecs</span> <span class="o">@</span> <span class="n">numpy</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">eigvals</span><span class="p">)</span> <span class="o">@</span> <span class="n">eigvecs</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># shape (Nparams, Nparams)</span>
+                <span class="c1"># Display the eigenvalues</span>
+                <span class="n">fig_eig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+                <span class="n">ax_eigval</span> <span class="o">=</span> <span class="n">fig_eig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">ax_eigval</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">ordered_eigvals</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">)</span>
+                <span class="n">ax_eigval</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Ordered Eigenvalues of JTJ (Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                <span class="n">ax_eigval</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Index&quot;</span><span class="p">)</span>
+                <span class="n">ax_eigval</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Eigenvalue (log scale)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+                <span class="n">ax_eigval</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+                <span class="n">ax_eigval</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
 
+                <span class="n">ax_cond</span> <span class="o">=</span> <span class="n">ax_eigval</span><span class="o">.</span><span class="n">twinx</span><span class="p">()</span>
+                <span class="n">ax_cond</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">ordered_cond_number</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;None&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+                <span class="n">ax_cond</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Condition Number |max(eig)/eig| (log scale)&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+                <span class="n">ax_cond</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">labelcolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+                <span class="n">ax_cond</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+                <span class="c1"># Display the eigenvectors</span>
+                <span class="n">ax_eigvec</span> <span class="o">=</span> <span class="n">fig_eig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="n">ax_eigvec</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">ordered_eigvecs</span><span class="p">),</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;viridis&#39;</span><span class="p">)</span>
+                <span class="n">fig_eig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ax_eigvec</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax_eigvec</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Eigenvector Component&#39;</span><span class="p">)</span>
+                <span class="n">ax_eigvec</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Eigenvectors of JTJ (Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                <span class="n">ax_eigvec</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Eigenvector Index&quot;</span><span class="p">)</span>
+                <span class="n">ax_eigvec</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Eigenvector Component&quot;</span><span class="p">)</span>
+                <span class="n">ax_eigvec</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
             <span class="c1"># ===================================================</span>
             <span class="c1"># Condition number check</span>
@@ -1237,13 +1278,13 @@
             <span class="n">delta_itk</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">JTJ</span><span class="p">,</span> <span class="n">JTR</span><span class="p">)</span> <span class="c1"># shape (Nparams,)</span>
 
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Delta parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">delta_itk</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Delta parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">delta_itk</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 
             <span class="c1"># Update the parameters of the object class</span>
             <span class="n">object_class</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">object_class</span><span class="o">.</span><span class="n">parameters</span> <span class="o">+</span> <span class="n">delta_itk</span>  <span class="c1"># shape (Nparams,)</span>
 
             <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Updated parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">object_class</span><span class="o">.</span><span class="n">parameters</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Iteration </span><span class="si">{</span><span class="n">it</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">: Updated parameters:</span><span class="se">\n</span><span class="si">{</span><span class="n">object_class</span><span class="o">.</span><span class="n">parameters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="n">object_class</span><span class="o">.</span><span class="n">parameters</span>  <span class="c1"># shape (Nparams,)</span></div>
 
@@ -1490,6 +1531,12 @@
 <span class="sd">    This class allows to compose multiple transformations and apply them sequentially.</span>
 <span class="sd">    It inherits from the `Transform` class and overrides the `_transform` and `_inverse_transform` methods to apply the composition of transformations.</span>
 
+<span class="sd">    If the transformations to represent is :math:`T_n (T_{n-1}(...(T_1(X))))`, the transformations must be given in the order of application, i.e. from the first to the last transformation.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        transformations = [Transform1(), Transform2(), ..., TransformN()]</span>
+
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    transformations : Sequence[Transform]</span>
@@ -1661,9 +1708,9 @@
             <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">):</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">Nparams</span>
                 <span class="n">jacobian_dp_t</span> <span class="o">=</span> <span class="n">jacobian_dp_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>  <span class="c1"># (Npoints, output_dim_t, Nparams_t)</span>
-                <span class="k">for</span> <span class="n">index_2</span><span class="p">,</span> <span class="n">t_2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]):</span>
-                    <span class="c1"># Compute the chain rule for the Jacobian with respect to the parameters</span>
-                    <span class="n">jacobian_dp_t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">index_2</span><span class="p">],</span> <span class="n">jacobian_dp_t</span><span class="p">)</span>  <span class="c1"># (Npoints, output_dim_t, Nparams_t)</span>
+                <span class="k">for</span> <span class="n">index_2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">)):</span>
+                    <span class="c1"># Compute the chain rule for the Jacobian with respect to the parameters including the dx for the next transformation</span>
+                    <span class="n">jacobian_dp_t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">index_2</span><span class="p">],</span> <span class="n">jacobian_dp_t</span><span class="p">)</span>  <span class="c1"># (Npoints, output_dim_t2, input_dim_t2) * (Npoints, output_dim_t, Nparams_t) -&gt; (Npoints, output_dim_t2, Nparams_t)</span>
                 <span class="n">jacobian_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">jacobian_dp_t</span>  <span class="c1"># (Npoints, output_dim_t, Nparams_t)</span>
                 <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1751,7 +1798,7 @@
             <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">)):</span>
                 <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">Nparams</span>
                 <span class="n">jacobian_dp_t</span> <span class="o">=</span> <span class="n">jacobian_dp_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>  <span class="c1"># (Npoints, input_dim_t, Nparams_t)</span>
-                <span class="k">for</span> <span class="n">index_2</span><span class="p">,</span> <span class="n">t_2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:])):</span>
+                <span class="k">for</span> <span class="n">index_2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">))):</span>
                     <span class="c1"># Compute the chain rule for the Jacobian with respect to the parameters</span>
                     <span class="n">jacobian_dp_t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">index_2</span><span class="p">],</span> <span class="n">jacobian_dp_t</span><span class="p">)</span>
                 <span class="n">jacobian_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">jacobian_dp_t</span>  <span class="c1"># (Npoints, input_dim_t, Nparams_t)</span>
@@ -1778,6 +1825,99 @@
 
 
               
+
+
+
+
+
+
+
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TransformInvertion</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class to represent the inversion of a transformation.</span>
+
+<span class="sd">    This class allows to invert a transformation and apply it to the input points.</span>
+<span class="sd">    It inherits from the `Transform` class and overrides the `_transform` and `_inverse_transform` methods to apply the inverse transformation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    transform : Transform</span>
+<span class="sd">        The transformation to be inverted. Must be an instance of the `Transform` class or its subclasses.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">Transform</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;transform must be an instance of Transform, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">input_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The input dimension is the output dimension of the transformation to be inverted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">output_dim</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The output dimension is the input dimension of the transformation to be inverted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">input_dim</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Nparams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The number of parameters is the same as the number of parameters of the transformation to be inverted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Nparams</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The parameters are the same as the parameters of the transformation to be inverted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span>
+    
+    <span class="nd">@parameters</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Check if the parameters of the transformation to be inverted are set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="o">*</span><span class="p">,</span>
+            <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The transform method is the inverse of the transformation to be inverted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">_inverse_transform</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+            <span class="o">*</span><span class="p">,</span>
+            <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The inverse transform method is the direct transformation of the transformation to be inverted.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
                 </article>

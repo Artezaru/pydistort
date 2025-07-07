@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.NoDistortion &#8212; pydistort 2.0.1 documentation</title>
+    <title>pydistort.NoDistortion &#8212; pydistort 2.0.2 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=f5cff4aa"></script>
+    <script src="../_static/documentation_options.js?v=c2377ec0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_doc/no_distortion';</script>
@@ -110,7 +110,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.1 documentation</p>
+    <p class="title logo__title">pydistort 2.0.2 documentation</p>
   
 </a></div>
     
@@ -345,90 +345,6 @@
                   
   <section id="pydistort-nodistortion">
 <h1>pydistort.NoDistortion<a class="headerlink" href="#pydistort-nodistortion" title="Link to this heading">#</a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="pydistort.NoDistortion">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">NoDistortion</span></span><a class="reference internal" href="../_modules/pydistort/no_distortion.html#NoDistortion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.NoDistortion" title="Link to this definition">#</a></dt>
-<dd><p>Class to represent the empty distortion model where the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> are equal to the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code>.</p>
-<p>The NoDistortionmodel is used when there is no distortion in the camera.</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.NoDistortion.Nparams">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Nparams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.NoDistortion.Nparams" title="Link to this definition">#</a></dt>
-<dd><p>Returns the number of parameters for the no distortion model, which is always 0.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.NoDistortion._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.NoDistortion._abc_impl" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pydistort.NoDistortion._inverse_transform">
-<span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distorted_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/no_distortion.html#NoDistortion._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.NoDistortion._inverse_transform" title="Link to this definition">#</a></dt>
-<dd><p>The inverse transform for the no distortion model is the same as the transform, since the distorted points are equal to the normalized points.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>distorted_points</strong> (<em>numpy.ndarray</em>) – The points in distorted coordinates to be transformed. Shape (Npoints, 2).</p></li>
-<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the jacobian with respect to the normalized points is computed. Default is True</p></li>
-<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the jacobian with respect to the distortion parameters is computed. Default is True</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – The points in normalized coordinates, which are equal to the distorted points. Shape (Npoints, 2).</p></li>
-<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – The jacobian of the normalized points with respect to the distorted points. Shape (Npoints, 2, 2) if dx is True, otherwise None.</p></li>
-<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – The jacobian of the normalized points with respect to the distortion parameters if dp is True, otherwise None. Shape (Npoints, 2, Nparams) if dp is True, otherwise None.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pydistort.NoDistortion._transform">
-<span class="sig-name descname"><span class="pre">_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/no_distortion.html#NoDistortion._transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.NoDistortion._transform" title="Link to this definition">#</a></dt>
-<dd><p>Where no distortion is applied, the normalized points are returned as distorted points.</p>
-<p>The jacobians for the distortion parameters is an empty array, as there are no parameters to compute the jacobian for.
-The jacobian for the normalized points is set to the identity matrix, as the distorted points are equal to the normalized points.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This method is not designed to be used directly for the transformation of points.
-No checks are performed on the input points, so it is the user’s responsibility to ensure that the input points are valid.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – The points in normalized coordinates to be transformed. Shape (Npoints, 2).</p></li>
-<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the jacobian with respect to the normalized points is computed. Default is True</p></li>
-<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the jacobian with respect to the distortion parameters is computed. Default is True</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>distorted_points</strong> (<em>numpy.ndarray</em>) – The points in distorted coordinates, which are equal to the normalized points. Shape (Npoints, 2).</p></li>
-<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – The jacobian of the distorted points with respect to the normalized points. Shape (Npoints, 2, 2) if dx is True, otherwise None.</p></li>
-<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – The jacobian of the distorted points with respect to the distortion parameters if dp is True, otherwise None. Shape (Npoints, 2, Nparams) if dp is True, otherwise None.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pydistort.NoDistortion.is_set">
-<span class="sig-name descname"><span class="pre">is_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydistort/no_distortion.html#NoDistortion.is_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.NoDistortion.is_set" title="Link to this definition">#</a></dt>
-<dd><p>Returns True, indicating that the no distortion model is always set.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.NoDistortion.parameters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.NoDistortion.parameters" title="Link to this definition">#</a></dt>
-<dd><p>Here always returns None since there are no parameters for the no distortion model.
-It cannot be set, as there are no parameters to set.</p>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 
 
@@ -469,26 +385,6 @@ It cannot be set, as there are no parameters to set.</p>
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.NoDistortion"><code class="docutils literal notranslate"><span class="pre">NoDistortion</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.NoDistortion.Nparams"><code class="docutils literal notranslate"><span class="pre">NoDistortion.Nparams</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.NoDistortion._abc_impl"><code class="docutils literal notranslate"><span class="pre">NoDistortion._abc_impl</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.NoDistortion._inverse_transform"><code class="docutils literal notranslate"><span class="pre">NoDistortion._inverse_transform()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.NoDistortion._transform"><code class="docutils literal notranslate"><span class="pre">NoDistortion._transform()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.NoDistortion.is_set"><code class="docutils literal notranslate"><span class="pre">NoDistortion.is_set()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.NoDistortion.parameters"><code class="docutils literal notranslate"><span class="pre">NoDistortion.parameters</span></code></a></li>
-</ul>
-</li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
