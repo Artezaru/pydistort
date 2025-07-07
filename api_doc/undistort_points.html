@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.undistort_points &#8212; pydistort 2.0.2 documentation</title>
+    <title>pydistort.undistort_points &#8212; pydistort 2.0.3 documentation</title>
   
   
   
@@ -38,9 +38,10 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=c2377ec0"></script>
+    <script src="../_static/documentation_options.js?v=664ffad9"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_doc/undistort_points';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -110,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.2 documentation</p>
+    <p class="title logo__title">pydistort 2.0.3 documentation</p>
   
 </a></div>
     
@@ -345,6 +346,79 @@
                   
   <section id="pydistort-undistort-points">
 <h1>pydistort.undistort_points<a class="headerlink" href="#pydistort-undistort-points" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydistort.undistort_points">
+<span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">undistort_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distortion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="distortion.html#pydistort.objects.Distortion" title="pydistort.objects.distortion.Distortion"><span class="pre">Distortion</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/undistort_points.html#undistort_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.undistort_points" title="Link to this definition">#</a></dt>
+<dd><p>Undistort 2D image points using the camera intrinsic and distortion coefficients.</p>
+<p>The process to undistort a 2D-image point is as follows:</p>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">image_points</span></code> (<span class="math notranslate nohighlight">\(x_I\)</span>) are normalized by multiplying by the inverse of the intrinsic matrix K to obtain the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> (<span class="math notranslate nohighlight">\(x_D\)</span>).</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> (<span class="math notranslate nohighlight">\(x_D\)</span>) are undistorted by the distortion model using the coefficients <span class="math notranslate nohighlight">\(\{\lambda_1, \lambda_2, \lambda_3, \ldots\}\)</span> to obtain the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>).</p></li>
+<li><p>A rectification matrix R and a new projection matrix P can be applied to the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> to return the <code class="docutils literal notranslate"><span class="pre">undistorted_points</span></code> in the space required by the user.</p></li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Iterative non-linear optimization is used to find the undistorted points.</p>
+</div>
+<p>The given points <code class="docutils literal notranslate"><span class="pre">image_points</span></code> are assumed to be in the image coordinate system and expressed in 2D coordinates with shape (…, 2).
+If the user gives an identity matrix K, it equivalent to give directly the normalized points.</p>
+<p>This method not compute the jacobians of the undistortion process, but it can be done by using the <code class="docutils literal notranslate"><span class="pre">dx</span></code> and <code class="docutils literal notranslate"><span class="pre">dp</span></code> flags in the intrinsic and distortion models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_points</strong> (<em>numpy.ndarray</em>) – The 2D image points in the camera coordinate system. Shape (…, 2)</p></li>
+<li><p><strong>K</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The intrinsic camera matrix (or vector). Shape (3, 3) or (4,).
+If None, the identity intrinsic matrix is used.</p></li>
+<li><p><strong>distortion</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="distortion.html#pydistort.objects.Distortion" title="pydistort.objects.Distortion"><em>Distortion</em></a><em>]</em>) – The distortion model to be applied to the image points.
+If None, a zero distortion is applied.</p></li>
+<li><p><strong>R</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The rotation matrix (or vector) of the camera. Shape (3,) or (3, 3).
+If None, the identity rotation is used. Default is None.</p></li>
+<li><p><strong>P</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The new projection matrix (or vector). Shape (3, 3) or (4,).
+If None, the identity projection matrix is used. Default is None.</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the input points are assumed to be in the shape (2, …) instead of (…, 2). Default is False.
+The output points will be in the same shape as the input points.</p></li>
+<li><p><strong>kwargs</strong> (<em>optional</em>) – Additional arguments to be passed to the distortion model “undistort” method.
+This is useful for some distortion models that require additional parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The undistorted 2D image points in the camera coordinate system. Shape (…, 2). If no <code class="docutils literal notranslate"><span class="pre">P</span></code> is given, the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> are returned instead of the <code class="docutils literal notranslate"><span class="pre">undistorted_points</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>The following example shows how to undistort 2D image points using the intrinsic camera matrix and a distortion model.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydistort</span><span class="w"> </span><span class="kn">import</span> <span class="n">undistort_points</span><span class="p">,</span> <span class="n">Cv2Distortion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">py3dframe</span><span class="w"> </span><span class="kn">import</span> <span class="n">Frame</span>
+
+<span class="c1"># Define the 2D image points in the camera coordinate system</span>
+<span class="n">image_points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">320.0</span><span class="p">,</span> <span class="mf">240.0</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">420.0</span><span class="p">,</span> <span class="mf">440.0</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">520.0</span><span class="p">,</span> <span class="mf">540.0</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">620.0</span><span class="p">,</span> <span class="mf">640.0</span><span class="p">],</span>
+                            <span class="p">[</span><span class="mf">720.0</span><span class="p">,</span> <span class="mf">740.0</span><span class="p">]])</span> <span class="c1"># shape (5, 2)</span>
+
+<span class="c1"># Define the intrinsic camera matrix</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">320.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">240.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+
+<span class="c1"># Define the distortion model (optional)</span>
+<span class="n">distortion</span> <span class="o">=</span> <span class="n">Cv2Distortion</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+
+<span class="c1"># Undistort the 2D image points</span>
+<span class="n">normalized_points</span> <span class="o">=</span> <span class="n">undistort_points</span><span class="p">(</span><span class="n">image_points</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">distortion</span><span class="o">=</span><span class="n">distortion</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>To return the undistorted points in the image coordinate system, you can provide a projection matrix P equal to the intrinsic matrix K:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">undistorted_points</span> <span class="o">=</span> <span class="n">undistort_points</span><span class="p">(</span><span class="n">image_points</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">,</span> <span class="n">distortion</span><span class="o">=</span><span class="n">distortion</span><span class="p">,</span> <span class="n">P</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
 </section>
 
 
@@ -385,6 +459,18 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.undistort_points"><code class="docutils literal notranslate"><span class="pre">undistort_points()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">
