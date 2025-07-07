@@ -1195,6 +1195,8 @@ class Cv2Distortion(Distortion):
             return "Cv2Distortion: No distortion model"
         elif self.Nparams == 4:
             return f"Cv2Distortion: k1 = {self.k1}, k2 = {self.k2}, p1 = {self.p1}, p2 = {self.p2}"
+        elif self.Nparams == 5:
+            return f"Cv2Distortion: k1 = {self.k1}, k2 = {self.k2}, p1 = {self.p1}, p2 = {self.p2}, k3 = {self.k3}"
         elif self.Nparams == 8:
             return f"Cv2Distortion: k1 = {self.k1}, k2 = {self.k2}, p1 = {self.p1}, p2 = {self.p2}, k3 = {self.k3}, k4 = {self.k4}, k5 = {self.k5}, k6 = {self.k6}"
         elif self.Nparams == 12:
