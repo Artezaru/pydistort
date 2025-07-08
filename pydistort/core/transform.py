@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple, Sequence
+from typing import Optional, Tuple, Dict
 from dataclasses import dataclass
 import numpy
 import copy
@@ -15,15 +15,24 @@ class TransformResult:
 
     .. seealso::
 
-        - :class:`pydistort.objects.Transform` for the base class of all transformations.
-        - :meth:`pydistort.objects.Transform.transform` for applying the transformation to points.
-        - :meth:`pydistort.objects.Transform.inverse_transform` for applying the inverse transformation to points (`output_dim` and `input_dim` are swapped).
+        - :class:`pydistort.core.Transform` for the base class of all transformations.
+        - :meth:`pydistort.core.Transform.transform` for applying the transformation to points.
+        - :meth:`pydistort.core.Transform.inverse_transform` for applying the inverse transformation to points (`output_dim` and `input_dim` are swapped).
 
     For a transformation from :math:`\mathbb{R}^{input\_dim}` to :math:`\mathbb{R}^{output\_dim}`, the input points are assumed to have shape (..., input_dim) and the output points will have shape (..., output_dim).
     
     .. note::
 
         If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
+
+    Some short-hand notation for the Jacobian matrices can be added to the `TransformResult` class usaing the `add_jacobian` method, which allows to add custom views of the ``dp`` Jacobian matrix with respect to the parameters of the transformation.
+
+    .. code-block:: python
+
+        result = TransformResult(transformed_points, jacobian_dx, jacobian_dp)
+        result.add_jacobian("dk", start=0, end=2, doc="Custom Jacobian view for two first parameters related to k1 and k2")
+
+        result.jacobian_dk # This will return a view of the jacobian_dp matrix with respect to the parameters k1 and k2, i.e., jacobian_dp[..., 0:2]
 
     Attributes
     ----------
@@ -42,6 +51,65 @@ class TransformResult:
     transformed_points: numpy.ndarray
     jacobian_dx: Optional[numpy.ndarray] = None
     jacobian_dp: Optional[numpy.ndarray] = None
+    # _custom_jacobians: Dict[str, Tuple[int, int, Optional[str]]] = {}
+
+    # def add_jacobian(self, name: str, start: int, end: int, doc: Optional[str] = None) -> None:
+    #     r"""
+    #     Add a custom view of the `jacobian_dp` matrix to the `TransformResult` object.
+
+    #     This method allows to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.
+    #     The custom Jacobian can be accessed using the `name` attribute.
+
+    #     Parameters
+    #     ----------
+    #     name : str
+    #         The name of the custom Jacobian view.
+        
+    #     start : int
+    #         The starting index of the parameters to include in the custom Jacobian view.
+        
+    #     end : int
+    #         The ending index of the parameters to include in the custom Jacobian view.
+        
+    #     doc : Optional[str], optional
+    #         A documentation string for the custom Jacobian view. Default is None.
+    #     """
+    #     if not isinstance(name, str):
+    #         raise TypeError(f"name must be a string, got {type(name)}")
+    #     if not isinstance(start, int):
+    #         raise TypeError(f"start must be an integer, got {type(start)}")
+    #     if not isinstance(end, int):
+    #         raise TypeError(f"end must be an integer, got {type(end)}")
+    #     if not doc is None and not isinstance(doc, str):
+    #         raise TypeError(f"doc must be a string, got {type(doc)}")
+        
+    #     if start < 0 or end < 0 or start >= end or end > self.jacobian_dp.shape[-1]:
+    #         raise ValueError(f"Invalid range for custom Jacobian view: start={start}, end={end}, Nparams={self.jacobian_dp.shape[-1]}")
+        
+    #     self._custom_jacobians[name] = (start, end, doc)
+
+    # def __getattr__(self, key):
+    #     if key.startswith("jacobian_"):
+    #         name = key[len("jacobian_"):]
+    #         if name in self._custom_jacobians:
+    #             if self.jacobian_dp is None:
+    #                 return None
+    #             start, end, _ = self._custom_jacobians[name]
+    #             return self.jacobian_dp[..., start:end]
+    #     raise AttributeError(f"'TransformResult' object has no attribute '{key}'")
+
+    # def describe_jacobians(self):
+    #     r"""
+    #     Print the descriptions of the custom Jacobian views.
+
+    #     This method prints the names and documentation strings of the custom Jacobian views added to the `TransformResult` object.
+    #     """
+    #     print("tranformed_points: The transformed points after applying the transformation with shape (..., output_dim)")
+    #     print("jacobian_dx: The Jacobian matrix with respect to the input points with shape (..., output_dim, input_dim) [or None if not computed]")
+    #     print("jacobian_dp: The Jacobian matrix with respect to the parameters of the transformation with shape (..., output_dim, Nparams) [or None if not computed]")
+    #     for name, (start, end, doc) in self._custom_jacobians.items():
+    #         print(f"jacobian_{name}: {doc if doc is not None else 'No description provided'} with shape (..., output_dim, {end - start}) [or None if not computed], view of jacobian_dp[..., {start}:{end}]")
+
 
 
 
@@ -84,27 +152,31 @@ class Transform(ABC):
 
     Each sub-classes must implement the following methods and properties:
 
-    - `input_dim`: (attribute) The dimension of the input points (should be 2 for 2D points).
-    - `output_dim`: (attribute) The dimension of the output points (should be 2 for 2D points).
-    - `parameters` (attribute) The parameters of the transformation in a 1D numpy array of shape (Nparams,).
-    - `is_set`: (method) Check if the transformation is set (i.e., if the parameters are initialized).
-    - `_transform`: (method) Apply the transformation to the given points.
-    - `_inverse_transform`: (method) Apply the inverse transformation to the given points.
+    - ``input_dim``: (attribute) The dimension of the input points (should be 2 for 2D points).
+    - ``output_dim``: (attribute) The dimension of the output points (should be 2 for 2D points).
+    - ``parameters`` (attribute) The parameters of the transformation in a 1D numpy array of shape (Nparams,).
+    - ``is_set``: (method) Check if the transformation is set (i.e., if the parameters are initialized).
+    - ``_transform``: (method) Apply the transformation to the given points.
+    - ``_inverse_transform``: (method) Apply the inverse transformation to the given points.
+
+    The following properties are not required but can be implemented to provide additional information about the transformation:
+
+    - ``result_class``: (property) The class used for the result of the transformation (sub-class of ``TransformResult``). Default is :class:`pydistort.core.TransformResult`.
+    - ``inverse_result_class``: (property) The class used for the result of the inverse transformation (sub-class of ``TransformResult``). Default is :class:`pydistort.core.TransformResult`.
+    - ``jacobian_short_hand``: (property) A dictionary of short-hand notation for the Jacobian matrices, which can be used to add custom views of the ``jacobian_dp`` matrix with respect to the parameters of the transformation.
 
     More details on the transformation methods are provided in the `transform` and `inverse_transform` methods. 
 
     .. seealso::
 
-        - :meth:`pydistort.objects.Transform.transform` for applying the transformation to points.
-        - :meth:`pydistort.objects.Transform.inverse_transform` for applying the inverse transformation to points.
-        - :class:`pydistort.objects.TransformResult` for the result of the transformation.
+        - :meth:`pydistort.core.Transform.transform` for applying the transformation to points.
+        - :meth:`pydistort.core.Transform.inverse_transform` for applying the inverse transformation to points.
+        - :class:`pydistort.core.TransformResult` for the result of the transformation.
 
     .. note::
 
         ``...`` in the shape of the attributes indicates that the shape can have any number of leading dimensions, which is useful for batch processing of points.
 
-    If given, subclasses of ``TransformResult`` should be used to return the results of the transformation and inverse transformation.
-    The attributes `result_class` and `inverse_result_class` can be overridden to specify the result classes for the transformation and inverse transformation, respectively.    
     """
 
     # =============================================
@@ -139,6 +211,30 @@ class Transform(ABC):
         """
         return TransformResult
     
+    @property
+    def jacobian_short_hand(self) -> Dict[str, Tuple[int, int, Optional[str]]]:
+        r"""
+        Property to return a dictionary of short-hand notation for the Jacobian matrices.
+        
+        This dictionary can be used to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.
+
+        .. code-block:: python
+
+            {
+                "dk": (0, 2, "Custom Jacobian view for two first parameters related to k1 and k2"),
+                "dother": (2, 4, "Custom Jacobian view for other parameters related to k3 and k4"),
+            }
+        
+        Returns
+        -------
+        Dict[str, Tuple[int, int, Optional[str]]]
+            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:
+
+            - start index (int): The starting index of the parameters to include in the custom Jacobian view.
+            - end index (int): The ending index of the parameters to include in the custom Jacobian view.
+            - doc (Optional[str]): A documentation string for the custom Jacobian view.
+        """
+        return {} 
     
     @property
     def Nparams(self) -> int:
@@ -318,6 +414,34 @@ class Transform(ABC):
     # Transformation Methods
     # =============================================
 
+    def return_result(self, transform_result: TransformResult) -> TransformResult:
+        r"""
+        Return the result of the transformation as a ``TransformResult`` object.
+
+        This method is used to return the result of the transformation, including the transformed points and the Jacobian matrices if requested.
+
+        This medthos also add the custom Jacobian views to the `TransformResult` object using the `add_jacobian` method.
+
+        Parameters
+        ----------
+        transform_result : TransformResult
+            The result of the transformation containing the transformed points and the Jacobian matrices.
+
+        Returns
+        -------
+        TransformResult
+            The result of the transformation.
+        """
+        # if not isinstance(transform_result, TransformResult):
+        #     raise TypeError(f"transform_result must be an instance of TransformResult, got {type(transform_result)}")
+        
+        # # Add custom Jacobian views to the TransformResult object
+        # for name, (start, end, doc) in self.jacobian_short_hand.items():
+        #     transform_result.add_jacobian(name, start, end, doc=doc)
+        
+        return transform_result
+
+
     def transform(
         self,
         points: numpy.ndarray,
@@ -466,11 +590,11 @@ class Transform(ABC):
                 jacobian_dp = numpy.moveaxis(jacobian_dp, -2, 0) if jacobian_dp is not None else None # (..., output_dim, Nparams) -> (output_dim, ..., Nparams)
 
         # Return the result as a TransformResult object
-        return self.result_class(
+        return self.return_result(self.result_class(
             transformed_points=transformed_points,
             jacobian_dx=jacobian_dx,
             jacobian_dp=jacobian_dp
-        )
+        ))
     
 
     def inverse_transform(
@@ -621,11 +745,11 @@ class Transform(ABC):
                 jacobian_dp = numpy.moveaxis(jacobian_dp, -2, 0) if jacobian_dp is not None else None # (..., input_dim, Nparams) -> (input_dim, ..., Nparams)
 
         # Return the result as a InverseTransformResult object
-        return self.inverse_result_class(
+        return self.return_result(self.inverse_result_class(
             transformed_points=transformed_points,
             jacobian_dx=jacobian_dx,
             jacobian_dp=jacobian_dp
-        )
+        ))
     
     
     # =============================================

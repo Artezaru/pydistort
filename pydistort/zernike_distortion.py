@@ -748,7 +748,7 @@ class ZernikeDistortion(Distortion):
 
     def _transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the distortion transformation.
+        This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the distortion transformation.
         This method allows to transform the ``normalized_points`` to the ``distorted_points`` using the distortion model.
 
         .. note::
@@ -911,7 +911,7 @@ class ZernikeDistortion(Distortion):
         **kwargs
     ) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse distortion transformation.
+        This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse distortion transformation.
         This method allows to transform the ``distorted_points`` back to the ``normalized_points`` using the distortion model.
 
         .. note::
@@ -919,7 +919,7 @@ class ZernikeDistortion(Distortion):
             For ``_inverse_transform`` the input must have shape (Npoints, 2) with float64 type.
             The output has shape (Npoints, 2) for the normalized points and the jacobian are always None.
 
-        See the :meth:`pydistort.objects.objetcs.Transform.optimize_input_points` method for more details.
+        See the :meth:`pydistort.core.objetcs.Transform.optimize_input_points` method for more details.
         The initial guess is setted to :math:`\mathbf{x}_{N} = \mathbf{x}_{D} - U(\mathbf{x}_{D})``, where :math:`U(\mathbf{x}_{D})` is the distortion filed applied to the distorted points.
 
         .. warning::

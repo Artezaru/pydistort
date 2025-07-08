@@ -176,6 +176,7 @@ def distort_image(
 
         # Remap the image using OpenCV
         distorted_image = cv2.remap(src, map_x.astype(numpy.float32), map_y.astype(numpy.float32), interpolation=cv2.INTER_LINEAR)
+        distorted_image = cv2.remap(src, map_x.astype(numpy.float32), map_y.astype(numpy.float32), interpolation=cv2.INTER_CUBIC)
 
         return distorted_image
     

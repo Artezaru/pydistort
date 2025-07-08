@@ -3,8 +3,8 @@ __all__ = ["__version__"]
 
 # Extrinsic Models
 
-from .cv2_extrinsic import Cv2Extrinsic, Cv2ExtrinsicResult, InverseCv2ExtrinsicResult
-__all__.extend(["Cv2Extrinsic", "Cv2ExtrinsicResult", "InverseCv2ExtrinsicResult"])
+from .cv2_extrinsic import Cv2Extrinsic
+__all__.extend(["Cv2Extrinsic"])
 
 # Intrinsic Models
 

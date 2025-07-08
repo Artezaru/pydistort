@@ -1,117 +1,9 @@
-from typing import Optional, Tuple
-from dataclasses import dataclass
+from typing import Optional, Tuple, Dict
 import numpy
 from py3dframe import Frame
 import cv2
 
 from .core import Extrinsic, ExtrinsicResult, InverseExtrinsicResult
-
-@dataclass
-class Cv2ExtrinsicResult(ExtrinsicResult):
-    r"""
-    Subclass of :class:`pydistort.core.ExtrinsicResult` to represent the result of the extrinsic transformation in the cv2 format.
-
-    This class is used to store the result of transforming the ``world_3dpoints`` to ``normalized_points``, and the optional Jacobians.
-
-    - ``transformed_points``: The transformed normalized points in the camera coordinate system. Shape (..., 2).
-    - ``jacobian_dx``: The Jacobian of the normalized points with respect to the input world 3D points if ``dx`` is True. Otherwise None. Shape (..., 2, 3), where the last dimension represents (dx, dy, dz).
-    - ``jacobian_dp``: The Jacobian of the normalized points with respect to the extrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).
-
-    Some properties are provided for convenience:
-
-    - ``normalized_points``: Alias for ``transformed_points`` to represent the transformed normalized points. Shape (..., 2).
-    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 2, 3).
-    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 2, 3).
-
-    .. warning::
-
-        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
-
-    """
-    @property
-    def jacobian_dr(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the normalized points with respect to the rotation vector.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to rotation (dr). Shape (..., 2, 3).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 0:3]
-
-    @property
-    def jacobian_dt(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the normalized points with respect to the translation vector.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to translation (dt). Shape (..., 2, 3).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 3:6]
-
-
-
-@dataclass
-class InverseCv2ExtrinsicResult(InverseExtrinsicResult):
-    r"""
-    Subclass of :pydistort.core.InverseExtrinsicResult` to represent the result of the inverse extrinsic transformation in the cv2 format.
-
-    This class is used to store the result of transforming the ``normalized_points`` back to ``world_3dpoints``, and the optional Jacobians.
-
-    - ``transformed_points``: The transformed world 3D points in the camera coordinate system. Shape (..., 3).
-    - ``jacobian_dx``: The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None. Shape (..., 3, 2), where the last dimension represents (dx, dy).
-    - ``jacobian_dp``: The Jacobian of the world 3D points with respect to the extrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 3, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).
-
-    Some properties are provided for convenience:
-
-    - ``world_3dpoints``: Alias for ``transformed_points`` to represent the transformed world 3D points. Shape (..., 3).
-    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 3, 3).
-    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 3, 3).
-
-    .. warning::
-
-        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
-
-    """
-    @property
-    def jacobian_dr(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the world 3D points with respect to the rotation vector.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to rotation (dr). Shape (..., 3, 3).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 0:3]
-    
-    @property
-    def jacobian_dt(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the world 3D points with respect to the translation vector.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to translation (dt). Shape (..., 3, 3).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 3:6]
-    
-
-
-
-
 
 
 class Cv2Extrinsic(Extrinsic):
@@ -136,6 +28,11 @@ class Cv2Extrinsic(Extrinsic):
     .. note::
 
         To compute the translation vector and the rotation vector, you can use cv2.Rodrigues() or py3dframe.Frame with convention 4.
+
+    Two short-hand notations are provided to access the jacobian with respect to the rotation vector and translation vector:
+
+    - ``jacobian_dr``: The Jacobian of the normalized points with respect to the rotation vector. It has shape (..., 2, 3).
+    - ``jacobian_dt``: The Jacobian of the normalized points with respect to the translation vector. It has shape (..., 2, 3).
 
     Parameters
     ----------
@@ -226,11 +123,11 @@ class Cv2Extrinsic(Extrinsic):
     
     @property
     def result_class(self) -> type:
-        return Cv2ExtrinsicResult
+        return ExtrinsicResult
     
     @property
     def inverse_result_class(self) -> type:
-        return InverseCv2ExtrinsicResult
+        return InverseExtrinsicResult
     
     # =============================================
     # Implement the parameters property
@@ -262,6 +159,35 @@ class Cv2Extrinsic(Extrinsic):
             raise ValueError("Parameters must be a 1D array of shape (6,).")
         self.rotation_vector = params[:3]  # First 3 elements are the rotation vector
         self.translation_vector = params[3:]  # Last 3 elements are the translation vector
+
+
+    @property
+    def jacobian_short_hand(self) -> Dict[str, Tuple[int, int, Optional[str]]]:
+        r"""
+        Property to return a dictionary of short-hand notation for the Jacobian matrices.
+        
+        This dictionary can be used to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.
+
+        .. code-block:: python
+
+            {
+                "dk": (0, 2, "Custom Jacobian view for two first parameters related to k1 and k2"),
+                "dother": (2, 4, "Custom Jacobian view for other parameters related to k3 and k4"),
+            }
+        
+        Returns
+        -------
+        Dict[str, Tuple[int, int, Optional[str]]]
+            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:
+
+            - start index (int): The starting index of the parameters to include in the custom Jacobian view.
+            - end index (int): The ending index of the parameters to include in the custom Jacobian view.
+            - doc (Optional[str]): A documentation string for the custom Jacobian view.
+        """
+        return {
+            "dr": (0, 3, "Jacobian with respect to the rotation vector (rvec)"),
+            "dt": (3, 6, "Jacobian with respect to the translation vector (tvec)"),
+        }
 
     # =============================================
     # translation vector

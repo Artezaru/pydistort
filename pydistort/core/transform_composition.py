@@ -185,7 +185,7 @@ class TransformComposition(Transform):
                 jacobian_dp_t = jacobian_dp_list[index]  # (Npoints, output_dim_t, Nparams_t)
                 for index_2 in range(index + 1, len(self.transformations)):
                     # Compute the chain rule for the Jacobian with respect to the parameters including the dx for the next transformation
-                    jacobian_dp_t = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index_2], jacobian_dp_t)  # (Npoints, output_dim_t2, input_dim_t2) * (Npoints, output_dim_t, Nparams_t) -> (Npoints, output_dim_t2, Nparams_t)
+                    numpy.matmul(jacobian_dx_list[index_2], jacobian_dp_t, out=jacobian_dp_t)  # (Npoints, output_dim_t2, input_dim_t2) * (Npoints, output_dim_t, Nparams_t) -> (Npoints, output_dim_t2, Nparams_t)
                 jacobian_dp[:, :, start:end] = jacobian_dp_t  # (Npoints, output_dim_t, Nparams_t)
                 start = end
         else:
@@ -197,7 +197,7 @@ class TransformComposition(Transform):
             jacobian_dx = jacobian_dx_list[0] # (Npoints, output_dim_0, input_dim_0)
             for index, t in enumerate(self.transformations[1:]):
                 # Apply the chain rule for the Jacobian with respect to the input points
-                jacobian_dx = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index + 1], jacobian_dx)  # (Npoints, output_dim_t, input_dim_t)
+                jacobian_dx = numpy.matmul(jacobian_dx_list[index + 1], jacobian_dx)  # (Npoints, input_dim_t, output_dim_t)
         else:
             jacobian_dx = None
 
@@ -273,7 +273,7 @@ class TransformComposition(Transform):
                 jacobian_dp_t = jacobian_dp_list[index]  # (Npoints, input_dim_t, Nparams_t)
                 for index_2 in range(index + 1, len(reversed(self.transformations))):
                     # Compute the chain rule for the Jacobian with respect to the parameters
-                    jacobian_dp_t = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index_2], jacobian_dp_t)
+                    numpy.matmul(jacobian_dx_list[index_2], jacobian_dp_t, out=jacobian_dp_t)  # (Npoints, input_dim_t2, output_dim_t2) * (Npoints, input_dim_t, Nparams_t) -> (Npoints, input_dim_t2, Nparams_t)
                 jacobian_dp[:, :, start:end] = jacobian_dp_t  # (Npoints, input_dim_t, Nparams_t)
                 start = end
         else:
@@ -285,7 +285,7 @@ class TransformComposition(Transform):
             jacobian_dx = jacobian_dx_list[0] # (Npoints, input_dim_-1, output_dim_-1)
             for index, t in enumerate(reversed(self.transformations[:-1])):
                 # Apply the chain rule for the Jacobian with respect to the input points
-                jacobian_dx = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index], jacobian_dx)
+                jacobian_dx = numpy.matmul(jacobian_dx_list[index + 1], jacobian_dx)  # (Npoints, input_dim_t, output_dim_t)
         else:
             jacobian_dx = None
 

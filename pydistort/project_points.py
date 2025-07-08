@@ -394,6 +394,3 @@ def project_points(
     return result
 
 
-
-
-
