@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.objects.transform &#8212; pydistort 2.0.4 documentation</title>
+    <title>pydistort.core.transform &#8212; pydistort 2.0.6 documentation</title>
   
   
   
@@ -37,10 +37,10 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=adc66a14"></script>
+    <script src="../../../_static/documentation_options.js?v=3e466467"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/objects/transform';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/core/transform';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.4 documentation</p>
+    <p class="title logo__title">pydistort 2.0.6 documentation</p>
   
 </a></div>
     
@@ -292,7 +292,7 @@
     
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.objects.transform</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.core.transform</span></li>
   </ul>
 </nav>
 </div>
@@ -309,7 +309,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for pydistort.objects.transform</h1><div class="highlight"><pre>
+  <h1>Source code for pydistort.core.transform</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
@@ -317,8 +317,9 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
+
 <div class="viewcode-block" id="TransformResult">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.TransformResult">[docs]</a>
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.TransformResult">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">TransformResult</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -368,11 +369,18 @@
 
 
 
+
 <div class="viewcode-block" id="Transform">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.Transform">[docs]</a>
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Transform</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transform is the base class to manage transformations from :math:`\mathbb{R}^{input\_dim}` to :math:`\mathbb{R}^{output\_dim}`.</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        X_O = T(X_I, \lambda_1, \lambda_2, \ldots, \lambda_N)</span>
+
+<span class="sd">    where :math:`X_O` are the output points, :math:`X_I` are the input points, and :math:`\{\lambda_1, \lambda_2, \ldots, \lambda_N\}` are the parameters of the transformation.</span>
 
 <span class="sd">    In this package, the transformations wiil be used to project 3D-world points onto a 2D-image plane in the stenopic camera model.</span>
 
@@ -385,7 +393,7 @@
 
 <span class="sd">    This tranformation can be decomposed into 3 main steps:</span>
 
-<span class="sd">    1. **Extrinsic**: Transform the ``world 3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).</span>
+<span class="sd">    1. **Extrinsic**: Transform the ``world_3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).</span>
 <span class="sd">    2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model.</span>
 <span class="sd">    3. **Intrinsic**: Transform the ``distorted_points`` to ``image_points`` using the intrinsic matrix K.</span>
 
@@ -394,13 +402,11 @@
 <span class="sd">    Each sub-classes must implement the following methods and properties:</span>
 
 <span class="sd">    - `input_dim`: (attribute) The dimension of the input points (should be 2 for 2D points).</span>
-<span class="sd">    - `output_dim`: (attribute) The dimension of the output points (should be 2 for</span>
-<span class="sd">    - `parameters` (attribute) The parameters of the transformation, if applicable.</span>
-<span class="sd">    - `Nparams`: (attribute) The number of parameters for the transformation, if applicable.</span>
-<span class="sd">    - `_transform`: (method) Apply the transformation to the given points.</span>
+<span class="sd">    - `output_dim`: (attribute) The dimension of the output points (should be 2 for 2D points).</span>
+<span class="sd">    - `parameters` (attribute) The parameters of the transformation in a 1D numpy array of shape (Nparams,).</span>
 <span class="sd">    - `is_set`: (method) Check if the transformation is set (i.e., if the parameters are initialized).</span>
+<span class="sd">    - `_transform`: (method) Apply the transformation to the given points.</span>
 <span class="sd">    - `_inverse_transform`: (method) Apply the inverse transformation to the given points.</span>
-
 
 <span class="sd">    More details on the transformation methods are provided in the `transform` and `inverse_transform` methods. </span>
 
@@ -418,6 +424,9 @@
 <span class="sd">    The attributes `result_class` and `inverse_result_class` can be overridden to specify the result classes for the transformation and inverse transformation, respectively.    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Properties for ABC Transform Class</span>
+    <span class="c1"># =============================================</span>
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -446,8 +455,37 @@
 <span class="sd">            The class used for the result of the inverse transformation.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">TransformResult</span>
+    
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">Nparams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Property to return the number of parameters of the transformation.</span>
+<span class="sd">        </span>
+<span class="sd">        The number of parameters must be a non-negative integer representing the number of parameters of the transformation.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        int</span>
+<span class="sd">            The number of parameters of the transformation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">size</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        String representation of the Transform class.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            A string representation of the transformation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Nparams</span><span class="si">}</span><span class="s2"> parameters: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;not set&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
 
 
+    <span class="c1"># =============================================</span>
+    <span class="c1"># To be implemented by subclasses</span>
+    <span class="c1"># =============================================</span>
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">input_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -462,6 +500,7 @@
 <span class="sd">            The number of dimensions of the input points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
+
 
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
@@ -478,13 +517,14 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
+
     <span class="nd">@property</span>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Property to return the parameters of the transformation.</span>
 <span class="sd">        </span>
-<span class="sd">        The parameters must be a numpy array of shape (Nparams,) where Nparams is the number of parameters of the transformation.</span>
+<span class="sd">        The parameters must be a 1-D numpy array of shape (Nparams,) where Nparams is the number of parameters of the transformation.</span>
 
 <span class="sd">        If the transformation does not have parameters or they are not set, this property should return None.</span>
 <span class="sd">        </span>
@@ -495,23 +535,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>
 
-    <span class="nd">@property</span>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">Nparams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Property to return the number of parameters of the transformation.</span>
-<span class="sd">        </span>
-<span class="sd">        The number of parameters must be a non-negative integer representing the number of parameters of the transformation.</span>
-<span class="sd">        </span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        int</span>
-<span class="sd">            The number of parameters of the transformation.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">pass</span>
 
 <div class="viewcode-block" id="Transform.is_set">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.Transform.is_set">[docs]</a>
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform.is_set">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -527,8 +553,99 @@
         <span class="k">pass</span></div>
 
 
+
+<div class="viewcode-block" id="Transform._transform">
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform._transform">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply the transformation to the given points.</span>
+
+<span class="sd">        This method must be implemented by subclasses to apply the transformation to the input points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        points : numpy.ndarray</span>
+<span class="sd">            The input points to be transformed. Shape (Npoints, input_dim).</span>
+
+<span class="sd">        dx : bool, optional</span>
+<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</span>
+
+<span class="sd">        dp : bool, optional</span>
+<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</span>
+
+<span class="sd">        **kwargs</span>
+<span class="sd">            Additional keyword arguments for the transformation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]</span>
+<span class="sd">            A tuple containing:</span>
+
+<span class="sd">            - `transformed_points`: The transformed points of shape (Npoints, output_dim).</span>
+<span class="sd">            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, output_dim, input_dim) if `dx` is True, otherwise None.</span>
+<span class="sd">            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, output_dim, Nparams) if `dp` is True, otherwise None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement the _transform method.&quot;</span><span class="p">)</span></div>
+
+    
+
+<div class="viewcode-block" id="Transform._inverse_transform">
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform._inverse_transform">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply the inverse transformation to the given points.</span>
+
+<span class="sd">        This method must be implemented by subclasses to apply the inverse transformation to the input points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        points : numpy.ndarray</span>
+<span class="sd">            The input points to be transformed. Shape (Npoints, output_dim).</span>
+
+<span class="sd">        dx : bool, optional</span>
+<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</span>
+
+<span class="sd">        dp : bool, optional</span>
+<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</span>
+
+<span class="sd">        **kwargs</span>
+<span class="sd">            Additional keyword arguments for the transformation.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]</span>
+<span class="sd">            A tuple containing:</span>
+
+<span class="sd">            - `transformed_points`: The transformed points of shape (Npoints, input_dim).</span>
+<span class="sd">            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, input_dim, output_dim) if `dx` is True, otherwise None.</span>
+<span class="sd">            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, input_dim, Nparams) if `dp` is True, otherwise None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement the _inverse_transform method.&quot;</span><span class="p">)</span></div>
+
+
+    
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Transformation Methods</span>
+    <span class="c1"># =============================================</span>
+
 <div class="viewcode-block" id="Transform.transform">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.Transform.transform">[docs]</a>
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform.transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -685,9 +802,8 @@
 
     
 
-
 <div class="viewcode-block" id="Transform.inverse_transform">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.Transform.inverse_transform">[docs]</a>
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform.inverse_transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">inverse_transform</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -843,94 +959,13 @@
         <span class="p">)</span></div>
 
     
-<div class="viewcode-block" id="Transform._transform">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.Transform._transform">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Apply the transformation to the given points.</span>
-
-<span class="sd">        This method must be implemented by subclasses to apply the transformation to the input points.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        points : numpy.ndarray</span>
-<span class="sd">            The input points to be transformed. Shape (Npoints, input_dim).</span>
-
-<span class="sd">        dx : bool, optional</span>
-<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</span>
-
-<span class="sd">        dp : bool, optional</span>
-<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</span>
-
-<span class="sd">        **kwargs</span>
-<span class="sd">            Additional keyword arguments for the transformation.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]</span>
-<span class="sd">            A tuple containing:</span>
-
-<span class="sd">            - `transformed_points`: The transformed points of shape (Npoints, output_dim).</span>
-<span class="sd">            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, output_dim, input_dim) if `dx` is True, otherwise None.</span>
-<span class="sd">            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, output_dim, Nparams) if `dp` is True, otherwise None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement the _transform method.&quot;</span><span class="p">)</span></div>
-
     
-
-<div class="viewcode-block" id="Transform._inverse_transform">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.Transform._inverse_transform">[docs]</a>
-    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Apply the inverse transformation to the given points.</span>
-
-<span class="sd">        This method must be implemented by subclasses to apply the inverse transformation to the input points.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        points : numpy.ndarray</span>
-<span class="sd">            The input points to be transformed. Shape (Npoints, output_dim).</span>
-
-<span class="sd">        dx : bool, optional</span>
-<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</span>
-
-<span class="sd">        dp : bool, optional</span>
-<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</span>
-
-<span class="sd">        **kwargs</span>
-<span class="sd">            Additional keyword arguments for the transformation.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]</span>
-<span class="sd">            A tuple containing:</span>
-
-<span class="sd">            - `transformed_points`: The transformed points of shape (Npoints, input_dim).</span>
-<span class="sd">            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, input_dim, output_dim) if `dx` is True, otherwise None.</span>
-<span class="sd">            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, input_dim, Nparams) if `dp` is True, otherwise None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Subclasses must implement the _inverse_transform method.&quot;</span><span class="p">)</span></div>
-
-    
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Optimization Methods</span>
+    <span class="c1"># =============================================</span>
 
 <div class="viewcode-block" id="Transform.optimize_parameters">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.Transform.optimize_parameters">[docs]</a>
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform.optimize_parameters">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">optimize_parameters</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">input_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -1290,10 +1325,8 @@
 
     
 
-
-
 <div class="viewcode-block" id="Transform.optimize_input_points">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.Transform.optimize_input_points">[docs]</a>
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform.optimize_input_points">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">optimize_input_points</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">output_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
@@ -1514,410 +1547,6 @@
 
 
 
-
-
-
-
-
-
-
-
-<div class="viewcode-block" id="TransformComposition">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.TransformComposition">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">TransformComposition</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A class to represent the composition of multiple transformations.</span>
-
-<span class="sd">    This class allows to compose multiple transformations and apply them sequentially.</span>
-<span class="sd">    It inherits from the `Transform` class and overrides the `_transform` and `_inverse_transform` methods to apply the composition of transformations.</span>
-
-<span class="sd">    If the transformations to represent is :math:`T_n (T_{n-1}(...(T_1(X))))`, the transformations must be given in the order of application, i.e. from the first to the last transformation.</span>
-
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        transformations = [Transform1(), Transform2(), ..., TransformN()]</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    transformations : Sequence[Transform]</span>
-<span class="sd">        A list of transformations to be composed. Each transformation must be an instance of the `Transform` class or its subclasses.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transformations</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Transform</span><span class="p">]):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        
-        <span class="c1"># Check if the transformations are a sequence of Transform instances</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transformations</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;transformations must be a sequence, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">transformations</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">transformations</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transformations must contain at least one transformation.&quot;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">transformations</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Each transformation must be an instance of Transform, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        
-        <span class="c1"># Check the chain of dimensions</span>
-        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">transformations</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">transformations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">output_dim</span> <span class="o">!=</span> <span class="n">transformations</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">input_dim</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output dimension of transformation </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">transformations</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">output_dim</span><span class="si">}</span><span class="s2">) does not match input dimension of transformation </span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">transformations</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">input_dim</span><span class="si">}</span><span class="s2">).&quot;</span><span class="p">)</span>
-            
-        <span class="c1"># Set the transformations and their parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span> <span class="o">=</span> <span class="n">transformations</span>
-
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">input_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The input dimension of the first transformation in the composition.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">input_dim</span>
-    
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">output_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The output dimension of the last transformation in the composition.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">output_dim</span>
-    
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">Nparams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The total number of parameters in the composition of transformations.</span>
-<span class="sd">        This is the sum of the number of parameters of each transformation in the composition.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Nparams</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">)</span>
-    
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The parameters of the composition of transformations.</span>
-<span class="sd">        This is a concatenation of the parameters of each transformation in the composition.</span>
-
-<span class="sd">        If a transformation does not have parameters, it is represented by a zero array of its Nparams.</span>
-<span class="sd">        The resulting array has shape (Nparams,).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">t</span><span class="o">.</span><span class="n">parameters</span> <span class="k">if</span> <span class="n">t</span><span class="o">.</span><span class="n">parameters</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">Nparams</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    
-
-    <span class="nd">@parameters</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Set the parameters of the composition of transformations.</span>
-
-<span class="sd">        The input value must be a 1D numpy array with shape (Nparams,).</span>
-<span class="sd">        The parameters are set to the corresponding transformations in the composition.</span>
-<span class="sd">        If a transformation does not have parameters, it is skipped.</span>
-<span class="sd">        </span>
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        value : numpy.ndarray</span>
-<span class="sd">            The parameters to set. Must be a 1D numpy array with shape (Nparams,).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="n">value</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameters must be a 1D numpy array, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2"> dimensions.&quot;</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nparams</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameters must have </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">Nparams</span><span class="si">}</span><span class="s2"> elements, got </span><span class="si">{</span><span class="n">value</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> elements.&quot;</span><span class="p">)</span>
-        
-        <span class="c1"># Set the parameters for each transformation</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">:</span>
-            <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">Nparams</span>
-            <span class="n">t</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
-            <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
-
-
-<div class="viewcode-block" id="TransformComposition.is_set">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.TransformComposition.is_set">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if the parameters of all transformations in the composition are set.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        bool</span>
-<span class="sd">            True if all transformations have their parameters set, False otherwise.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">)</span></div>
-
-    
-
-<div class="viewcode-block" id="TransformComposition._transform">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.TransformComposition._transform">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Apply the composition of transformations to the given points.</span>
-
-<span class="sd">        This method applies each transformation in the composition sequentially to the input points.</span>
-
-<span class="sd">        The jacobian matrices with respect to the input points and the parameters are computed using the chain rule.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        points : numpy.ndarray</span>
-<span class="sd">            The input points to be transformed. Shape (Npoints, input_dim).</span>
-
-<span class="sd">        dx : bool, optional</span>
-<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</span>
-
-<span class="sd">        dp : bool, optional</span>
-<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</span>
-
-<span class="sd">        **kwargs</span>
-<span class="sd">            Additional keyword arguments for the transformations.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]</span>
-<span class="sd">            A tuple containing:</span>
-
-<span class="sd">            - `transformed_points`: The transformed points of shape (Npoints, output_dim).</span>
-<span class="sd">            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, output_dim, input_dim) if `dx` is True, otherwise None.</span>
-<span class="sd">            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, output_dim, Nparams) if `dp` is True, otherwise None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Npoints</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Number of points in computation</span>
-        <span class="n">jacobian_dx_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">jacobian_dp_list</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># Iterate over each transformation in the composition</span>
-        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">):</span>
-            <span class="c1"># Apply the transformation to the points</span>
-            <span class="n">transformed_points</span><span class="p">,</span> <span class="n">jacobian_dx</span><span class="p">,</span> <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span> <span class="ow">or</span> <span class="p">(</span><span class="n">dx</span> <span class="ow">and</span> <span class="n">index</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">)),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># (Npoints, output_dim_t), (Npoints, output_dim_t, input_dim_t), (Npoints, output_dim_t, Nparams_t)</span>
-            
-            <span class="c1"># Append the transformed points and Jacobians to the lists</span>
-            <span class="n">jacobian_dx_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jacobian_dx</span><span class="p">)</span>
-            <span class="n">jacobian_dp_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jacobian_dp</span><span class="p">)</span>
-
-            <span class="c1"># Update the points for the next transformation</span>
-            <span class="n">points</span> <span class="o">=</span> <span class="n">transformed_points</span>
-
-        <span class="c1"># Apply the chain rules to compute the Jacobians with respect to the parameters</span>
-        <span class="k">if</span> <span class="n">dp</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jacobian_dx_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">jacobian_dp_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jacobian_dp_list</span><span class="p">))):</span>
-            <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nparams</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-            <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># Boucle over the transformations to compute the Jacobian with respect to the parameters</span>
-            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">):</span>
-                <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">Nparams</span>
-                <span class="n">jacobian_dp_t</span> <span class="o">=</span> <span class="n">jacobian_dp_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>  <span class="c1"># (Npoints, output_dim_t, Nparams_t)</span>
-                <span class="k">for</span> <span class="n">index_2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">)):</span>
-                    <span class="c1"># Compute the chain rule for the Jacobian with respect to the parameters including the dx for the next transformation</span>
-                    <span class="n">jacobian_dp_t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">index_2</span><span class="p">],</span> <span class="n">jacobian_dp_t</span><span class="p">)</span>  <span class="c1"># (Npoints, output_dim_t2, input_dim_t2) * (Npoints, output_dim_t, Nparams_t) -&gt; (Npoints, output_dim_t2, Nparams_t)</span>
-                <span class="n">jacobian_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">jacobian_dp_t</span>  <span class="c1"># (Npoints, output_dim_t, Nparams_t)</span>
-                <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="kc">None</span>
-        
-        <span class="c1"># Apply the chain rules to compute the Jacobians with respect to the input points</span>
-        <span class="k">if</span> <span class="n">dx</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jacobian_dx_list</span><span class="p">))):</span>
-            <span class="c1"># Compute the Jacobian with respect to the input points</span>
-            <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="n">jacobian_dx_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># (Npoints, output_dim_0, input_dim_0)</span>
-            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-                <span class="c1"># Apply the chain rule for the Jacobian with respect to the input points</span>
-                <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">jacobian_dx</span><span class="p">)</span>  <span class="c1"># (Npoints, output_dim_t, input_dim_t)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="n">points</span><span class="p">,</span>  <span class="c1"># (Npoints, output_dim)</span>
-            <span class="n">jacobian_dx</span><span class="p">,</span>  <span class="c1"># (Npoints, output_dim, input_dim) if dx is True, otherwise None</span>
-            <span class="n">jacobian_dp</span>  <span class="c1"># (Npoints, output_dim, Nparams) if dp is True, otherwise None</span>
-        <span class="p">)</span></div>
-
-    
-
-<div class="viewcode-block" id="TransformComposition._inverse_transform">
-<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.objects.TransformComposition._inverse_transform">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Apply the inverse transformation to the given points.</span>
-
-<span class="sd">        This method applies the inverse of each transformation in the composition sequentially to the input points.</span>
-
-<span class="sd">        The jacobian matrices with respect to the input points and the parameters are computed using the chain rule.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        points : numpy.ndarray</span>
-<span class="sd">            The input points to be transformed. Shape (Npoints, output_dim).</span>
-
-<span class="sd">        dx : bool, optional</span>
-<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.</span>
-
-<span class="sd">        dp : bool, optional</span>
-<span class="sd">            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.</span>
-
-<span class="sd">        **kwargs</span>
-<span class="sd">            Additional keyword arguments for the transformations.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]</span>
-<span class="sd">            A tuple containing:</span>
-
-<span class="sd">            - `transformed_points`: The transformed points of shape (Npoints, input_dim).</span>
-<span class="sd">            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, input_dim, output_dim) if `dx` is True, otherwise None.</span>
-<span class="sd">            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, input_dim, Nparams) if `dp` is True, otherwise None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">Npoints</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Number of points in computation</span>
-        <span class="n">jacobian_dx_list</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">jacobian_dp_list</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># Iterate over each transformation in the composition in reverse order !</span>
-        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">)):</span>
-            <span class="c1"># Apply the inverse transformation to the points</span>
-            <span class="n">transformed_points</span><span class="p">,</span> <span class="n">jacobian_dx</span><span class="p">,</span> <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">_inverse_transform</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span> <span class="ow">or</span> <span class="p">(</span><span class="n">dx</span> <span class="ow">and</span> <span class="n">index</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">)),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># (Npoints, input_dim_t), (Npoints, input_dim_t, output_dim_t), (Npoints, input_dim_t, Nparams_t)</span>
-            <span class="c1"># Append the transformed points and Jacobians to the lists</span>
-            <span class="n">jacobian_dx_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jacobian_dx</span><span class="p">)</span>
-            <span class="n">jacobian_dp_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">jacobian_dp</span><span class="p">)</span>
-
-            <span class="c1"># Update the points for the next transformation</span>
-            <span class="n">points</span> <span class="o">=</span> <span class="n">transformed_points</span>
-
-        <span class="c1"># Apply the chain rules to compute the Jacobians with respect to the parameters</span>
-        <span class="k">if</span> <span class="n">dp</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jacobian_dx_list</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">jacobian_dp_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jacobian_dp_list</span><span class="p">))):</span>
-            <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Nparams</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-
-            <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="c1"># Boucle over the transformations to compute the Jacobian with respect to the parameters</span>
-            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">)):</span>
-                <span class="n">end</span> <span class="o">=</span> <span class="n">start</span> <span class="o">+</span> <span class="n">t</span><span class="o">.</span><span class="n">Nparams</span>
-                <span class="n">jacobian_dp_t</span> <span class="o">=</span> <span class="n">jacobian_dp_list</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>  <span class="c1"># (Npoints, input_dim_t, Nparams_t)</span>
-                <span class="k">for</span> <span class="n">index_2</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">))):</span>
-                    <span class="c1"># Compute the chain rule for the Jacobian with respect to the parameters</span>
-                    <span class="n">jacobian_dp_t</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">index_2</span><span class="p">],</span> <span class="n">jacobian_dp_t</span><span class="p">)</span>
-                <span class="n">jacobian_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">jacobian_dp_t</span>  <span class="c1"># (Npoints, input_dim_t, Nparams_t)</span>
-                <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="c1"># Apply the chain rules to compute the Jacobians with respect to the input points</span>
-        <span class="k">if</span> <span class="n">dx</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">jacobian_dx_list</span><span class="p">))):</span>
-            <span class="c1"># Compute the Jacobian with respect to the input points</span>
-            <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="n">jacobian_dx_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># (Npoints, input_dim_-1, output_dim_-1)</span>
-            <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transformations</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
-                <span class="c1"># Apply the chain rule for the Jacobian with respect to the input points</span>
-                <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;nij, njk -&gt; nik&quot;</span><span class="p">,</span> <span class="n">jacobian_dx_list</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="n">jacobian_dx</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="kc">None</span>
-
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="n">points</span><span class="p">,</span>  <span class="c1"># (Npoints, input_dim)</span>
-            <span class="n">jacobian_dx</span><span class="p">,</span>  <span class="c1"># (Npoints, input_dim, output_dim) if dx is True, otherwise None</span>
-            <span class="n">jacobian_dp</span>  <span class="c1"># (Npoints, input_dim, Nparams) if dp is True, otherwise None</span>
-        <span class="p">)</span></div>
-</div>
-
-
-              
-
-
-
-
-
-
-
-
-
-
-<span class="k">class</span><span class="w"> </span><span class="nc">TransformInvertion</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    A class to represent the inversion of a transformation.</span>
-
-<span class="sd">    This class allows to invert a transformation and apply it to the input points.</span>
-<span class="sd">    It inherits from the `Transform` class and overrides the `_transform` and `_inverse_transform` methods to apply the inverse transformation.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    transform : Transform</span>
-<span class="sd">        The transformation to be inverted. Must be an instance of the `Transform` class or its subclasses.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform</span><span class="p">:</span> <span class="n">Transform</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transform</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;transform must be an instance of Transform, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">transform</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span> <span class="o">=</span> <span class="n">transform</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">input_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The input dimension is the output dimension of the transformation to be inverted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">output_dim</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">output_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The output dimension is the input dimension of the transformation to be inverted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">input_dim</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">Nparams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The number of parameters is the same as the number of parameters of the transformation to be inverted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Nparams</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The parameters are the same as the parameters of the transformation to be inverted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span>
-    
-    <span class="nd">@parameters</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">value</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">is_set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Check if the parameters of the transformation to be inverted are set.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span>
-    
-    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-            <span class="o">*</span><span class="p">,</span>
-            <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The transform method is the inverse of the transformation to be inverted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">_inverse_transform</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-    
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span>
-            <span class="bp">self</span><span class="p">,</span>
-            <span class="n">points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-            <span class="o">*</span><span class="p">,</span>
-            <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The inverse transform method is the direct transformation of the transformation to be inverted.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </pre></div>
 
                 </article>

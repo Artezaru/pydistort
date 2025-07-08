@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.undistort_points &#8212; pydistort 2.0.4 documentation</title>
+    <title>pydistort.undistort_points &#8212; pydistort 2.0.6 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=adc66a14"></script>
+    <script src="../../_static/documentation_options.js?v=3e466467"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/undistort_points';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.4 documentation</p>
+    <p class="title logo__title">pydistort 2.0.6 documentation</p>
   
 </a></div>
     
@@ -314,10 +314,10 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.objects.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.core.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.no_distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoDistortion</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.objects.intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Intrinsic</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.objects.extrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extrinsic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.cv2_intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cv2Intrinsic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.cv2_extrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cv2Extrinsic</span>
 
 
 
@@ -432,7 +432,7 @@
         <span class="n">distortion</span> <span class="o">=</span> <span class="n">NoDistortion</span><span class="p">()</span>
 
     <span class="c1"># Create the intrinsic and distortion objects</span>
-    <span class="n">intrinsic</span> <span class="o">=</span> <span class="n">Intrinsic</span><span class="p">()</span>
+    <span class="n">intrinsic</span> <span class="o">=</span> <span class="n">Cv2Intrinsic</span><span class="p">()</span>
     <span class="n">K</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">K</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
         <span class="n">intrinsic</span><span class="o">.</span><span class="n">intrinsic_vector</span> <span class="o">=</span> <span class="n">K</span>
@@ -441,7 +441,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;K must be of shape (4,) or (3, 3)&quot;</span><span class="p">)</span>
     
-    <span class="n">intrinsic_projection</span> <span class="o">=</span> <span class="n">Intrinsic</span><span class="p">()</span>
+    <span class="n">intrinsic_projection</span> <span class="o">=</span> <span class="n">Cv2Intrinsic</span><span class="p">()</span>
     <span class="n">P</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">P</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
         <span class="n">intrinsic_projection</span><span class="o">.</span><span class="n">intrinsic_vector</span> <span class="o">=</span> <span class="n">P</span>
@@ -450,7 +450,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;P must be of shape (4,) or (3, 3)&quot;</span><span class="p">)</span>
     
-    <span class="n">rectification</span> <span class="o">=</span> <span class="n">Extrinsic</span><span class="p">()</span>
+    <span class="n">rectification</span> <span class="o">=</span> <span class="n">Cv2Extrinsic</span><span class="p">()</span>
     <span class="n">rectification</span><span class="o">.</span><span class="n">translation_vector</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">R</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">R</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>

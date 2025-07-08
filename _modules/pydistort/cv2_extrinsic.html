@@ -2,12 +2,12 @@
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="../../" >
 
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.objects.extrinsic &#8212; pydistort 2.0.4 documentation</title>
+    <title>pydistort.cv2_extrinsic &#8212; pydistort 2.0.6 documentation</title>
   
   
   
@@ -26,23 +26,23 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
   
   <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=adc66a14"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/objects/extrinsic';</script>
-    <link rel="index" title="Index" href="../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../search.html" />
+    <script src="../../_static/documentation_options.js?v=3e466467"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/cv2_extrinsic';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -64,7 +64,7 @@
   <dialog id="pst-search-dialog">
     
 <form class="bd-search d-flex align-items-center"
-      action="../../../search.html"
+      action="../../search.html"
       method="get">
   <i class="fa-solid fa-magnifying-glass"></i>
   <input type="search"
@@ -100,14 +100,14 @@
     
   
 
-<a class="navbar-brand logo" href="../../../index.html">
+<a class="navbar-brand logo" href="../../index.html">
   
   
   
   
   
   
-    <p class="title logo__title">pydistort 2.0.4 documentation</p>
+    <p class="title logo__title">pydistort 2.0.6 documentation</p>
   
 </a></div>
     
@@ -122,21 +122,21 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../installation.html">
+  <a class="nav-link nav-internal" href="../../installation.html">
     Installation
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../api.html">
+  <a class="nav-link nav-internal" href="../../api.html">
     API Reference
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../usage.html">
+  <a class="nav-link nav-internal" href="../../usage.html">
     Usage
   </a>
 </li>
@@ -213,21 +213,21 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../installation.html">
+  <a class="nav-link nav-internal" href="../../installation.html">
     Installation
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../api.html">
+  <a class="nav-link nav-internal" href="../../api.html">
     API Reference
   </a>
 </li>
 
 
 <li class="nav-item ">
-  <a class="nav-link nav-internal" href="../../../usage.html">
+  <a class="nav-link nav-internal" href="../../usage.html">
     Usage
   </a>
 </li>
@@ -285,14 +285,14 @@
   <ul class="bd-breadcrumbs">
     
     <li class="breadcrumb-item breadcrumb-home">
-      <a href="../../../index.html" class="nav-link" aria-label="Home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
     
-    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.objects.extrinsic</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.cv2_extrinsic</span></li>
   </ul>
 </nav>
 </div>
@@ -309,27 +309,27 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for pydistort.objects.extrinsic</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+  <h1>Source code for pydistort.cv2_extrinsic</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">py3dframe</span><span class="w"> </span><span class="kn">import</span> <span class="n">Frame</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transform</span><span class="p">,</span> <span class="n">TransformResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extrinsic</span><span class="p">,</span> <span class="n">ExtrinsicResult</span><span class="p">,</span> <span class="n">InverseExtrinsicResult</span>
 
-<div class="viewcode-block" id="ExtrinsicResult">
-<a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.objects.ExtrinsicResult">[docs]</a>
+<div class="viewcode-block" id="Cv2ExtrinsicResult">
+<a class="viewcode-back" href="../../api_doc/cv2_extrinsic.html#pydistort.Cv2ExtrinsicResult">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">ExtrinsicResult</span><span class="p">(</span><span class="n">TransformResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Cv2ExtrinsicResult</span><span class="p">(</span><span class="n">ExtrinsicResult</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Subclass of TransformResult to represent the result of the extrinsic transformation.</span>
+<span class="sd">    Subclass of :class:`pydistort.core.ExtrinsicResult` to represent the result of the extrinsic transformation in the cv2 format.</span>
 
 <span class="sd">    This class is used to store the result of transforming the ``world_3dpoints`` to ``normalized_points``, and the optional Jacobians.</span>
 
-<span class="sd">    - ``transformed_points``: The transformed normalized points in the camera coordinate system.</span>
-<span class="sd">    - ``jacobian_dx``: The Jacobian of the normalized points with respect to the input 3D world points if ``dx`` is True. Otherwise None. Shape (..., 2, 3).</span>
-<span class="sd">    - ``jacobian_dp``: The Jacobian of the normalized points with respect to the pose parameters (rotation and translation) if ``dp`` is True. Otherwise None. Shape (..., 2, 6), where the last dimension represents (dr, dt).</span>
+<span class="sd">    - ``transformed_points``: The transformed normalized points in the camera coordinate system. Shape (..., 2).</span>
+<span class="sd">    - ``jacobian_dx``: The Jacobian of the normalized points with respect to the input world 3D points if ``dx`` is True. Otherwise None. Shape (..., 2, 3), where the last dimension represents (dx, dy, dz).</span>
+<span class="sd">    - ``jacobian_dp``: The Jacobian of the normalized points with respect to the extrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).</span>
 
 <span class="sd">    Some properties are provided for convenience:</span>
 
@@ -342,18 +342,6 @@
 <span class="sd">        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">normalized_points</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the transformed normalized points in the camera coordinate system.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        numpy.ndarray</span>
-<span class="sd">            The transformed normalized points. Shape (..., 2).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformed_points</span>
-
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -385,18 +373,18 @@
 
 
 
-<div class="viewcode-block" id="InverseExtrinsicResult">
-<a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.objects.InverseExtrinsicResult">[docs]</a>
+<div class="viewcode-block" id="InverseCv2ExtrinsicResult">
+<a class="viewcode-back" href="../../api_doc/cv2_extrinsic.html#pydistort.InverseCv2ExtrinsicResult">[docs]</a>
 <span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">InverseExtrinsicResult</span><span class="p">(</span><span class="n">TransformResult</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">InverseCv2ExtrinsicResult</span><span class="p">(</span><span class="n">InverseExtrinsicResult</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Subclass of TransformResult to represent the result of the inverse extrinsic transformation.</span>
+<span class="sd">    Subclass of :pydistort.core.InverseExtrinsicResult` to represent the result of the inverse extrinsic transformation in the cv2 format.</span>
 
 <span class="sd">    This class is used to store the result of transforming the ``normalized_points`` back to ``world_3dpoints``, and the optional Jacobians.</span>
 
-<span class="sd">    - ``transformed_points``: The transformed world 3D points. Shape (..., 3).</span>
-<span class="sd">    - ``jacobian_dx``: The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None. Shape (..., 3, 2).</span>
-<span class="sd">    - ``jacobian_dp``: The Jacobian of the world 3D points with respect to the pose parameters (rotation and translation) if ``dp`` is True. Otherwise None. Shape (..., 3, 6), where the last dimension represents (dr, dt).</span>
+<span class="sd">    - ``transformed_points``: The transformed world 3D points in the camera coordinate system. Shape (..., 3).</span>
+<span class="sd">    - ``jacobian_dx``: The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None. Shape (..., 3, 2), where the last dimension represents (dx, dy).</span>
+<span class="sd">    - ``jacobian_dp``: The Jacobian of the world 3D points with respect to the extrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 3, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).</span>
 
 <span class="sd">    Some properties are provided for convenience:</span>
 
@@ -406,21 +394,9 @@
 
 <span class="sd">    .. warning::</span>
 
-<span class="sd">        If ``transpose`` is set to True during the inverse transformation, the output points will have shape (input_dim, ...) instead of (..., input_dim), same for the Jacobian matrices.</span>
+<span class="sd">        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">world_3dpoints</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the transformed world 3D points.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        numpy.ndarray</span>
-<span class="sd">            The transformed world 3D points. Shape (..., 3).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformed_points</span>
-    
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -454,32 +430,19 @@
 
 
 
-<div class="viewcode-block" id="Extrinsic">
-<a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.objects.Extrinsic">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">Extrinsic</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
+
+
+<div class="viewcode-block" id="Cv2Extrinsic">
+<a class="viewcode-back" href="../../api_doc/cv2_extrinsic.html#pydistort.Cv2Extrinsic">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Cv2Extrinsic</span><span class="p">(</span><span class="n">Extrinsic</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    .. note::</span>
-
-<span class="sd">        This class represents the extrinsic transformation, which is the first step of the process.</span>
-
-<span class="sd">    The process to correspond a 3D-world point to a 2D-image point in the stenopic camera model is as follows:</span>
-
-<span class="sd">    1. The ``world_3dpoints`` (:math:`X_W`) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the ``camera_3dpoints`` (:math:`X_C`).</span>
-<span class="sd">    2. The ``camera_3dpoints`` (:math:`X_C`) are normalized by dividing by the third coordinate to obtain the ``normalized_points`` (:math:`x_N`).</span>
-<span class="sd">    3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).</span>
-<span class="sd">    4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic matrix K to obtain the ``image_points`` (:math:`x_I`).</span>
-
-<span class="sd">    This tranformation can be decomposed into 3 main steps:</span>
-
-<span class="sd">    1. **Extrinsic**: Transform the ``world 3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).</span>
-<span class="sd">    2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model.</span>
-<span class="sd">    3. **Intrinsic**: Transform the ``distorted_points`` to ``image_points`` using the intrinsic matrix K.</span>
+<span class="sd">    Subclass of :class:`pydistort.core.Extrinsic` to represent the extrinsic transformation using OpenCV conventions.</span>
 
 <span class="sd">    .. note::</span>
 
 <span class="sd">        To manage only ``world_3dpoints`` to ``camera_3dpoints``, use the package py3dframe (https://github.com/Artezaru/py3dframe).</span>
 
-<span class="sd">    The equation used for the extrinsic transformation is:    </span>
+<span class="sd">    The equation used for the extrinsic transformation in the cv2 convention is: </span>
 
 <span class="sd">    .. math::</span>
 
@@ -492,7 +455,7 @@
 
 <span class="sd">    .. note::</span>
 
-<span class="sd">        To compute the translation vector and the rotation vector, you can use cv2.Rodrigues() or py3dframe.Frame with convention 0.</span>
+<span class="sd">        To compute the translation vector and the rotation vector, you can use cv2.Rodrigues() or py3dframe.Frame with convention 4.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -509,12 +472,12 @@
 <span class="sd">    .. code-block:: python</span>
 
 <span class="sd">        import numpy as np</span>
-<span class="sd">        from pydistort.objects import Extrinsic</span>
+<span class="sd">        from pydistort import Cv2Extrinsic</span>
 
 <span class="sd">        rvec = np.array([0.1, 0.2, 0.3])</span>
 <span class="sd">        tvec = np.array([0.5, 0.5, 0.5])</span>
 
-<span class="sd">        extrinsic = Extrinsic(rvec, tvec)</span>
+<span class="sd">        extrinsic = Cv2Extrinsic(rvec, tvec)</span>
 
 <span class="sd">    Then you can use the extrinsic object to transform ``world_3dpoints`` to ``camera_points``:</span>
 
@@ -558,8 +521,8 @@
 
 <span class="sd">        For more information about the transformation process, see:</span>
 
-<span class="sd">        - :meth:`pydistort.objects.Extrinsic._transform` to transform the ``world_3dpoints`` to ``normalized_points``.</span>
-<span class="sd">        - :meth:`pydistort.objects.Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.</span>
+<span class="sd">        - :meth:`pydistort.Cv2Extrinsic._transform` to transform the ``world_3dpoints`` to ``normalized_points``.</span>
+<span class="sd">        - :meth:`pydistort.Cv2Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
@@ -575,28 +538,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">tvec</span> <span class="o">=</span> <span class="n">tvec</span>
 
     <span class="c1"># =============================================</span>
-    <span class="c1"># Properties for ABC Transform Class</span>
+    <span class="c1"># Overwrite some properties from the base class</span>
     <span class="c1"># =============================================</span>
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">input_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">3</span> <span class="c1"># The input is a 3D point (x, y, z)</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">output_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">2</span> <span class="c1"># The output is a 2D point (x, y)</span>
-
-    <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">Nparams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">6</span> <span class="c1"># The number of parameters is 6 (3 for rotation and 3 for translation)</span>
+        <span class="k">return</span> <span class="mi">6</span> <span class="c1"># The number of parameters is 6 (3 for rotation and 3 for translation) even if parameters are not set.</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ExtrinsicResult</span>
+        <span class="k">return</span> <span class="n">Cv2ExtrinsicResult</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">inverse_result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">InverseExtrinsicResult</span>
+        <span class="k">return</span> <span class="n">InverseCv2ExtrinsicResult</span>
     
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Implement the parameters property</span>
+    <span class="c1"># =============================================</span>
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
@@ -607,7 +565,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        Optional[numpy.ndarray]</span>
-<span class="sd">            The parameters of the extrinsic transformation. Shape (6,).</span>
+<span class="sd">            The parameters of the extrinsic transformation. Shape (6,) or None if not set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -641,7 +599,7 @@
 
 <span class="sd">        .. seealso::</span>
 
-<span class="sd">            - :meth:`pydistort.objects.Extrinsic.rotation_vector` or ``rvec`` to set the rotation vector of the extrinsic transformation.</span>
+<span class="sd">            - :meth:`pydistort.Cv2Extrinsic.rotation_vector` or ``rvec`` to set the rotation vector of the extrinsic transformation.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -686,7 +644,7 @@
 
 <span class="sd">        .. seealso::</span>
 
-<span class="sd">            - :meth:`pydistort.objects.Extrinsic.translation_vector` or ``tvec`` to set the translation vector of the extrinsic transformation.</span>
+<span class="sd">            - :meth:`pydistort.Cv2Extrinsic.translation_vector` or ``tvec`` to set the translation vector of the extrinsic transformation.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -780,7 +738,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="n">Frame</span><span class="p">(</span><span class="n">translation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="p">,</span> <span class="n">rotation_vector</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span><span class="p">,</span> <span class="n">convention</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Frame</span><span class="p">(</span><span class="n">translation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="p">,</span> <span class="n">rotation_vector</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span><span class="p">,</span> <span class="n">convention</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
     
     <span class="nd">@frame</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Frame</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -790,8 +748,8 @@
             <span class="k">return</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">Frame</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Frame must be a py3dframe.Frame object.&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">get_global_rotation_vector</span><span class="p">(</span><span class="n">convention</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">get_global_translation</span><span class="p">(</span><span class="n">convention</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">get_global_rotation_vector</span><span class="p">(</span><span class="n">convention</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">get_global_translation</span><span class="p">(</span><span class="n">convention</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
     <span class="c1"># =============================================</span>
     <span class="c1"># Display the extrinsic parameters</span>
@@ -805,13 +763,13 @@
 <span class="sd">        str</span>
 <span class="sd">            A string representation of the extrinsic parameters.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Extrinsic Pose: rvec=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span><span class="si">}</span><span class="s2">, tvec=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Cv2 Extrinsic Pose: rvec=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span><span class="si">}</span><span class="s2">, tvec=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="si">}</span><span class="s2">&quot;</span>
     
     <span class="c1"># =============================================</span>
     <span class="c1"># Methods for ABC Transform Class</span>
     <span class="c1"># =============================================</span>
-<div class="viewcode-block" id="Extrinsic.is_set">
-<a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.objects.Extrinsic.is_set">[docs]</a>
+<div class="viewcode-block" id="Cv2Extrinsic.is_set">
+<a class="viewcode-back" href="../../api_doc/cv2_extrinsic.html#pydistort.Cv2Extrinsic.is_set">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Check if the extrinsic parameters are set.</span>
@@ -823,12 +781,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rvec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span></div>
 
+    
 
-<div class="viewcode-block" id="Extrinsic._transform">
-<a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.objects.Extrinsic._transform">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_3dpoints</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<div class="viewcode-block" id="Cv2Extrinsic._transform">
+<a class="viewcode-back" href="../../api_doc/cv2_extrinsic.html#pydistort.Cv2Extrinsic._transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">world_3dpoints</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the extrinsic transformation.</span>
+<span class="sd">        This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the extrinsic transformation.</span>
 <span class="sd">        This method allows to transform the ``world_3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).</span>
 
 <span class="sd">        .. note::</span>
@@ -903,8 +862,7 @@
 
         <span class="c1"># Compute the jacobian with respect to the world points</span>
         <span class="k">if</span> <span class="n">dx</span><span class="p">:</span>
-            <span class="n">points_camera_flat_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3, 3)</span>
-            <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">rmat</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3, 3)</span>
+            <span class="n">points_camera_flat_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">rmat</span><span class="p">,</span> <span class="p">(</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
             <span class="n">X_C_dx</span> <span class="o">=</span> <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
             <span class="n">Y_C_dx</span> <span class="o">=</span> <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
             <span class="n">Z_C_dx</span> <span class="o">=</span> <span class="n">points_camera_flat_dx</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:]</span> <span class="c1"># shape (Npoints, 3)</span>
@@ -957,11 +915,11 @@
 
     
 
-<div class="viewcode-block" id="Extrinsic._inverse_transform">
-<a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.objects.Extrinsic._inverse_transform">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<div class="viewcode-block" id="Cv2Extrinsic._inverse_transform">
+<a class="viewcode-back" href="../../api_doc/cv2_extrinsic.html#pydistort.Cv2Extrinsic._inverse_transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse extrinsic transformation.</span>
+<span class="sd">        This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse extrinsic transformation.</span>
 <span class="sd">        This method allows to transform the ``normalized_points`` back to ``world_3dpoints`` using the extrinsic parameters (rotation and translation).</span>
 
 <span class="sd">        .. note::</span>
@@ -1080,9 +1038,9 @@
             <span class="n">world_3dpoints_flat_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3, 6)</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
                 <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">points_camera_flat</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:])</span> <span class="o">@</span> <span class="n">rmat_inv_dr</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
-            <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">rmat_inv</span> <span class="o">@</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
-            <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">rmat_inv</span> <span class="o">@</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
-            <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">rmat_inv</span> <span class="o">@</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="o">@</span> <span class="n">rmat_inv</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="o">@</span> <span class="n">rmat_inv</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">world_3dpoints_flat_dp</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)[</span><span class="n">numpy</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span> <span class="o">@</span> <span class="n">rmat_inv</span><span class="o">.</span><span class="n">T</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">dx</span><span class="p">:</span>
             <span class="n">world_3dpoints_flat_dx</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1121,8 +1079,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">

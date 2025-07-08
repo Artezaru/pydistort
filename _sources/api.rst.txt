@@ -14,17 +14,30 @@ The process to correspond a 3D-world point to a 2D-image point is as follows:
 3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).
 4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic matrix K to obtain the ``image_points`` (:math:`x_I`).
 
-To processing is performed by the following classes stored in the `pydistort.objects` module:
+To processing is performed by the following abstract classes stored in the `pydistort.core` module:
 
 .. toctree::
    :maxdepth: 1
    :caption: Transformation Classes:
 
    ./api_doc/transform.rst
+   ./api_doc/transform_inversion.rst
+   ./api_doc/transform_composition.rst
    ./api_doc/extrinsic.rst
    ./api_doc/intrinsic.rst
    ./api_doc/distortion.rst
 
+These classes are designed to handle the transformation of points between different coordinate systems, including intrinsic and extrinsic parameters, as well as distortion models.
+
+Some Extrinsic and Intrinsic classes are provided in the package, such as:
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Extrinsic and Intrinsic Classes:
+
+   ./api_doc/cv2_extrinsic.rst
+   ./api_doc/cv2_intrinsic.rst
+   ./api_doc/skew_intrinsic.rst
 
 Some distortion models are provided in the package, such as:
 

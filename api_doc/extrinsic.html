@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.objects.Extrinsic &#8212; pydistort 2.0.4 documentation</title>
+    <title>pydistort.core.Extrinsic &#8212; pydistort 2.0.6 documentation</title>
   
   
   
@@ -38,15 +38,15 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=adc66a14"></script>
+    <script src="../_static/documentation_options.js?v=3e466467"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_doc/extrinsic';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pydistort.objects.Intrinsic" href="intrinsic.html" />
-    <link rel="prev" title="pydistort.objects.Transform" href="transform.html" />
+    <link rel="next" title="pydistort.core.Intrinsic" href="intrinsic.html" />
+    <link rel="prev" title="pydistort.core.TranformComposition" href="transform_composition.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.4 documentation</p>
+    <p class="title logo__title">pydistort 2.0.6 documentation</p>
   
 </a></div>
     
@@ -267,10 +267,18 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformation Classes:</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="transform.html">pydistort.objects.Transform</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.objects.Extrinsic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.objects.Intrinsic</a></li>
-<li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.objects.Distortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform.html">pydistort.core.Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_inversion.html">pydistort.core.TransformInversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_composition.html">pydistort.core.TranformComposition</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.core.Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.core.Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.core.Distortion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic and Intrinsic Classes:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_intrinsic.html">pydistort.Cv2Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skew_intrinsic.html">pydistort.SkewIntrinsic</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Distortion Models:</span></p>
 <ul class="nav bd-sidenav">
@@ -327,7 +335,7 @@
     
     <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API Reference</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.objects.Extrinsic</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.core.Extrinsic</span></li>
   </ul>
 </nav>
 </div>
@@ -344,14 +352,14 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="pydistort-objects-extrinsic">
-<h1>pydistort.objects.Extrinsic<a class="headerlink" href="#pydistort-objects-extrinsic" title="Link to this heading">#</a></h1>
+  <section id="pydistort-core-extrinsic">
+<h1>pydistort.core.Extrinsic<a class="headerlink" href="#pydistort-core-extrinsic" title="Link to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.objects.</span></span><span class="sig-name descname"><span class="pre">Extrinsic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tvec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/objects/extrinsic.html#Extrinsic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Extrinsic" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.core.</span></span><span class="sig-name descname"><span class="pre">Extrinsic</span></span><a class="reference internal" href="../_modules/pydistort/core/extrinsic.html#Extrinsic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.core.Extrinsic" title="Link to this definition">#</a></dt>
 <dd><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This class represents the extrinsic transformation, which is the first step of the process.</p>
+<p>This class represents the extrinsic transformation, which is the central step of the process.</p>
 </div>
 <p>The process to correspond a 3D-world point to a 2D-image point in the stenopic camera model is as follows:</p>
 <ol class="arabic simple">
@@ -362,218 +370,29 @@
 </ol>
 <p>This tranformation can be decomposed into 3 main steps:</p>
 <ol class="arabic simple">
-<li><p><strong>Extrinsic</strong>: Transform the <code class="docutils literal notranslate"><span class="pre">world</span> <span class="pre">3dpoints</span></code> to <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> using the extrinsic parameters (rotation and translation).</p></li>
+<li><p><strong>Extrinsic</strong>: Transform the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> to <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> using the extrinsic parameters (rotation and translation), (this class).</p></li>
 <li><p><strong>Distortion</strong>: Transform the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> to <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> using the distortion model.</p></li>
 <li><p><strong>Intrinsic</strong>: Transform the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> to <code class="docutils literal notranslate"><span class="pre">image_points</span></code> using the intrinsic matrix K.</p></li>
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>To manage only <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> to <code class="docutils literal notranslate"><span class="pre">camera_3dpoints</span></code>, use the package py3dframe (<a class="github reference external" href="https://github.com/Artezaru/py3dframe">Artezaru/py3dframe</a>).</p>
-</div>
-<p>The equation used for the extrinsic transformation is:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\begin{align*}
-X_C &amp;= R \cdot X_W + T \\
-x_N &amp;= \frac{X_C}{Z_C} \\
-\end{align*}\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(R\)</span> is the rotation matrix, <span class="math notranslate nohighlight">\(T\)</span> is the translation vector.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>To compute the translation vector and the rotation vector, you can use cv2.Rodrigues() or py3dframe.Frame with convention 0.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>rvec</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The rotation vector of the camera. Shape (3,). If None, the rotation vector is not set.</p></li>
-<li><p><strong>tvec</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The translation vector of the camera. Shape (3,). If None, the translation vector is not set.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<p>Create an extrinsic object with a rotation vector and a translation vector:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydistort.objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extrinsic</span>
-
-<span class="n">rvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">])</span>
-<span class="n">tvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
-
-<span class="n">extrinsic</span> <span class="o">=</span> <span class="n">Extrinsic</span><span class="p">(</span><span class="n">rvec</span><span class="p">,</span> <span class="n">tvec</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Then you can use the extrinsic object to transform <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> to <code class="docutils literal notranslate"><span class="pre">camera_points</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">world_3dpoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
-                           <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
-                           <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span>
-                           <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">]])</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">extrinsic</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">world_3dpoints</span><span class="p">)</span>
-<span class="n">normalized_points</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">normalized_points</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">normalized_points</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>You can also access to the jacobian of the extrinsic transformation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">extrinsic</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">world_3dpoints</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">normalized_points_dx</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">jacobian_dx</span>  <span class="c1"># Shape (..., 2, 3)</span>
-<span class="n">normalized_points_dp</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">jacobian_dp</span>  <span class="c1"># Shape (..., 2, 6)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">normalized_points_dx</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">normalized_points_dp</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The inverse transformation can be computed using the <cite>inverse_transform</cite> method:
-By default, the depth is assumed to be 1.0 for all points, but you can provide a specific depth for each point with shape (…,).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">depth</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span>  <span class="c1"># Example depth values for each point</span>
-
-<span class="n">inverse_result</span> <span class="o">=</span> <span class="n">extrinsic</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">normalized_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="n">depth</span><span class="p">)</span>
-<span class="n">world_3dpoints</span> <span class="o">=</span> <span class="n">inverse_result</span><span class="o">.</span><span class="n">transformed_points</span>  <span class="c1"># Shape (..., 3)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">world_3dpoints</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The jacobian with respect to the depth is not computed.</p>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p>For more information about the transformation process, see:</p>
+<p>This class is the base class for all extrinsic models.</p>
+<p>The subclasses should implement the following methods:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#pydistort.objects.Extrinsic._transform" title="pydistort.objects.Extrinsic._transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Extrinsic._transform()</span></code></a> to transform the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> to <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code>.</p></li>
-<li><p><a class="reference internal" href="#pydistort.objects.Extrinsic._inverse_transform" title="pydistort.objects.Extrinsic._inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Extrinsic._inverse_transform()</span></code></a> to transform the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> back to <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code>.</p></li>
+<li><p>“parameters”: property to return the extrinsic parameters in a 1D numpy array.</p></li>
+<li><p>“is_set”: to check if the extrinsic parameters are set.</p></li>
+<li><p>“_transform”: to apply extrinsic to a set of points. The transformation is applied to the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_W\)</span>) to obtain the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>).</p></li>
+<li><p>“_inverse_transform”: to remove extrinsic from a set of points. The transformation is applied to the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>) to obtain the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_W\)</span>).</p></li>
 </ul>
 </div>
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.Nparams">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Nparams</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.Nparams" title="Link to this definition">#</a></dt>
-<dd><p>Property to return the number of parameters of the transformation.</p>
-<p>The number of parameters must be a non-negative integer representing the number of parameters of the transformation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The number of parameters of the transformation.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py attribute">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic._abc_impl">
-<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic._abc_impl" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.core.Extrinsic._abc_impl" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic._inverse_transform">
-<span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/objects/extrinsic.html#Extrinsic._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Extrinsic._inverse_transform" title="Link to this definition">#</a></dt>
-<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.objects.Transform.inverse_transform" title="pydistort.objects.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Transform.inverse_transform()</span></code></a> method to perform the inverse extrinsic transformation.
-This method allows to transform the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> back to <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> using the extrinsic parameters (rotation and translation).</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For <code class="docutils literal notranslate"><span class="pre">_inverse_transform</span></code> the input must have shape (Npoints, 2) with float64 type.
-The output has shape (Npoints, 3) for the world 3D points and (Npoints, 3, 2)</p>
-</div>
-<p>The equation used for the transformation is:</p>
-<div class="math notranslate nohighlight">
-\[[X_W, Y_W, Z_W]^T = R^{-1} \cdot ([X_N, Y_N, 1]^T \cdot Z_C - T)\]</div>
-<p>where <span class="math notranslate nohighlight">\(R^{-1}\)</span> is the inverse of the rotation matrix, <span class="math notranslate nohighlight">\(T\)</span> is the translation vector.</p>
-<p>The depth parameter is used to scale the normalized points to the world 3D points.
-By default, the depth is assumed to be 1.0 for all points, but you can provide a specific depth for each point with shape (…,).</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This method is not designed to be used directly for the transformation of points.
-No checks are performed on the input points, so it is the user’s responsibility to ensure that the input points are valid.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – Array of normalized points to be transformed with shape (Npoints, 2).</p></li>
-<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the Jacobian of the world 3D points with respect to the input normalized points is computed. Default is False.
-The output will be a 2D array of shape (Npoints, 3, 2).</p></li>
-<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the Jacobian of the world 3D points with respect to the pose parameters is computed. Default is False.
-The output will be a 2D array of shape (Npoints, 3, 6).</p></li>
-<li><p><strong>depth</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em><em>, </em><em>optional</em>) – The depth of the points in the world coordinate system. If None, the depth is assumed to be 1.0 for all points.
-The shape should be (…,). If provided, it will be used to scale the normalized points to the world 3D points.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>world_3dpoints</strong> (<em>numpy.ndarray</em>) – The transformed world 3D points. It will be a 2D array of shape (Npoints, 3).</p></li>
-<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – The Jacobian of the world 3D points with respect to the input normalized points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None.
-It will be a 2D array of shape (Npoints, 3, 2) if <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is False.</p></li>
-<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – The Jacobian of the world 3D points with respect to the pose parameters if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None.
-It will be a 2D array of shape (Npoints, 3, 6) if <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is False.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic._transform">
-<span class="sig-name descname"><span class="pre">_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world_3dpoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/objects/extrinsic.html#Extrinsic._transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Extrinsic._transform" title="Link to this definition">#</a></dt>
-<dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.objects.Transform.transform" title="pydistort.objects.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Transform.transform()</span></code></a> method to perform the extrinsic transformation.
-This method allows to transform the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> to <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> using the extrinsic parameters (rotation and translation).</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For <code class="docutils literal notranslate"><span class="pre">_transform</span></code> the input must have shape (Npoints, 3) with float64 type.
-The output has shape (Npoints, 2) for the normalized points and (Npoints, 2, 3) for the jacobian with respect to the 3D world points and (Npoints, 2, 6) for the jacobian with respect to the extrinsic parameters.</p>
-</div>
-<p>The equation used for the transformation is:</p>
-<div class="math notranslate nohighlight">
-\[[X_C, Y_C, Z_C]^T = R \cdot [X_W, Y_W, Z_W]^T + T\]</div>
-<div class="math notranslate nohighlight">
-\[x_N = \frac{X_C}{Z_C}\]</div>
-<div class="math notranslate nohighlight">
-\[y_N = \frac{Y_C}{Z_C}\]</div>
-<p>where <span class="math notranslate nohighlight">\(R\)</span> is the rotation matrix, <span class="math notranslate nohighlight">\(T\)</span> is the translation vector.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>This method is not designed to be used directly for the transformation of points.
-No checks are performed on the input points, so it is the user’s responsibility to ensure that the input points are valid.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>world_3dpoints</strong> (<em>numpy.ndarray</em>) – Array of world 3dpoints to be transformed with shape (Npoints, 3).</p></li>
-<li><p><strong>dx</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the Jacobian of the normalized points with respect to the input 3D world points is computed. Default is False.
-The output will be a 2D array of shape (Npoints, 2, 3).</p></li>
-<li><p><strong>dp</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the Jacobian of the normalized points with respect to the pose parameters is computed. Default is False.
-The output will be a 2D array of shape (Npoints, 2, 6).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – The transformed image points in pixels. It will be a 2D array of shape (Npoints, 2).</p></li>
-<li><p><strong>jacobian_dx</strong> (<em>Optional[numpy.ndarray]</em>) – The Jacobian of the normalized points with respect to the input 3D world points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None.
-It will be a 2D array of shape (Npoints, 2, 2) if <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is False.</p></li>
-<li><p><strong>jacobian_dp</strong> (<em>Optional[numpy.ndarray]</em>) – The Jacobian of the normalized points with respect to the pose parameters if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None.
-It will be a 2D array of shape (Npoints, 2, 6) if <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is False.</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.frame">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">frame</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Frame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.frame" title="Link to this definition">#</a></dt>
-<dd><p>Get or set the 3D frame of the extrinsic transformation.</p>
-<p>The frame is a py3dframe.Frame object representing the 3D frame of the camera in the world coordinate system.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><a class="github reference external" href="https://github.com/Artezaru/py3dframe">Artezaru/py3dframe</a> for more information about the Frame class.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The 3D frame of the camera in the world coordinate system. (or None if not set)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[Frame]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.input_dim">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.input_dim" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic.input_dim">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.core.Extrinsic.input_dim" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the input dimension of the transformation.</p>
 <p>The input dimension must be a positive integer representing the number of dimensions of the input points.</p>
 <dl class="field-list simple">
@@ -587,8 +406,8 @@ It will be a 2D array of shape (Npoints, 2, 6) if <code class="docutils literal 
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.inverse_result_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverse_result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.inverse_result_class" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic.inverse_result_class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverse_result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.core.Extrinsic.inverse_result_class" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the class used for the result of the inverse transformation.</p>
 <p>The default is <cite>TransformResult</cite>, but subclasses can override this to return a different class.</p>
 <dl class="field-list simple">
@@ -601,23 +420,9 @@ It will be a 2D array of shape (Npoints, 2, 6) if <code class="docutils literal 
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.is_set">
-<span class="sig-name descname"><span class="pre">is_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydistort/objects/extrinsic.html#Extrinsic.is_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.Extrinsic.is_set" title="Link to this definition">#</a></dt>
-<dd><p>Check if the extrinsic parameters are set.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>True if both rotation vector and translation vector are set, False otherwise.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.output_dim">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.output_dim" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic.output_dim">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.core.Extrinsic.output_dim" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the output dimension of the transformation.</p>
 <p>The output dimension must be a positive integer representing the number of dimensions of the output points.</p>
 <dl class="field-list simple">
@@ -631,23 +436,8 @@ It will be a 2D array of shape (Npoints, 2, 6) if <code class="docutils literal 
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.parameters">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.parameters" title="Link to this definition">#</a></dt>
-<dd><p>Get or set the parameters of the extrinsic transformation.</p>
-<p>The parameters are a numpy array of shape (6,) representing the rotation vector and translation vector concatenated.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The parameters of the extrinsic transformation. Shape (6,).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.result_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.result_class" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic.result_class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.core.Extrinsic.result_class" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the class used for the result of the transformation.</p>
 <p>The default is <cite>TransformResult</cite>, but subclasses can override this to return a different class.</p>
 <dl class="field-list simple">
@@ -660,149 +450,34 @@ It will be a 2D array of shape (Npoints, 2, 6) if <code class="docutils literal 
 </dl>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.rmat">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rmat</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.rmat" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.rotation_matrix">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotation_matrix</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.rotation_matrix" title="Link to this definition">#</a></dt>
-<dd><p>Get or set the rotation matrix of the extrinsic transformation.</p>
-<p>The rotation matrix is a numpy array of shape (3, 3) representing the rotation of the camera in the world coordinate system.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The rotation matrix is computed using the Rodrigues formula.
-An alias for <code class="docutils literal notranslate"><span class="pre">rotation_matrix</span></code> is <code class="docutils literal notranslate"><span class="pre">rmat</span></code>.</p>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The rotation matrix of the camera in the world coordinate system. (or None if not set)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.rotation_vector">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rotation_vector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.rotation_vector" title="Link to this definition">#</a></dt>
-<dd><p>Get or set the rotation vector <code class="docutils literal notranslate"><span class="pre">rvec</span></code> of the extrinsic transformation.</p>
-<p>The rotation vector is a numpy array of shape (3,) representing the rotation of the camera in the world coordinate system.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>An alias for <code class="docutils literal notranslate"><span class="pre">rotation_vector</span></code> is <code class="docutils literal notranslate"><span class="pre">rvec</span></code>.</p>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#pydistort.objects.Extrinsic.translation_vector" title="pydistort.objects.Extrinsic.translation_vector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Extrinsic.translation_vector()</span></code></a> or <code class="docutils literal notranslate"><span class="pre">tvec</span></code> to set the translation vector of the extrinsic transformation.</p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The rotation vector of the camera in the world coordinate system. (or None if not set)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.rvec">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rvec</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.rvec" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.translation_vector">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">translation_vector</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.translation_vector" title="Link to this definition">#</a></dt>
-<dd><p>Get or set the translation vector <code class="docutils literal notranslate"><span class="pre">tvec</span></code> of the extrinsic transformation.</p>
-<p>The translation vector is a numpy array of shape (3,) representing the translation of the camera in the world coordinate system.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>An alias for <code class="docutils literal notranslate"><span class="pre">translation_vector</span></code> is <code class="docutils literal notranslate"><span class="pre">tvec</span></code>.</p>
-</div>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<ul class="simple">
-<li><p><a class="reference internal" href="#pydistort.objects.Extrinsic.rotation_vector" title="pydistort.objects.Extrinsic.rotation_vector"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.objects.Extrinsic.rotation_vector()</span></code></a> or <code class="docutils literal notranslate"><span class="pre">rvec</span></code> to set the rotation vector of the extrinsic transformation.</p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The translation vector of the camera in the world coordinate system. (or None if not set)</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.Extrinsic.tvec">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tvec</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.Extrinsic.tvec" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="pydistort.objects.ExtrinsicResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.objects.</span></span><span class="sig-name descname"><span class="pre">ExtrinsicResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/objects/extrinsic.html#ExtrinsicResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.ExtrinsicResult" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="transform.html#pydistort.objects.TransformResult" title="pydistort.objects.transform.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformResult</span></code></a></p>
-<p>Subclass of TransformResult to represent the result of the extrinsic transformation.</p>
+<dt class="sig sig-object py" id="pydistort.core.ExtrinsicResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.core.</span></span><span class="sig-name descname"><span class="pre">ExtrinsicResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/core/extrinsic.html#ExtrinsicResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.core.ExtrinsicResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="transform.html#pydistort.core.TransformResult" title="pydistort.core.transform.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformResult</span></code></a></p>
+<p>Subclass of <a class="reference internal" href="transform.html#pydistort.core.TransformResult" title="pydistort.core.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.core.TransformResult</span></code></a> to represent the result of the extrinsic transformation.</p>
 <p>This class is used to store the result of transforming the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> to <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code>, and the optional Jacobians.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">transformed_points</span></code>: The transformed normalized points in the camera coordinate system.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dx</span></code>: The Jacobian of the normalized points with respect to the input 3D world points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None. Shape (…, 2, 3).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dp</span></code>: The Jacobian of the normalized points with respect to the pose parameters (rotation and translation) if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None. Shape (…, 2, 6), where the last dimension represents (dr, dt).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">transformed_points</span></code>: The transformed normalized points in the camera coordinate system. Shape (…, 2).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dx</span></code>: The Jacobian of the normalized points with respect to the input world 3D points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None. Shape (…, 2, 3), where the last dimension represents (dx, dy, dz).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dp</span></code>: The Jacobian of the normalized points with respect to the extrinsic parameters if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None. Shape (…, 2, Nparams), where Nparams is the number of extrinsic parameters.</p></li>
 </ul>
 <p>Some properties are provided for convenience:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">normalized_points</span></code>: Alias for <code class="docutils literal notranslate"><span class="pre">transformed_points</span></code> to represent the transformed normalized points. Shape (…, 2).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dr</span></code>: Part of the Jacobian with respect to the rotation vector. Shape (…, 2, 3).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dt</span></code>: Part of the Jacobian with respect to the translation vector. Shape (…, 2, 3).</p></li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the transformation, the output points will have shape (output_dim, …) instead of (…, output_dim), same for the Jacobian matrices.</p>
 </div>
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.ExtrinsicResult.jacobian_dr">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.ExtrinsicResult.jacobian_dr" title="Link to this definition">#</a></dt>
-<dd><p>Get the Jacobian of the normalized points with respect to the rotation vector.</p>
+<dt class="sig sig-object py" id="pydistort.core.ExtrinsicResult.normalized_points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalized_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.core.ExtrinsicResult.normalized_points" title="Link to this definition">#</a></dt>
+<dd><p>Get the transformed normalized points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Jacobian with respect to rotation (dr). Shape (…, 2, 3).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.ExtrinsicResult.jacobian_dt">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.ExtrinsicResult.jacobian_dt" title="Link to this definition">#</a></dt>
-<dd><p>Get the Jacobian of the normalized points with respect to the translation vector.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Jacobian with respect to translation (dt). Shape (…, 2, 3).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.ExtrinsicResult.normalized_points">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">normalized_points</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.objects.ExtrinsicResult.normalized_points" title="Link to this definition">#</a></dt>
-<dd><p>Get the transformed normalized points in the camera coordinate system.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The transformed normalized points. Shape (…, 2).</p>
+<dd class="field-odd"><p>The transformed normalized points in the camera coordinate system. Shape (…, 2).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.ndarray</p>
@@ -813,61 +488,31 @@ An alias for <code class="docutils literal notranslate"><span class="pre">rotati
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="pydistort.objects.InverseExtrinsicResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.objects.</span></span><span class="sig-name descname"><span class="pre">InverseExtrinsicResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/objects/extrinsic.html#InverseExtrinsicResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.objects.InverseExtrinsicResult" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="transform.html#pydistort.objects.TransformResult" title="pydistort.objects.transform.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformResult</span></code></a></p>
-<p>Subclass of TransformResult to represent the result of the inverse extrinsic transformation.</p>
+<dt class="sig sig-object py" id="pydistort.core.InverseExtrinsicResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.core.</span></span><span class="sig-name descname"><span class="pre">InverseExtrinsicResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/core/extrinsic.html#InverseExtrinsicResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.core.InverseExtrinsicResult" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference internal" href="transform.html#pydistort.core.TransformResult" title="pydistort.core.transform.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformResult</span></code></a></p>
+<p>Subclass of <a class="reference internal" href="transform.html#pydistort.core.TransformResult" title="pydistort.core.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.core.TransformResult</span></code></a> to represent the result of the inverse extrinsic transformation.</p>
 <p>This class is used to store the result of transforming the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> back to <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code>, and the optional Jacobians.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">transformed_points</span></code>: The transformed world 3D points. Shape (…, 3).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dx</span></code>: The Jacobian of the world 3D points with respect to the input normalized points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None. Shape (…, 3, 2).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dp</span></code>: The Jacobian of the world 3D points with respect to the pose parameters (rotation and translation) if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None. Shape (…, 3, 6), where the last dimension represents (dr, dt).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">transformed_points</span></code>: The transformed world 3D points in the camera coordinate system. Shape (…, 3).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dx</span></code>: The Jacobian of the world 3D points with respect to the input normalized points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None. Shape (…, 3, 2), where the last dimension represents (dx, dy).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dp</span></code>: The Jacobian of the world 3D points with respect to the extrinsic parameters if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None. Shape (…, 3, Nparams), where Nparams is the number of extrinsic parameters.</p></li>
 </ul>
 <p>Some properties are provided for convenience:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code>: Alias for <code class="docutils literal notranslate"><span class="pre">transformed_points</span></code> to represent the transformed world 3D points. Shape (…, 3).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dr</span></code>: Part of the Jacobian with respect to the rotation vector. Shape (…, 3, 3).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dt</span></code>: Part of the Jacobian with respect to the translation vector. Shape (…, 3, 3).</p></li>
 </ul>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the inverse transformation, the output points will have shape (input_dim, …) instead of (…, input_dim), same for the Jacobian matrices.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the transformation, the output points will have shape (output_dim, …) instead of (…, output_dim), same for the Jacobian matrices.</p>
 </div>
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.InverseExtrinsicResult.jacobian_dr">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.InverseExtrinsicResult.jacobian_dr" title="Link to this definition">#</a></dt>
-<dd><p>Get the Jacobian of the world 3D points with respect to the rotation vector.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Jacobian with respect to rotation (dr). Shape (…, 3, 3).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.InverseExtrinsicResult.jacobian_dt">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.objects.InverseExtrinsicResult.jacobian_dt" title="Link to this definition">#</a></dt>
-<dd><p>Get the Jacobian of the world 3D points with respect to the translation vector.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Jacobian with respect to translation (dt). Shape (…, 3, 3).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.objects.InverseExtrinsicResult.world_3dpoints">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">world_3dpoints</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.objects.InverseExtrinsicResult.world_3dpoints" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="pydistort.core.InverseExtrinsicResult.world_3dpoints">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">world_3dpoints</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span></em><a class="headerlink" href="#pydistort.core.InverseExtrinsicResult.world_3dpoints" title="Link to this definition">#</a></dt>
 <dd><p>Get the transformed world 3D points.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The transformed world 3D points. Shape (…, 3).</p>
+<dd class="field-odd"><p>The transformed world 3D points in the camera coordinate system. Shape (…, 3).</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>numpy.ndarray</p>
@@ -890,12 +535,12 @@ An alias for <code class="docutils literal notranslate"><span class="pre">rotati
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="transform.html"
+       href="transform_composition.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pydistort.objects.Transform</p>
+        <p class="prev-next-title">pydistort.core.TranformComposition</p>
       </div>
     </a>
     <a class="right-next"
@@ -903,7 +548,7 @@ An alias for <code class="docutils literal notranslate"><span class="pre">rotati
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pydistort.objects.Intrinsic</p>
+        <p class="prev-next-title">pydistort.core.Intrinsic</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -926,36 +571,20 @@ An alias for <code class="docutils literal notranslate"><span class="pre">rotati
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic"><code class="docutils literal notranslate"><span class="pre">Extrinsic</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.Nparams"><code class="docutils literal notranslate"><span class="pre">Extrinsic.Nparams</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic._abc_impl"><code class="docutils literal notranslate"><span class="pre">Extrinsic._abc_impl</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic._inverse_transform"><code class="docutils literal notranslate"><span class="pre">Extrinsic._inverse_transform()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic._transform"><code class="docutils literal notranslate"><span class="pre">Extrinsic._transform()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.frame"><code class="docutils literal notranslate"><span class="pre">Extrinsic.frame</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.input_dim"><code class="docutils literal notranslate"><span class="pre">Extrinsic.input_dim</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic.inverse_result_class</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.is_set"><code class="docutils literal notranslate"><span class="pre">Extrinsic.is_set()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.output_dim"><code class="docutils literal notranslate"><span class="pre">Extrinsic.output_dim</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.parameters"><code class="docutils literal notranslate"><span class="pre">Extrinsic.parameters</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic.result_class</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.rmat"><code class="docutils literal notranslate"><span class="pre">Extrinsic.rmat</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.rotation_matrix"><code class="docutils literal notranslate"><span class="pre">Extrinsic.rotation_matrix</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.rotation_vector"><code class="docutils literal notranslate"><span class="pre">Extrinsic.rotation_vector</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.rvec"><code class="docutils literal notranslate"><span class="pre">Extrinsic.rvec</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.translation_vector"><code class="docutils literal notranslate"><span class="pre">Extrinsic.translation_vector</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.Extrinsic.tvec"><code class="docutils literal notranslate"><span class="pre">Extrinsic.tvec</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic"><code class="docutils literal notranslate"><span class="pre">Extrinsic</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._abc_impl"><code class="docutils literal notranslate"><span class="pre">Extrinsic._abc_impl</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.input_dim"><code class="docutils literal notranslate"><span class="pre">Extrinsic.input_dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic.inverse_result_class</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.output_dim"><code class="docutils literal notranslate"><span class="pre">Extrinsic.output_dim</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic.result_class</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.ExtrinsicResult"><code class="docutils literal notranslate"><span class="pre">ExtrinsicResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.ExtrinsicResult.jacobian_dr"><code class="docutils literal notranslate"><span class="pre">ExtrinsicResult.jacobian_dr</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.ExtrinsicResult.jacobian_dt"><code class="docutils literal notranslate"><span class="pre">ExtrinsicResult.jacobian_dt</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.ExtrinsicResult.normalized_points"><code class="docutils literal notranslate"><span class="pre">ExtrinsicResult.normalized_points</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.ExtrinsicResult"><code class="docutils literal notranslate"><span class="pre">ExtrinsicResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.ExtrinsicResult.normalized_points"><code class="docutils literal notranslate"><span class="pre">ExtrinsicResult.normalized_points</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.InverseExtrinsicResult"><code class="docutils literal notranslate"><span class="pre">InverseExtrinsicResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.InverseExtrinsicResult.jacobian_dr"><code class="docutils literal notranslate"><span class="pre">InverseExtrinsicResult.jacobian_dr</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.InverseExtrinsicResult.jacobian_dt"><code class="docutils literal notranslate"><span class="pre">InverseExtrinsicResult.jacobian_dt</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.objects.InverseExtrinsicResult.world_3dpoints"><code class="docutils literal notranslate"><span class="pre">InverseExtrinsicResult.world_3dpoints</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.InverseExtrinsicResult"><code class="docutils literal notranslate"><span class="pre">InverseExtrinsicResult</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.InverseExtrinsicResult.world_3dpoints"><code class="docutils literal notranslate"><span class="pre">InverseExtrinsicResult.world_3dpoints</span></code></a></li>
 </ul>
 </li>
 </ul>

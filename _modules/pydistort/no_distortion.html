@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.no_distortion &#8212; pydistort 2.0.4 documentation</title>
+    <title>pydistort.no_distortion &#8212; pydistort 2.0.6 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=adc66a14"></script>
+    <script src="../../_static/documentation_options.js?v=3e466467"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/no_distortion';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.4 documentation</p>
+    <p class="title logo__title">pydistort 2.0.6 documentation</p>
   
 </a></div>
     
@@ -313,7 +313,7 @@
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.objects.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.core.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
 
 <div class="viewcode-block" id="NoDistortion">
 <a class="viewcode-back" href="../../api_doc/no_distortion.html#pydistort.NoDistortion">[docs]</a>
@@ -321,7 +321,7 @@
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class to represent the empty distortion model where the ``distorted_points`` are equal to the ``normalized_points``.</span>
 
-<span class="sd">    The NoDistortionmodel is used when there is no distortion in the camera.</span>
+<span class="sd">    The NoDistortion model is used when there is no distortion in the camera.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -411,7 +411,7 @@
 <span class="sd">            The points in distorted coordinates to be transformed. Shape (Npoints, 2).</span>
 
 <span class="sd">        dx : bool, optional</span>
-<span class="sd">            If True, the jacobian with respect to the normalized points is computed. Default is True</span>
+<span class="sd">            If True, the jacobian with respect to the distorted points is computed. Default is True</span>
 
 <span class="sd">        dp : bool, optional</span>
 <span class="sd">            If True, the jacobian with respect to the distortion parameters is computed. Default is True</span>
