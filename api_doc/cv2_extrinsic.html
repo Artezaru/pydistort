@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.Cv2Extrinsic &#8212; pydistort 2.0.6 documentation</title>
+    <title>pydistort.Cv2Extrinsic &#8212; pydistort 2.0.8 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=3e466467"></script>
+    <script src="../_static/documentation_options.js?v=722443bc"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.6 documentation</p>
+    <p class="title logo__title">pydistort 2.0.8 documentation</p>
   
 </a></div>
     
@@ -373,6 +373,11 @@ x_N &amp;= \frac{X_C}{Z_C} \\
 <p class="admonition-title">Note</p>
 <p>To compute the translation vector and the rotation vector, you can use cv2.Rodrigues() or py3dframe.Frame with convention 4.</p>
 </div>
+<p>Two short-hand notations are provided to access the jacobian with respect to the rotation vector and translation vector:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dr</span></code>: The Jacobian of the normalized points with respect to the rotation vector. It has shape (…, 2, 3).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dt</span></code>: The Jacobian of the normalized points with respect to the translation vector. It has shape (…, 2, 3).</p></li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -593,6 +598,33 @@ It will be a 2D array of shape (Npoints, 2, 6) if <code class="docutils literal 
 </dd></dl>
 
 <dl class="py property">
+<dt class="sig sig-object py" id="pydistort.Cv2Extrinsic.jacobian_short_hand">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_short_hand</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pydistort.Cv2Extrinsic.jacobian_short_hand" title="Link to this definition">#</a></dt>
+<dd><p>Property to return a dictionary of short-hand notation for the Jacobian matrices.</p>
+<p>This dictionary can be used to add custom views of the <cite>jacobian_dp</cite> matrix with respect to the parameters of the transformation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;dk&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Custom Jacobian view for two first parameters related to k1 and k2&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;dother&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Custom Jacobian view for other parameters related to k3 and k4&quot;</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>A dictionary where keys are names of the custom Jacobian views and values are tuples containing:</p>
+<ul class="simple">
+<li><p>start index (int): The starting index of the parameters to include in the custom Jacobian view.</p></li>
+<li><p>end index (int): The ending index of the parameters to include in the custom Jacobian view.</p></li>
+<li><p>doc (Optional[str]): A documentation string for the custom Jacobian view.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Tuple[int, int, Optional[str]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
 <dt class="sig sig-object py" id="pydistort.Cv2Extrinsic.parameters">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parameters</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2Extrinsic.parameters" title="Link to this definition">#</a></dt>
 <dd><p>Get or set the parameters of the extrinsic transformation.</p>
@@ -709,108 +741,6 @@ An alias for <code class="docutils literal notranslate"><span class="pre">rotati
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="pydistort.Cv2ExtrinsicResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">Cv2ExtrinsicResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/cv2_extrinsic.html#Cv2ExtrinsicResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2ExtrinsicResult" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="extrinsic.html#pydistort.core.ExtrinsicResult" title="pydistort.core.extrinsic.ExtrinsicResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExtrinsicResult</span></code></a></p>
-<p>Subclass of <a class="reference internal" href="extrinsic.html#pydistort.core.ExtrinsicResult" title="pydistort.core.ExtrinsicResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.core.ExtrinsicResult</span></code></a> to represent the result of the extrinsic transformation in the cv2 format.</p>
-<p>This class is used to store the result of transforming the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> to <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code>, and the optional Jacobians.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">transformed_points</span></code>: The transformed normalized points in the camera coordinate system. Shape (…, 2).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dx</span></code>: The Jacobian of the normalized points with respect to the input world 3D points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None. Shape (…, 2, 3), where the last dimension represents (dx, dy, dz).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dp</span></code>: The Jacobian of the normalized points with respect to the extrinsic parameters if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None. Shape (…, 2, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).</p></li>
-</ul>
-<p>Some properties are provided for convenience:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">normalized_points</span></code>: Alias for <code class="docutils literal notranslate"><span class="pre">transformed_points</span></code> to represent the transformed normalized points. Shape (…, 2).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dr</span></code>: Part of the Jacobian with respect to the rotation vector. Shape (…, 2, 3).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dt</span></code>: Part of the Jacobian with respect to the translation vector. Shape (…, 2, 3).</p></li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the transformation, the output points will have shape (output_dim, …) instead of (…, output_dim), same for the Jacobian matrices.</p>
-</div>
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Cv2ExtrinsicResult.jacobian_dr">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2ExtrinsicResult.jacobian_dr" title="Link to this definition">#</a></dt>
-<dd><p>Get the Jacobian of the normalized points with respect to the rotation vector.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Jacobian with respect to rotation (dr). Shape (…, 2, 3).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.Cv2ExtrinsicResult.jacobian_dt">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.Cv2ExtrinsicResult.jacobian_dt" title="Link to this definition">#</a></dt>
-<dd><p>Get the Jacobian of the normalized points with respect to the translation vector.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Jacobian with respect to translation (dt). Shape (…, 2, 3).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pydistort.InverseCv2ExtrinsicResult">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">InverseCv2ExtrinsicResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">transformed_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jacobian_dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/cv2_extrinsic.html#InverseCv2ExtrinsicResult"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.InverseCv2ExtrinsicResult" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference internal" href="extrinsic.html#pydistort.core.InverseExtrinsicResult" title="pydistort.core.extrinsic.InverseExtrinsicResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">InverseExtrinsicResult</span></code></a></p>
-<p>Subclass of :pydistort.core.InverseExtrinsicResult` to represent the result of the inverse extrinsic transformation in the cv2 format.</p>
-<p>This class is used to store the result of transforming the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> back to <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code>, and the optional Jacobians.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">transformed_points</span></code>: The transformed world 3D points in the camera coordinate system. Shape (…, 3).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dx</span></code>: The Jacobian of the world 3D points with respect to the input normalized points if <code class="docutils literal notranslate"><span class="pre">dx</span></code> is True. Otherwise None. Shape (…, 3, 2), where the last dimension represents (dx, dy).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dp</span></code>: The Jacobian of the world 3D points with respect to the extrinsic parameters if <code class="docutils literal notranslate"><span class="pre">dp</span></code> is True. Otherwise None. Shape (…, 3, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).</p></li>
-</ul>
-<p>Some properties are provided for convenience:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code>: Alias for <code class="docutils literal notranslate"><span class="pre">transformed_points</span></code> to represent the transformed world 3D points. Shape (…, 3).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dr</span></code>: Part of the Jacobian with respect to the rotation vector. Shape (…, 3, 3).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_dt</span></code>: Part of the Jacobian with respect to the translation vector. Shape (…, 3, 3).</p></li>
-</ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If <code class="docutils literal notranslate"><span class="pre">transpose</span></code> is set to True during the transformation, the output points will have shape (output_dim, …) instead of (…, output_dim), same for the Jacobian matrices.</p>
-</div>
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.InverseCv2ExtrinsicResult.jacobian_dr">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.InverseCv2ExtrinsicResult.jacobian_dr" title="Link to this definition">#</a></dt>
-<dd><p>Get the Jacobian of the world 3D points with respect to the rotation vector.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Jacobian with respect to rotation (dr). Shape (…, 3, 3).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.InverseCv2ExtrinsicResult.jacobian_dt">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_dt</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#pydistort.InverseCv2ExtrinsicResult.jacobian_dt" title="Link to this definition">#</a></dt>
-<dd><p>Get the Jacobian of the world 3D points with respect to the translation vector.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The Jacobian with respect to translation (dt). Shape (…, 3, 3).</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Optional[numpy.ndarray]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 
 
@@ -868,6 +798,7 @@ An alias for <code class="docutils literal notranslate"><span class="pre">rotati
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.frame"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.frame</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.inverse_result_class</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.is_set"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.is_set()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.jacobian_short_hand"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.jacobian_short_hand</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.parameters"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.parameters</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.result_class"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.result_class</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.rmat"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.rmat</span></code></a></li>
@@ -876,16 +807,6 @@ An alias for <code class="docutils literal notranslate"><span class="pre">rotati
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.rvec"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.rvec</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.translation_vector"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.translation_vector</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2Extrinsic.tvec"><code class="docutils literal notranslate"><span class="pre">Cv2Extrinsic.tvec</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2ExtrinsicResult"><code class="docutils literal notranslate"><span class="pre">Cv2ExtrinsicResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2ExtrinsicResult.jacobian_dr"><code class="docutils literal notranslate"><span class="pre">Cv2ExtrinsicResult.jacobian_dr</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.Cv2ExtrinsicResult.jacobian_dt"><code class="docutils literal notranslate"><span class="pre">Cv2ExtrinsicResult.jacobian_dt</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.InverseCv2ExtrinsicResult"><code class="docutils literal notranslate"><span class="pre">InverseCv2ExtrinsicResult</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.InverseCv2ExtrinsicResult.jacobian_dr"><code class="docutils literal notranslate"><span class="pre">InverseCv2ExtrinsicResult.jacobian_dr</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.InverseCv2ExtrinsicResult.jacobian_dt"><code class="docutils literal notranslate"><span class="pre">InverseCv2ExtrinsicResult.jacobian_dt</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.zernike_distortion &#8212; pydistort 2.0.6 documentation</title>
+    <title>pydistort.zernike_distortion &#8212; pydistort 2.0.8 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=3e466467"></script>
+    <script src="../../_static/documentation_options.js?v=722443bc"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/zernike_distortion';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.6 documentation</p>
+    <p class="title logo__title">pydistort 2.0.8 documentation</p>
   
 </a></div>
     
@@ -1082,7 +1082,7 @@
 <a class="viewcode-back" href="../../api_doc/zernike_distortion.html#pydistort.ZernikeDistortion._transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the distortion transformation.</span>
+<span class="sd">        This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the distortion transformation.</span>
 <span class="sd">        This method allows to transform the ``normalized_points`` to the ``distorted_points`` using the distortion model.</span>
 
 <span class="sd">        .. note::</span>
@@ -1248,7 +1248,7 @@
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse distortion transformation.</span>
+<span class="sd">        This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse distortion transformation.</span>
 <span class="sd">        This method allows to transform the ``distorted_points`` back to the ``normalized_points`` using the distortion model.</span>
 
 <span class="sd">        .. note::</span>
@@ -1256,7 +1256,7 @@
 <span class="sd">            For ``_inverse_transform`` the input must have shape (Npoints, 2) with float64 type.</span>
 <span class="sd">            The output has shape (Npoints, 2) for the normalized points and the jacobian are always None.</span>
 
-<span class="sd">        See the :meth:`pydistort.objects.objetcs.Transform.optimize_input_points` method for more details.</span>
+<span class="sd">        See the :meth:`pydistort.core.objetcs.Transform.optimize_input_points` method for more details.</span>
 <span class="sd">        The initial guess is setted to :math:`\mathbf{x}_{N} = \mathbf{x}_{D} - U(\mathbf{x}_{D})``, where :math:`U(\mathbf{x}_{D})` is the distortion filed applied to the distorted points.</span>
 
 <span class="sd">        .. warning::</span>

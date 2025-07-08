@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.core.transform &#8212; pydistort 2.0.6 documentation</title>
+    <title>pydistort.core.transform &#8212; pydistort 2.0.8 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=3e466467"></script>
+    <script src="../../../_static/documentation_options.js?v=722443bc"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/core/transform';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.6 documentation</p>
+    <p class="title logo__title">pydistort 2.0.8 documentation</p>
   
 </a></div>
     
@@ -311,7 +311,7 @@
                   
   <h1>Source code for pydistort.core.transform</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
@@ -329,15 +329,24 @@
 
 <span class="sd">    .. seealso::</span>
 
-<span class="sd">        - :class:`pydistort.objects.Transform` for the base class of all transformations.</span>
-<span class="sd">        - :meth:`pydistort.objects.Transform.transform` for applying the transformation to points.</span>
-<span class="sd">        - :meth:`pydistort.objects.Transform.inverse_transform` for applying the inverse transformation to points (`output_dim` and `input_dim` are swapped).</span>
+<span class="sd">        - :class:`pydistort.core.Transform` for the base class of all transformations.</span>
+<span class="sd">        - :meth:`pydistort.core.Transform.transform` for applying the transformation to points.</span>
+<span class="sd">        - :meth:`pydistort.core.Transform.inverse_transform` for applying the inverse transformation to points (`output_dim` and `input_dim` are swapped).</span>
 
 <span class="sd">    For a transformation from :math:`\mathbb{R}^{input\_dim}` to :math:`\mathbb{R}^{output\_dim}`, the input points are assumed to have shape (..., input_dim) and the output points will have shape (..., output_dim).</span>
 <span class="sd">    </span>
 <span class="sd">    .. note::</span>
 
 <span class="sd">        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.</span>
+
+<span class="sd">    Some short-hand notation for the Jacobian matrices can be added to the `TransformResult` class usaing the `add_jacobian` method, which allows to add custom views of the ``dp`` Jacobian matrix with respect to the parameters of the transformation.</span>
+
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        result = TransformResult(transformed_points, jacobian_dx, jacobian_dp)</span>
+<span class="sd">        result.add_jacobian(&quot;dk&quot;, start=0, end=2, doc=&quot;Custom Jacobian view for two first parameters related to k1 and k2&quot;)</span>
+
+<span class="sd">        result.jacobian_dk # This will return a view of the jacobian_dp matrix with respect to the parameters k1 and k2, i.e., jacobian_dp[..., 0:2]</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
@@ -356,6 +365,65 @@
     <span class="n">transformed_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span>
     <span class="n">jacobian_dx</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">jacobian_dp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+    <span class="c1"># _custom_jacobians: Dict[str, Tuple[int, int, Optional[str]]] = {}</span>
+
+    <span class="c1"># def add_jacobian(self, name: str, start: int, end: int, doc: Optional[str] = None) -&gt; None:</span>
+    <span class="c1">#     r&quot;&quot;&quot;</span>
+    <span class="c1">#     Add a custom view of the `jacobian_dp` matrix to the `TransformResult` object.</span>
+
+    <span class="c1">#     This method allows to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.</span>
+    <span class="c1">#     The custom Jacobian can be accessed using the `name` attribute.</span>
+
+    <span class="c1">#     Parameters</span>
+    <span class="c1">#     ----------</span>
+    <span class="c1">#     name : str</span>
+    <span class="c1">#         The name of the custom Jacobian view.</span>
+        
+    <span class="c1">#     start : int</span>
+    <span class="c1">#         The starting index of the parameters to include in the custom Jacobian view.</span>
+        
+    <span class="c1">#     end : int</span>
+    <span class="c1">#         The ending index of the parameters to include in the custom Jacobian view.</span>
+        
+    <span class="c1">#     doc : Optional[str], optional</span>
+    <span class="c1">#         A documentation string for the custom Jacobian view. Default is None.</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     if not isinstance(name, str):</span>
+    <span class="c1">#         raise TypeError(f&quot;name must be a string, got {type(name)}&quot;)</span>
+    <span class="c1">#     if not isinstance(start, int):</span>
+    <span class="c1">#         raise TypeError(f&quot;start must be an integer, got {type(start)}&quot;)</span>
+    <span class="c1">#     if not isinstance(end, int):</span>
+    <span class="c1">#         raise TypeError(f&quot;end must be an integer, got {type(end)}&quot;)</span>
+    <span class="c1">#     if not doc is None and not isinstance(doc, str):</span>
+    <span class="c1">#         raise TypeError(f&quot;doc must be a string, got {type(doc)}&quot;)</span>
+        
+    <span class="c1">#     if start &lt; 0 or end &lt; 0 or start &gt;= end or end &gt; self.jacobian_dp.shape[-1]:</span>
+    <span class="c1">#         raise ValueError(f&quot;Invalid range for custom Jacobian view: start={start}, end={end}, Nparams={self.jacobian_dp.shape[-1]}&quot;)</span>
+        
+    <span class="c1">#     self._custom_jacobians[name] = (start, end, doc)</span>
+
+    <span class="c1"># def __getattr__(self, key):</span>
+    <span class="c1">#     if key.startswith(&quot;jacobian_&quot;):</span>
+    <span class="c1">#         name = key[len(&quot;jacobian_&quot;):]</span>
+    <span class="c1">#         if name in self._custom_jacobians:</span>
+    <span class="c1">#             if self.jacobian_dp is None:</span>
+    <span class="c1">#                 return None</span>
+    <span class="c1">#             start, end, _ = self._custom_jacobians[name]</span>
+    <span class="c1">#             return self.jacobian_dp[..., start:end]</span>
+    <span class="c1">#     raise AttributeError(f&quot;&#39;TransformResult&#39; object has no attribute &#39;{key}&#39;&quot;)</span>
+
+    <span class="c1"># def describe_jacobians(self):</span>
+    <span class="c1">#     r&quot;&quot;&quot;</span>
+    <span class="c1">#     Print the descriptions of the custom Jacobian views.</span>
+
+    <span class="c1">#     This method prints the names and documentation strings of the custom Jacobian views added to the `TransformResult` object.</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     print(&quot;tranformed_points: The transformed points after applying the transformation with shape (..., output_dim)&quot;)</span>
+    <span class="c1">#     print(&quot;jacobian_dx: The Jacobian matrix with respect to the input points with shape (..., output_dim, input_dim) [or None if not computed]&quot;)</span>
+    <span class="c1">#     print(&quot;jacobian_dp: The Jacobian matrix with respect to the parameters of the transformation with shape (..., output_dim, Nparams) [or None if not computed]&quot;)</span>
+    <span class="c1">#     for name, (start, end, doc) in self._custom_jacobians.items():</span>
+    <span class="c1">#         print(f&quot;jacobian_{name}: {doc if doc is not None else &#39;No description provided&#39;} with shape (..., output_dim, {end - start}) [or None if not computed], view of jacobian_dp[..., {start}:{end}]&quot;)</span>
 
 
 
@@ -401,27 +469,31 @@
 
 <span class="sd">    Each sub-classes must implement the following methods and properties:</span>
 
-<span class="sd">    - `input_dim`: (attribute) The dimension of the input points (should be 2 for 2D points).</span>
-<span class="sd">    - `output_dim`: (attribute) The dimension of the output points (should be 2 for 2D points).</span>
-<span class="sd">    - `parameters` (attribute) The parameters of the transformation in a 1D numpy array of shape (Nparams,).</span>
-<span class="sd">    - `is_set`: (method) Check if the transformation is set (i.e., if the parameters are initialized).</span>
-<span class="sd">    - `_transform`: (method) Apply the transformation to the given points.</span>
-<span class="sd">    - `_inverse_transform`: (method) Apply the inverse transformation to the given points.</span>
+<span class="sd">    - ``input_dim``: (attribute) The dimension of the input points (should be 2 for 2D points).</span>
+<span class="sd">    - ``output_dim``: (attribute) The dimension of the output points (should be 2 for 2D points).</span>
+<span class="sd">    - ``parameters`` (attribute) The parameters of the transformation in a 1D numpy array of shape (Nparams,).</span>
+<span class="sd">    - ``is_set``: (method) Check if the transformation is set (i.e., if the parameters are initialized).</span>
+<span class="sd">    - ``_transform``: (method) Apply the transformation to the given points.</span>
+<span class="sd">    - ``_inverse_transform``: (method) Apply the inverse transformation to the given points.</span>
+
+<span class="sd">    The following properties are not required but can be implemented to provide additional information about the transformation:</span>
+
+<span class="sd">    - ``result_class``: (property) The class used for the result of the transformation (sub-class of ``TransformResult``). Default is :class:`pydistort.core.TransformResult`.</span>
+<span class="sd">    - ``inverse_result_class``: (property) The class used for the result of the inverse transformation (sub-class of ``TransformResult``). Default is :class:`pydistort.core.TransformResult`.</span>
+<span class="sd">    - ``jacobian_short_hand``: (property) A dictionary of short-hand notation for the Jacobian matrices, which can be used to add custom views of the ``jacobian_dp`` matrix with respect to the parameters of the transformation.</span>
 
 <span class="sd">    More details on the transformation methods are provided in the `transform` and `inverse_transform` methods. </span>
 
 <span class="sd">    .. seealso::</span>
 
-<span class="sd">        - :meth:`pydistort.objects.Transform.transform` for applying the transformation to points.</span>
-<span class="sd">        - :meth:`pydistort.objects.Transform.inverse_transform` for applying the inverse transformation to points.</span>
-<span class="sd">        - :class:`pydistort.objects.TransformResult` for the result of the transformation.</span>
+<span class="sd">        - :meth:`pydistort.core.Transform.transform` for applying the transformation to points.</span>
+<span class="sd">        - :meth:`pydistort.core.Transform.inverse_transform` for applying the inverse transformation to points.</span>
+<span class="sd">        - :class:`pydistort.core.TransformResult` for the result of the transformation.</span>
 
 <span class="sd">    .. note::</span>
 
 <span class="sd">        ``...`` in the shape of the attributes indicates that the shape can have any number of leading dimensions, which is useful for batch processing of points.</span>
 
-<span class="sd">    If given, subclasses of ``TransformResult`` should be used to return the results of the transformation and inverse transformation.</span>
-<span class="sd">    The attributes `result_class` and `inverse_result_class` can be overridden to specify the result classes for the transformation and inverse transformation, respectively.    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># =============================================</span>
@@ -456,6 +528,30 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">TransformResult</span>
     
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_short_hand</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Property to return a dictionary of short-hand notation for the Jacobian matrices.</span>
+<span class="sd">        </span>
+<span class="sd">        This dictionary can be used to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;dk&quot;: (0, 2, &quot;Custom Jacobian view for two first parameters related to k1 and k2&quot;),</span>
+<span class="sd">                &quot;dother&quot;: (2, 4, &quot;Custom Jacobian view for other parameters related to k3 and k4&quot;),</span>
+<span class="sd">            }</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Tuple[int, int, Optional[str]]]</span>
+<span class="sd">            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:</span>
+
+<span class="sd">            - start index (int): The starting index of the parameters to include in the custom Jacobian view.</span>
+<span class="sd">            - end index (int): The ending index of the parameters to include in the custom Jacobian view.</span>
+<span class="sd">            - doc (Optional[str]): A documentation string for the custom Jacobian view.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{}</span> 
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">Nparams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -644,6 +740,37 @@
     <span class="c1"># Transformation Methods</span>
     <span class="c1"># =============================================</span>
 
+<div class="viewcode-block" id="Transform.return_result">
+<a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform.return_result">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">return_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transform_result</span><span class="p">:</span> <span class="n">TransformResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TransformResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the result of the transformation as a ``TransformResult`` object.</span>
+
+<span class="sd">        This method is used to return the result of the transformation, including the transformed points and the Jacobian matrices if requested.</span>
+
+<span class="sd">        This medthos also add the custom Jacobian views to the `TransformResult` object using the `add_jacobian` method.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        transform_result : TransformResult</span>
+<span class="sd">            The result of the transformation containing the transformed points and the Jacobian matrices.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TransformResult</span>
+<span class="sd">            The result of the transformation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># if not isinstance(transform_result, TransformResult):</span>
+        <span class="c1">#     raise TypeError(f&quot;transform_result must be an instance of TransformResult, got {type(transform_result)}&quot;)</span>
+        
+        <span class="c1"># # Add custom Jacobian views to the TransformResult object</span>
+        <span class="c1"># for name, (start, end, doc) in self.jacobian_short_hand.items():</span>
+        <span class="c1">#     transform_result.add_jacobian(name, start, end, doc=doc)</span>
+        
+        <span class="k">return</span> <span class="n">transform_result</span></div>
+
+
+
 <div class="viewcode-block" id="Transform.transform">
 <a class="viewcode-back" href="../../../api_doc/transform.html#pydistort.core.Transform.transform">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span>
@@ -794,11 +921,11 @@
                 <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">jacobian_dp</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> <span class="c1"># (..., output_dim, Nparams) -&gt; (output_dim, ..., Nparams)</span>
 
         <span class="c1"># Return the result as a TransformResult object</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_class</span><span class="p">(</span>
             <span class="n">transformed_points</span><span class="o">=</span><span class="n">transformed_points</span><span class="p">,</span>
             <span class="n">jacobian_dx</span><span class="o">=</span><span class="n">jacobian_dx</span><span class="p">,</span>
             <span class="n">jacobian_dp</span><span class="o">=</span><span class="n">jacobian_dp</span>
-        <span class="p">)</span></div>
+        <span class="p">))</span></div>
 
     
 
@@ -952,11 +1079,11 @@
                 <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">jacobian_dp</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span> <span class="c1"># (..., input_dim, Nparams) -&gt; (input_dim, ..., Nparams)</span>
 
         <span class="c1"># Return the result as a InverseTransformResult object</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">inverse_result_class</span><span class="p">(</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_result</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inverse_result_class</span><span class="p">(</span>
             <span class="n">transformed_points</span><span class="o">=</span><span class="n">transformed_points</span><span class="p">,</span>
             <span class="n">jacobian_dx</span><span class="o">=</span><span class="n">jacobian_dx</span><span class="p">,</span>
             <span class="n">jacobian_dp</span><span class="o">=</span><span class="n">jacobian_dp</span>
-        <span class="p">)</span></div>
+        <span class="p">))</span></div>
 
     
     

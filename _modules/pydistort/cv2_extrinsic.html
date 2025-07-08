@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.cv2_extrinsic &#8212; pydistort 2.0.6 documentation</title>
+    <title>pydistort.cv2_extrinsic &#8212; pydistort 2.0.8 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=3e466467"></script>
+    <script src="../../_static/documentation_options.js?v=722443bc"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/cv2_extrinsic';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.6 documentation</p>
+    <p class="title logo__title">pydistort 2.0.8 documentation</p>
   
 </a></div>
     
@@ -310,126 +310,12 @@
                 <article class="bd-article">
                   
   <h1>Source code for pydistort.cv2_extrinsic</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">py3dframe</span><span class="w"> </span><span class="kn">import</span> <span class="n">Frame</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extrinsic</span><span class="p">,</span> <span class="n">ExtrinsicResult</span><span class="p">,</span> <span class="n">InverseExtrinsicResult</span>
-
-<div class="viewcode-block" id="Cv2ExtrinsicResult">
-<a class="viewcode-back" href="../../api_doc/cv2_extrinsic.html#pydistort.Cv2ExtrinsicResult">[docs]</a>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Cv2ExtrinsicResult</span><span class="p">(</span><span class="n">ExtrinsicResult</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Subclass of :class:`pydistort.core.ExtrinsicResult` to represent the result of the extrinsic transformation in the cv2 format.</span>
-
-<span class="sd">    This class is used to store the result of transforming the ``world_3dpoints`` to ``normalized_points``, and the optional Jacobians.</span>
-
-<span class="sd">    - ``transformed_points``: The transformed normalized points in the camera coordinate system. Shape (..., 2).</span>
-<span class="sd">    - ``jacobian_dx``: The Jacobian of the normalized points with respect to the input world 3D points if ``dx`` is True. Otherwise None. Shape (..., 2, 3), where the last dimension represents (dx, dy, dz).</span>
-<span class="sd">    - ``jacobian_dp``: The Jacobian of the normalized points with respect to the extrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).</span>
-
-<span class="sd">    Some properties are provided for convenience:</span>
-
-<span class="sd">    - ``normalized_points``: Alias for ``transformed_points`` to represent the transformed normalized points. Shape (..., 2).</span>
-<span class="sd">    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 2, 3).</span>
-<span class="sd">    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 2, 3).</span>
-
-<span class="sd">    .. warning::</span>
-
-<span class="sd">        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the Jacobian of the normalized points with respect to the rotation vector.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Optional[numpy.ndarray]</span>
-<span class="sd">            The Jacobian with respect to rotation (dr). Shape (..., 2, 3).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the Jacobian of the normalized points with respect to the translation vector.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Optional[numpy.ndarray]</span>
-<span class="sd">            The Jacobian with respect to translation (dt). Shape (..., 2, 3).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span></div>
-
-
-
-
-<div class="viewcode-block" id="InverseCv2ExtrinsicResult">
-<a class="viewcode-back" href="../../api_doc/cv2_extrinsic.html#pydistort.InverseCv2ExtrinsicResult">[docs]</a>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">InverseCv2ExtrinsicResult</span><span class="p">(</span><span class="n">InverseExtrinsicResult</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Subclass of :pydistort.core.InverseExtrinsicResult` to represent the result of the inverse extrinsic transformation in the cv2 format.</span>
-
-<span class="sd">    This class is used to store the result of transforming the ``normalized_points`` back to ``world_3dpoints``, and the optional Jacobians.</span>
-
-<span class="sd">    - ``transformed_points``: The transformed world 3D points in the camera coordinate system. Shape (..., 3).</span>
-<span class="sd">    - ``jacobian_dx``: The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None. Shape (..., 3, 2), where the last dimension represents (dx, dy).</span>
-<span class="sd">    - ``jacobian_dp``: The Jacobian of the world 3D points with respect to the extrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 3, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).</span>
-
-<span class="sd">    Some properties are provided for convenience:</span>
-
-<span class="sd">    - ``world_3dpoints``: Alias for ``transformed_points`` to represent the transformed world 3D points. Shape (..., 3).</span>
-<span class="sd">    - ``jacobian_dr``: Part of the Jacobian with respect to the rotation vector. Shape (..., 3, 3).</span>
-<span class="sd">    - ``jacobian_dt``: Part of the Jacobian with respect to the translation vector. Shape (..., 3, 3).</span>
-
-<span class="sd">    .. warning::</span>
-
-<span class="sd">        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dr</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the Jacobian of the world 3D points with respect to the rotation vector.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Optional[numpy.ndarray]</span>
-<span class="sd">            The Jacobian with respect to rotation (dr). Shape (..., 3, 3).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the Jacobian of the world 3D points with respect to the translation vector.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Optional[numpy.ndarray]</span>
-<span class="sd">            The Jacobian with respect to translation (dt). Shape (..., 3, 3).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span></div>
-
-    
-
-
-
-
 
 
 <div class="viewcode-block" id="Cv2Extrinsic">
@@ -456,6 +342,11 @@
 <span class="sd">    .. note::</span>
 
 <span class="sd">        To compute the translation vector and the rotation vector, you can use cv2.Rodrigues() or py3dframe.Frame with convention 4.</span>
+
+<span class="sd">    Two short-hand notations are provided to access the jacobian with respect to the rotation vector and translation vector:</span>
+
+<span class="sd">    - ``jacobian_dr``: The Jacobian of the normalized points with respect to the rotation vector. It has shape (..., 2, 3).</span>
+<span class="sd">    - ``jacobian_dt``: The Jacobian of the normalized points with respect to the translation vector. It has shape (..., 2, 3).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -546,11 +437,11 @@
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Cv2ExtrinsicResult</span>
+        <span class="k">return</span> <span class="n">ExtrinsicResult</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">inverse_result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">InverseCv2ExtrinsicResult</span>
+        <span class="k">return</span> <span class="n">InverseExtrinsicResult</span>
     
     <span class="c1"># =============================================</span>
     <span class="c1"># Implement the parameters property</span>
@@ -582,6 +473,35 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parameters must be a 1D array of shape (6,).&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rotation_vector</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># First 3 elements are the rotation vector</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">translation_vector</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>  <span class="c1"># Last 3 elements are the translation vector</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_short_hand</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Property to return a dictionary of short-hand notation for the Jacobian matrices.</span>
+<span class="sd">        </span>
+<span class="sd">        This dictionary can be used to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            {</span>
+<span class="sd">                &quot;dk&quot;: (0, 2, &quot;Custom Jacobian view for two first parameters related to k1 and k2&quot;),</span>
+<span class="sd">                &quot;dother&quot;: (2, 4, &quot;Custom Jacobian view for other parameters related to k3 and k4&quot;),</span>
+<span class="sd">            }</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Tuple[int, int, Optional[str]]]</span>
+<span class="sd">            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:</span>
+
+<span class="sd">            - start index (int): The starting index of the parameters to include in the custom Jacobian view.</span>
+<span class="sd">            - end index (int): The ending index of the parameters to include in the custom Jacobian view.</span>
+<span class="sd">            - doc (Optional[str]): A documentation string for the custom Jacobian view.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;dr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Jacobian with respect to the rotation vector (rvec)&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;dt&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Jacobian with respect to the translation vector (tvec)&quot;</span><span class="p">),</span>
+        <span class="p">}</span>
 
     <span class="c1"># =============================================</span>
     <span class="c1"># translation vector</span>
