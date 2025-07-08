@@ -1,26 +1,32 @@
 from typing import Optional, Tuple
 from dataclasses import dataclass
-import numpy
 from numbers import Number
+import numpy
 
-from .transform import Transform, TransformResult
+from .core import Intrinsic, IntrinsicResult, InverseIntrinsicResult
+
+
+
+
+
+
 
 @dataclass
-class IntrinsicResult(TransformResult):
+class Cv2IntrinsicResult(IntrinsicResult):
     r"""
-    Subclass of TransformResult to represent the result of the intrinsic transformation.
+    Subclass of :class:`pydistort.core.IntrinsicResult` to represent the result of the intrinsic transformation in the cv2 format.
 
-    This class is used to store the result of transforming the ``distorted_points`` to ``image_points``, and the optional Jacobians.
+    This class is used to store the result of transforming the ``distorted_points`` (or ``normalized_points`` if no distortion is applied) to ``image_points``, and the optional Jacobians.
 
     - ``transformed_points``: The transformed image points in the camera coordinate system. Shape (..., 2).
     - ``jacobian_dx``: The Jacobian of the image points with respect to the input distorted points if ``dx`` is True. Otherwise None. Shape (..., 2, 2), where the last dimension represents (dx, dy).
-    - ``jacobian_dp``: The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 4), where the last dimension represents (dfx, dfy, dcx, dcy).
+    - ``jacobian_dp``: The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 4), where the last dimension represents (fx, fy, cx, cy).
 
     Some properties are provided for convenience:
 
-    - ``image_points``: Alias for ``transformed_points`` to represent the transformed distorted points. Shape (..., 2).
-    - ``jacobian_df``: Part of the Jacobian with respect to the focal length. Shape (..., 2, 2).
-    - ``jacobian_dc``: Part of the Jacobian with respect to the principal point. Shape (..., 2, 2).
+    - ``image_points``: Alias for ``transformed_points`` to represent the transformed image points. Shape (..., 2).
+    - ``jacobian_df``: Part of the Jacobian with respect to the focal lengths (fx, fy). Shape (..., 2, 2).
+    - ``jacobian_dc``: Part of the Jacobian with respect to the principal point (cx, cy). Shape (..., 2, 2).
 
     .. note::
 
@@ -32,26 +38,14 @@ class IntrinsicResult(TransformResult):
 
     """
     @property
-    def image_points(self) -> numpy.ndarray:
-        r"""
-        Get the transformed image points.
-
-        Returns
-        -------
-        numpy.ndarray
-            The transformed image points in the camera coordinate system. Shape (..., 2).
-        """
-        return self.transformed_points
-    
-    @property
     def jacobian_df(self) -> Optional[numpy.ndarray]:
         r"""
-        Get the Jacobian of the image points with respect to the focal length.
+        Get the Jacobian of the image points with respect to the focal lengths.
 
         Returns
         -------
         Optional[numpy.ndarray]
-            The Jacobian with respect to focal length (df). Shape (..., 2, 2).
+            The Jacobian with respect to focal lengths (df). Shape (..., 2, 2).
         """
         if self.jacobian_dp is None:
             return None
@@ -74,21 +68,21 @@ class IntrinsicResult(TransformResult):
 
 
 @dataclass
-class InverseIntrinsicResult(TransformResult):
+class InverseCv2IntrinsicResult(InverseIntrinsicResult):
     r"""
-    Subclass of TransformResult to represent the result of the inverse intrinsic transformation.
+    Subclass of :class:`pydistort.core.InverseIntrinsicResult` to represent the result of the inverse intrinsic transformation in the cv2 format.
 
-    This class is used to store the result of transforming the ``image_points`` back to ``distorted_points``, and the optional Jacobians.
+    This class is used to store the result of transforming the ``image_points`` back to ``distorted_points`` (or ``normalized_points`` if no distortion is applied), and the optional Jacobians.
 
     - ``transformed_points``: The transformed distorted points in the camera coordinate system. Shape (..., 2).
     - ``jacobian_dx``: The Jacobian of the distorted points with respect to the input image points if ``dx`` is True. Otherwise None. Shape (..., 2, 2), where the last dimension represents (dx, dy).
-    - ``jacobian_dp``: The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 4), where the last dimension represents (dfx, dfy, dcx, dcy).
+    - ``jacobian_dp``: The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 4), where the last dimension represents (fx, fy, cx, cy).
 
     Some properties are provided for convenience:
 
-    - ``distorted_points``: Alias for ``transformed_points`` to represent the transformed image points. Shape (..., 2).
-    - ``jacobian_df``: Part of the Jacobian with respect to the focal length. Shape (..., 2, 2).
-    - ``jacobian_dc``: Part of the Jacobian with respect to the principal point. Shape (..., 2, 2).
+    - ``distorted_points``: Alias for ``transformed_points`` to represent the transformed distorted points. Shape (..., 2).
+    - ``jacobian_df`` : Part of the Jacobian with respect to the focal lengths (fx, fy). Shape (..., 2, 2).
+    - ``jacobian_dc`` : Part of the Jacobian with respect to the principal point (cx, cy). Shape (..., 2, 2).
 
     .. note::
 
@@ -100,26 +94,14 @@ class InverseIntrinsicResult(TransformResult):
 
     """
     @property
-    def distorted_points(self) -> numpy.ndarray:
-        r"""
-        Get the transformed distorted points.
-
-        Returns
-        -------
-        numpy.ndarray
-            The transformed distorted points in the camera coordinate system. Shape (..., 2).
-        """
-        return self.transformed_points
-    
-    @property
     def jacobian_df(self) -> Optional[numpy.ndarray]:
         r"""
-        Get the Jacobian of the distorted points with respect to the focal length.
+        Get the Jacobian of the distorted points with respect to the focal lengths.
 
         Returns
         -------
         Optional[numpy.ndarray]
-            The Jacobian with respect to focal length (df). Shape (..., 2, 2).
+            The Jacobian with respect to focal lengths (df). Shape (..., 2, 2).
         """
         if self.jacobian_dp is None:
             return None
@@ -138,27 +120,13 @@ class InverseIntrinsicResult(TransformResult):
         if self.jacobian_dp is None:
             return None
         return self.jacobian_dp[..., 2:4]
+    
 
 
 
-class Intrinsic(Transform):
+class Cv2Intrinsic(Intrinsic):
     r"""
-    .. note::
-
-        This class represents the intrinsic transformation, which is the last step of the process.
-
-    The process to correspond a 3D-world point to a 2D-image point in the stenopic camera model is as follows:
-
-    1. The ``world_3dpoints`` (:math:`X_W`) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the ``camera_3dpoints`` (:math:`X_C`).
-    2. The ``camera_3dpoints`` (:math:`X_C`) are normalized by dividing by the third coordinate to obtain the ``normalized_points`` (:math:`x_N`).
-    3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).
-    4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic matrix K to obtain the ``image_points`` (:math:`x_I`).
-
-    This tranformation can be decomposed into 3 main steps:
-
-    1. **Extrinsic**: Transform the ``world 3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
-    2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model.
-    3. **Intrinsic**: Transform the ``distorted_points`` to ``image_points`` using the intrinsic matrix K.
+    Subclass of :class:`pydistort.core.Intrinsic` to represent the intrinsic transformation using OpenCV conventions.
 
     The equation used for the intrinsic transformation is:    
 
@@ -170,9 +138,23 @@ class Intrinsic(Transform):
 
     where :math:`x_D` is the distorted points, :math:`x_I` is the image points, and :math:`K` is the intrinsic matrix defined as:
 
+    .. math::
+
+        K = \begin{bmatrix}
+        f_x & 0 & c_x \\
+        0 & f_y & c_y \\
+        0 & 0 & 1
+        \end{bmatrix}
+
+    where :math:`f_x` and :math:`f_y` are the focal lengths in pixels in x and y direction, :math:`c_x` and :math:`c_y` are the principal point coordinates in pixels.
+
     .. note::
 
         If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.
+
+    .. warning::
+
+        No ``skew`` parameter is included in the intrinsic matrix in this implementation. If you need to include a skew parameter, you can use :class:`pydistort.SkewIntrinsic`.
 
     Parameters
     ----------
@@ -186,12 +168,12 @@ class Intrinsic(Transform):
     .. code-block:: python
 
         import numpy as np
-        from pydistort.objects import Intrinsic
+        from pydistort import Cv2Intrinsic
 
         intrinsic_matrix = np.array([[1000, 0, 320],
                                      [0, 1000, 240],
                                      [0, 0, 1]])
-        intrinsic = Intrinsic(intrinsic_matrix)
+        intrinsic = Cv2Intrinsic(intrinsic_matrix)
 
     Then you can use the intrinsic object to transform ``distorted_points`` to ``image_points``:
 
@@ -225,8 +207,8 @@ class Intrinsic(Transform):
 
         For more information about the transformation process, see:
 
-        - :meth:`pydistort.objects.Intrinsic._transform` to transform the ``distorted_points`` to ``image_points``.
-        - :meth:`pydistort.objects.Intrinsic._inverse_transform` to transform the ``image_points`` back to ``distorted_points``.
+        - :meth:`pydistort.Cv2Intrinsic._transform` to transform the ``distorted_points`` to ``image_points``.
+        - :meth:`pydistort.Cv2Intrinsic._inverse_transform` to transform the ``image_points`` back to ``distorted_points``.
     
     """
     def __init__(self, intrinsic_matrix: Optional[numpy.ndarray] = None):
@@ -246,24 +228,16 @@ class Intrinsic(Transform):
     # Properties for ABC Transform Class
     # =============================================
     @property
-    def input_dim(self) -> int:
-        return 2 # The input is a 2D point (x, y)
-    
-    @property
-    def output_dim(self) -> int:
-        return 2 # The output is a 2D point (x, y)
-
-    @property
     def Nparams(self) -> int:
-        return 4  # The intrinsic parameters are (fx, fy, cx, cy)
+        return 4  # The intrinsic parameters are (fx, fy, cx, cy) even if some of them are not set.
     
     @property
     def result_class(self) -> type:
-        return IntrinsicResult
+        return Cv2IntrinsicResult
     
     @property
     def inverse_result_class(self) -> type:
-        return InverseIntrinsicResult
+        return InverseCv2IntrinsicResult
     
     @property
     def parameters(self) -> Optional[numpy.ndarray]:
@@ -272,7 +246,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.objects.Intrinsic.intrinsic_vector` or ``k`` to get the intrinsic vector of the camera.
+            - :meth:`pydistort.Cv2Intrinsic.intrinsic_vector` or ``k`` to get the intrinsic vector of the camera.
 
         Returns
         -------
@@ -303,7 +277,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.objects.Intrinsic.focal_length_y` or ``fy`` to set the focal length in pixels in y direction.
+            - :meth:`pydistort.Cv2Intrinsic.focal_length_y` or ``fy`` to set the focal length in pixels in y direction.
 
         Returns
         -------
@@ -349,7 +323,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.objects.Intrinsic.focal_length_x` or ``fx`` to set the focal length in pixels in x direction.
+            - :meth:`pydistort.Cv2Intrinsic.focal_length_x` or ``fx`` to set the focal length in pixels in x direction.
 
         Returns
         -------
@@ -398,7 +372,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.objects.Intrinsic.principal_point_y` or ``cy`` to set the principal point in pixels in y direction.
+            - :meth:`pydistort.Cv2Intrinsic.principal_point_y` or ``cy`` to set the principal point in pixels in y direction.
 
         Returns
         -------
@@ -443,7 +417,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.objects.Intrinsic.principal_point_x` or ``cx`` to set the principal point in pixels in x direction.
+            - :meth:`pydistort.Cv2Intrinsic.principal_point_x` or ``cx`` to set the principal point in pixels in x direction.
 
         Returns
         -------
@@ -497,7 +471,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.objects.Intrinsic.intrinsic_vector` or ``k`` to get the intrinsic vector of the camera.
+            - :meth:`pydistort.Cv2Intrinsic.intrinsic_vector` or ``k`` to get the intrinsic vector of the camera.
 
         Returns
         -------
@@ -525,7 +499,7 @@ class Intrinsic(Transform):
             raise ValueError("Intrinsic matrix must be a 3x3 matrix.")
         # Check if a skew value is given
         if abs(intrinsic_matrix[0, 1]) > 1e-6:
-            raise ValueError("Skew value is not supported by pydistort.")
+            raise ValueError("Skew value is not supported by Cv2Intrinsic. Use SkewIntrinsic instead.")
         if abs(intrinsic_matrix[1, 0]) > 1e-6 or abs(intrinsic_matrix[2, 0]) > 1e-6 or abs(intrinsic_matrix[2, 1]) > 1e-6:
             raise ValueError("Some coefficients of the intrinsic matrix are unexpected.")
         # Set the intrinsic parameters
@@ -567,7 +541,7 @@ class Intrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.objects.Intrinsic.intrinsic_matrix` or ``K`` to set the intrinsic matrix of the camera.
+            - :meth:`pydistort.Cv2Intrinsic.intrinsic_matrix` or ``K`` to set the intrinsic matrix of the camera.
 
         Returns
         -------
@@ -633,9 +607,15 @@ class Intrinsic(Transform):
         return self._fx is not None and self._fy is not None and self._cx is not None and self._cy is not None
     
 
-    def _transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(
+            self, 
+            distorted_points: numpy.ndarray, 
+            *, 
+            dx: bool = False, 
+            dp: bool = False
+        ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the intrinsic transformation.
+        This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the intrinsic transformation.
         This method allows to transform the ``distorted_points`` to ``image_points`` using the intrinsic parameters.
 
         .. note::
@@ -647,19 +627,11 @@ class Intrinsic(Transform):
 
         .. math::
 
-            \begin{align*}
-            x_I &= K \cdot x_D \\
-            \end{align*}
-
-        where :math:`x_D` is the distorted points, :math:`x_I` is the image points, and :math:`K` is the intrinsic matrix defined as:
+            x_I = f_x \cdot x_D + c_x 
 
         .. math::
 
-            K = \begin{bmatrix}
-            f_x & 0 & c_x \\
-            0 & f_y & c_y \\
-            0 & 0 & 1
-            \end{bmatrix}
+            y_I = f_y \cdot y_D + c_y
 
         where :math:`f_x` and :math:`f_y` are the focal lengths in pixels, and :math:`c_x` and :math:`c_y` are the coordinates of the principal point in pixels.
 
@@ -732,7 +704,7 @@ class Intrinsic(Transform):
 
     def _inverse_transform(self, image_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse intrinsic transformation.
+        This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse intrinsic transformation.
         This method allows to transform the ``image_points`` back to ``distorted_points`` using the intrinsic parameters.
 
         .. note::
@@ -744,20 +716,11 @@ class Intrinsic(Transform):
 
         .. math::
 
-            \begin{align*}
-            x_D &= \frac{x_I - c_x}{f_x} \\
-            y_D &= \frac{y_I - c_y}{f_y} \\
-            \end{align*}
-
-        where :math:`x_I` is the image points, :math:`x_D` is the distorted points, and :math:`K` is the intrinsic matrix defined as:
+            x_D = \frac{x_I - c_x}{f_x}
 
         .. math::
 
-            K = \begin{bmatrix}
-            f_x & 0 & c_x \\
-            0 & f_y & c_y \\
-            0 & 0 & 1
-            \end{bmatrix}
+            y_D = \frac{y_I - c_y}{f_y}
 
         where :math:`f_x` and :math:`f_y` are the focal lengths in pixels, and :math:`c_x` and :math:`c_y` are the coordinates of the principal point in pixels.
 
@@ -813,13 +776,13 @@ class Intrinsic(Transform):
         # Compute the jacobian with respect to the intrinsic parameters
         if dp:
             jacobian_flat_dp = numpy.empty((*image_points.shape, 4), dtype=numpy.float64) # shape (Npoints, 2, 4)
-            jacobian_flat_dp[:, 0, 0] = -x_I / self._fx # shape (Npoints,)
+            jacobian_flat_dp[:, 0, 0] = - x_D / self._fx # shape (Npoints,) because x_D = (x_I - c_x) / f_x
             jacobian_flat_dp[:, 0, 1] = 0.0 # shape (Npoints,)
-            jacobian_flat_dp[:, 0, 2] = -1.0 / self._fx # shape (Npoints,)
+            jacobian_flat_dp[:, 0, 2] = - 1.0 / self._fx # shape (Npoints,)
             jacobian_flat_dp[:, 0, 3] = 0.0 # shape (Npoints,)
 
             jacobian_flat_dp[:, 1, 0] = 0.0 # shape (Npoints,)
-            jacobian_flat_dp[:, 1, 1] = -y_I / self._fy # shape (Npoints,)
+            jacobian_flat_dp[:, 1, 1] = - y_D / self._fy # shape (Npoints,) because y_D = (y_I - c_y) / f_y
             jacobian_flat_dp[:, 1, 2] = 0.0 # shape (Npoints,)
             jacobian_flat_dp[:, 1, 3] = -1.0 / self._fy # shape (Npoints,)
         else:

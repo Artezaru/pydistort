@@ -5,6 +5,7 @@ import numpy
 import copy
 import matplotlib.pyplot as plt
 
+
 @dataclass
 class TransformResult:
     r"""
@@ -53,9 +54,16 @@ class TransformResult:
 
 
 
+
 class Transform(ABC):
     r"""
     Transform is the base class to manage transformations from :math:`\mathbb{R}^{input\_dim}` to :math:`\mathbb{R}^{output\_dim}`.
+
+    .. math::
+
+        X_O = T(X_I, \lambda_1, \lambda_2, \ldots, \lambda_N)
+
+    where :math:`X_O` are the output points, :math:`X_I` are the input points, and :math:`\{\lambda_1, \lambda_2, \ldots, \lambda_N\}` are the parameters of the transformation.
 
     In this package, the transformations wiil be used to project 3D-world points onto a 2D-image plane in the stenopic camera model.
 
@@ -68,7 +76,7 @@ class Transform(ABC):
 
     This tranformation can be decomposed into 3 main steps:
 
-    1. **Extrinsic**: Transform the ``world 3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
+    1. **Extrinsic**: Transform the ``world_3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
     2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model.
     3. **Intrinsic**: Transform the ``distorted_points`` to ``image_points`` using the intrinsic matrix K.
 
@@ -77,13 +85,11 @@ class Transform(ABC):
     Each sub-classes must implement the following methods and properties:
 
     - `input_dim`: (attribute) The dimension of the input points (should be 2 for 2D points).
-    - `output_dim`: (attribute) The dimension of the output points (should be 2 for
-    - `parameters` (attribute) The parameters of the transformation, if applicable.
-    - `Nparams`: (attribute) The number of parameters for the transformation, if applicable.
-    - `_transform`: (method) Apply the transformation to the given points.
+    - `output_dim`: (attribute) The dimension of the output points (should be 2 for 2D points).
+    - `parameters` (attribute) The parameters of the transformation in a 1D numpy array of shape (Nparams,).
     - `is_set`: (method) Check if the transformation is set (i.e., if the parameters are initialized).
+    - `_transform`: (method) Apply the transformation to the given points.
     - `_inverse_transform`: (method) Apply the inverse transformation to the given points.
-
 
     More details on the transformation methods are provided in the `transform` and `inverse_transform` methods. 
 
@@ -101,6 +107,9 @@ class Transform(ABC):
     The attributes `result_class` and `inverse_result_class` can be overridden to specify the result classes for the transformation and inverse transformation, respectively.    
     """
 
+    # =============================================
+    # Properties for ABC Transform Class
+    # =============================================
     @property
     def result_class(self) -> type:
         r"""
@@ -129,8 +138,37 @@ class Transform(ABC):
             The class used for the result of the inverse transformation.
         """
         return TransformResult
+    
+    
+    @property
+    def Nparams(self) -> int:
+        r"""
+        Property to return the number of parameters of the transformation.
+        
+        The number of parameters must be a non-negative integer representing the number of parameters of the transformation.
+        
+        Returns
+        -------
+        int
+            The number of parameters of the transformation.
+        """
+        return self.parameters.size if self.parameters is not None else 0
+    
+    def __repr__(self) -> str:
+        r"""
+        String representation of the Transform class.
+
+        Returns
+        -------
+        str
+            A string representation of the transformation.
+        """
+        return f"{self.__class__.__name__} with {self.Nparams} parameters: {self.parameters if self.is_set() else 'not set'}"
 
 
+    # =============================================
+    # To be implemented by subclasses
+    # =============================================
     @property
     @abstractmethod
     def input_dim(self) -> int:
@@ -145,6 +183,7 @@ class Transform(ABC):
             The number of dimensions of the input points.
         """
         pass
+
 
     @property
     @abstractmethod
@@ -161,13 +200,14 @@ class Transform(ABC):
         """
         pass
 
+
     @property
     @abstractmethod
     def parameters(self) -> Optional[numpy.ndarray]:
         r"""
         Property to return the parameters of the transformation.
         
-        The parameters must be a numpy array of shape (Nparams,) where Nparams is the number of parameters of the transformation.
+        The parameters must be a 1-D numpy array of shape (Nparams,) where Nparams is the number of parameters of the transformation.
 
         If the transformation does not have parameters or they are not set, this property should return None.
         
@@ -178,20 +218,6 @@ class Transform(ABC):
         """
         pass
 
-    @property
-    @abstractmethod
-    def Nparams(self) -> int:
-        r"""
-        Property to return the number of parameters of the transformation.
-        
-        The number of parameters must be a non-negative integer representing the number of parameters of the transformation.
-        
-        Returns
-        -------
-        int
-            The number of parameters of the transformation.
-        """
-        pass
 
     @abstractmethod
     def is_set(self) -> bool:
@@ -206,6 +232,91 @@ class Transform(ABC):
             True if the transformation parameters are set, otherwise False.
         """
         pass
+
+
+    @abstractmethod
+    def _transform(
+        self,
+        points: numpy.ndarray,
+        *,
+        dx: bool = False,
+        dp: bool = False,
+        **kwargs
+    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+        r"""
+        Apply the transformation to the given points.
+
+        This method must be implemented by subclasses to apply the transformation to the input points.
+
+        Parameters
+        ----------
+        points : numpy.ndarray
+            The input points to be transformed. Shape (Npoints, input_dim).
+
+        dx : bool, optional
+            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.
+
+        dp : bool, optional
+            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.
+
+        **kwargs
+            Additional keyword arguments for the transformation.
+
+        Returns
+        -------
+        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]
+            A tuple containing:
+
+            - `transformed_points`: The transformed points of shape (Npoints, output_dim).
+            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, output_dim, input_dim) if `dx` is True, otherwise None.
+            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, output_dim, Nparams) if `dp` is True, otherwise None.
+        """
+        raise NotImplementedError("Subclasses must implement the _transform method.")
+    
+
+    @abstractmethod
+    def _inverse_transform(
+        self,
+        points: numpy.ndarray,
+        *,
+        dx: bool = False,
+        dp: bool = False,
+        **kwargs
+    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+        r"""
+        Apply the inverse transformation to the given points.
+
+        This method must be implemented by subclasses to apply the inverse transformation to the input points.
+
+        Parameters
+        ----------
+        points : numpy.ndarray
+            The input points to be transformed. Shape (Npoints, output_dim).
+
+        dx : bool, optional
+            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.
+
+        dp : bool, optional
+            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.
+
+        **kwargs
+            Additional keyword arguments for the transformation.
+
+        Returns
+        -------
+        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]
+            A tuple containing:
+
+            - `transformed_points`: The transformed points of shape (Npoints, input_dim).
+            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, input_dim, output_dim) if `dx` is True, otherwise None.
+            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, input_dim, Nparams) if `dp` is True, otherwise None.
+        """
+        raise NotImplementedError("Subclasses must implement the _inverse_transform method.")
+
+    
+    # =============================================
+    # Transformation Methods
+    # =============================================
 
     def transform(
         self,
@@ -362,7 +473,6 @@ class Transform(ABC):
         )
     
 
-
     def inverse_transform(
         self,
         points: numpy.ndarray,
@@ -517,85 +627,10 @@ class Transform(ABC):
             jacobian_dp=jacobian_dp
         )
     
-    @abstractmethod
-    def _transform(
-        self,
-        points: numpy.ndarray,
-        *,
-        dx: bool = False,
-        dp: bool = False,
-        **kwargs
-    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
-        r"""
-        Apply the transformation to the given points.
-
-        This method must be implemented by subclasses to apply the transformation to the input points.
-
-        Parameters
-        ----------
-        points : numpy.ndarray
-            The input points to be transformed. Shape (Npoints, input_dim).
-
-        dx : bool, optional
-            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.
-
-        dp : bool, optional
-            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.
-
-        **kwargs
-            Additional keyword arguments for the transformation.
-
-        Returns
-        -------
-        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]
-            A tuple containing:
-
-            - `transformed_points`: The transformed points of shape (Npoints, output_dim).
-            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, output_dim, input_dim) if `dx` is True, otherwise None.
-            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, output_dim, Nparams) if `dp` is True, otherwise None.
-        """
-        raise NotImplementedError("Subclasses must implement the _transform method.")
     
-
-    @abstractmethod
-    def _inverse_transform(
-        self,
-        points: numpy.ndarray,
-        *,
-        dx: bool = False,
-        dp: bool = False,
-        **kwargs
-    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
-        r"""
-        Apply the inverse transformation to the given points.
-
-        This method must be implemented by subclasses to apply the inverse transformation to the input points.
-
-        Parameters
-        ----------
-        points : numpy.ndarray
-            The input points to be transformed. Shape (Npoints, output_dim).
-
-        dx : bool, optional
-            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.
-
-        dp : bool, optional
-            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.
-
-        **kwargs
-            Additional keyword arguments for the transformation.
-
-        Returns
-        -------
-        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]
-            A tuple containing:
-
-            - `transformed_points`: The transformed points of shape (Npoints, input_dim).
-            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, input_dim, output_dim) if `dx` is True, otherwise None.
-            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, input_dim, Nparams) if `dp` is True, otherwise None.
-        """
-        raise NotImplementedError("Subclasses must implement the _inverse_transform method.")
-    
+    # =============================================
+    # Optimization Methods
+    # =============================================
 
     def optimize_parameters(
         self,
@@ -955,8 +990,6 @@ class Transform(ABC):
         return object_class.parameters  # shape (Nparams,)
     
 
-
-
     def optimize_input_points(
         self,
         output_points: numpy.ndarray,
@@ -1175,395 +1208,3 @@ class Transform(ABC):
 
 
 
-
-
-
-
-
-
-
-
-class TransformComposition(Transform):
-    r"""
-    A class to represent the composition of multiple transformations.
-
-    This class allows to compose multiple transformations and apply them sequentially.
-    It inherits from the `Transform` class and overrides the `_transform` and `_inverse_transform` methods to apply the composition of transformations.
-
-    If the transformations to represent is :math:`T_n (T_{n-1}(...(T_1(X))))`, the transformations must be given in the order of application, i.e. from the first to the last transformation.
-
-    .. code-block:: python
-
-        transformations = [Transform1(), Transform2(), ..., TransformN()]
-
-    Parameters
-    ----------
-    transformations : Sequence[Transform]
-        A list of transformations to be composed. Each transformation must be an instance of the `Transform` class or its subclasses.
-
-    """
-    def __init__(self, transformations: Sequence[Transform]):
-        super().__init__()
-        
-        # Check if the transformations are a sequence of Transform instances
-        if not isinstance(transformations, Sequence):
-            raise TypeError(f"transformations must be a sequence, got {type(transformations)}")
-        if len(transformations) == 0:
-            raise ValueError("transformations must contain at least one transformation.")
-        for t in transformations:
-            if not isinstance(t, Transform):
-                raise TypeError(f"Each transformation must be an instance of Transform, got {type(t)}")
-        
-        # Check the chain of dimensions
-        for i in range(len(transformations) - 1):
-            if transformations[i].output_dim != transformations[i + 1].input_dim:
-                raise ValueError(f"Output dimension of transformation {i} ({transformations[i].output_dim}) does not match input dimension of transformation {i + 1} ({transformations[i + 1].input_dim}).")
-            
-        # Set the transformations and their parameters
-        self.transformations = transformations
-
-
-    @property
-    def input_dim(self) -> int:
-        r"""
-        The input dimension of the first transformation in the composition.
-        """
-        return self.transformations[0].input_dim
-    
-
-    @property
-    def output_dim(self) -> int:
-        r"""
-        The output dimension of the last transformation in the composition.
-        """
-        return self.transformations[-1].output_dim
-    
-
-    @property
-    def Nparams(self) -> int:
-        r"""
-        The total number of parameters in the composition of transformations.
-        This is the sum of the number of parameters of each transformation in the composition.
-        """
-        return sum(t.Nparams for t in self.transformations)
-    
-
-    @property
-    def parameters(self) -> numpy.ndarray:
-        r"""
-        The parameters of the composition of transformations.
-        This is a concatenation of the parameters of each transformation in the composition.
-
-        If a transformation does not have parameters, it is represented by a zero array of its Nparams.
-        The resulting array has shape (Nparams,).
-        """
-        return numpy.concatenate([t.parameters if t.parameters is not None else numpy.zeros(t.Nparams, dtype=numpy.float64) for t in self.transformations], axis=0)
-    
-
-    @parameters.setter
-    def parameters(self, value: numpy.ndarray):
-        r"""
-        Set the parameters of the composition of transformations.
-
-        The input value must be a 1D numpy array with shape (Nparams,).
-        The parameters are set to the corresponding transformations in the composition.
-        If a transformation does not have parameters, it is skipped.
-        
-        Parameters
-        ----------
-        value : numpy.ndarray
-            The parameters to set. Must be a 1D numpy array with shape (Nparams,).
-        """
-        if not isinstance(value, numpy.ndarray) or value.ndim != 1:
-            raise TypeError(f"Parameters must be a 1D numpy array, got {type(value)} with {value.ndim} dimensions.")
-        
-        if value.shape[0] != self.Nparams:
-            raise ValueError(f"Parameters must have {self.Nparams} elements, got {value.shape[0]} elements.")
-        
-        # Set the parameters for each transformation
-        start = 0
-        for t in self.transformations:
-            end = start + t.Nparams
-            t.parameters = value[start:end]
-            start = end
-
-
-    def is_set(self) -> bool:
-        r"""
-        Check if the parameters of all transformations in the composition are set.
-
-        Returns
-        -------
-        bool
-            True if all transformations have their parameters set, False otherwise.
-        """
-        return all(t.is_set() for t in self.transformations)
-    
-
-    def _transform(
-        self,
-        points: numpy.ndarray,
-        *,
-        dx: bool = False,
-        dp: bool = False,
-        **kwargs
-    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
-        r"""
-        Apply the composition of transformations to the given points.
-
-        This method applies each transformation in the composition sequentially to the input points.
-
-        The jacobian matrices with respect to the input points and the parameters are computed using the chain rule.
-
-        Parameters
-        ----------
-        points : numpy.ndarray
-            The input points to be transformed. Shape (Npoints, input_dim).
-
-        dx : bool, optional
-            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.
-
-        dp : bool, optional
-            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.
-
-        **kwargs
-            Additional keyword arguments for the transformations.
-
-        Returns
-        -------
-        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]
-            A tuple containing:
-
-            - `transformed_points`: The transformed points of shape (Npoints, output_dim).
-            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, output_dim, input_dim) if `dx` is True, otherwise None.
-            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, output_dim, Nparams) if `dp` is True, otherwise None.
-        """
-        Npoints = points.shape[0]  # Number of points in computation
-        jacobian_dx_list = []
-        jacobian_dp_list = []
-
-        # Iterate over each transformation in the composition
-        for index, t in enumerate(self.transformations):
-            # Apply the transformation to the points
-            transformed_points, jacobian_dx, jacobian_dp = t._transform(points, dx=dx, dp=dp or (dx and index != len(self.transformations)), **kwargs)  # (Npoints, output_dim_t), (Npoints, output_dim_t, input_dim_t), (Npoints, output_dim_t, Nparams_t)
-            
-            # Append the transformed points and Jacobians to the lists
-            jacobian_dx_list.append(jacobian_dx)
-            jacobian_dp_list.append(jacobian_dp)
-
-            # Update the points for the next transformation
-            points = transformed_points
-
-        # Apply the chain rules to compute the Jacobians with respect to the parameters
-        if dp and all(jacobian_dx_list[i] is not None for i in range(len(jacobian_dx_list) - 1)) and all(jacobian_dp_list[i] is not None for i in range(len(jacobian_dp_list))):
-            jacobian_dp = numpy.empty((Npoints, self.output_dim, self.Nparams), dtype=numpy.float64)
-            start = 0
-            # Boucle over the transformations to compute the Jacobian with respect to the parameters
-            for index, t in enumerate(self.transformations):
-                end = start + t.Nparams
-                jacobian_dp_t = jacobian_dp_list[index]  # (Npoints, output_dim_t, Nparams_t)
-                for index_2 in range(index + 1, len(self.transformations)):
-                    # Compute the chain rule for the Jacobian with respect to the parameters including the dx for the next transformation
-                    jacobian_dp_t = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index_2], jacobian_dp_t)  # (Npoints, output_dim_t2, input_dim_t2) * (Npoints, output_dim_t, Nparams_t) -> (Npoints, output_dim_t2, Nparams_t)
-                jacobian_dp[:, :, start:end] = jacobian_dp_t  # (Npoints, output_dim_t, Nparams_t)
-                start = end
-        else:
-            jacobian_dp = None
-        
-        # Apply the chain rules to compute the Jacobians with respect to the input points
-        if dx and all(jacobian_dx_list[i] is not None for i in range(len(jacobian_dx_list))):
-            # Compute the Jacobian with respect to the input points
-            jacobian_dx = jacobian_dx_list[0] # (Npoints, output_dim_0, input_dim_0)
-            for index, t in enumerate(self.transformations[1:]):
-                # Apply the chain rule for the Jacobian with respect to the input points
-                jacobian_dx = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index + 1], jacobian_dx)  # (Npoints, output_dim_t, input_dim_t)
-        else:
-            jacobian_dx = None
-
-        return (
-            points,  # (Npoints, output_dim)
-            jacobian_dx,  # (Npoints, output_dim, input_dim) if dx is True, otherwise None
-            jacobian_dp  # (Npoints, output_dim, Nparams) if dp is True, otherwise None
-        )
-    
-
-    def _inverse_transform(
-        self,
-        points: numpy.ndarray,
-        *,
-        dx: bool = False,
-        dp: bool = False,
-        **kwargs
-    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
-        r"""
-        Apply the inverse transformation to the given points.
-
-        This method applies the inverse of each transformation in the composition sequentially to the input points.
-
-        The jacobian matrices with respect to the input points and the parameters are computed using the chain rule.
-
-        Parameters
-        ----------
-        points : numpy.ndarray
-            The input points to be transformed. Shape (Npoints, output_dim).
-
-        dx : bool, optional
-            If True, compute the Jacobian of the transformed points with respect to the input points. Default is False.
-
-        dp : bool, optional
-            If True, compute the Jacobian of the transformed points with respect to the parameters of the transformation. Default is False.
-
-        **kwargs
-            Additional keyword arguments for the transformations.
-
-        Returns
-        -------
-        Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]
-            A tuple containing:
-
-            - `transformed_points`: The transformed points of shape (Npoints, input_dim).
-            - `jacobian_dx`: The Jacobian matrix with respect to the input points of shape (Npoints, input_dim, output_dim) if `dx` is True, otherwise None.
-            - `jacobian_dp`: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, input_dim, Nparams) if `dp` is True, otherwise None.
-        """
-        Npoints = points.shape[0]  # Number of points in computation
-        jacobian_dx_list = []
-        jacobian_dp_list = []
-
-        # Iterate over each transformation in the composition in reverse order !
-        for index, t in enumerate(reversed(self.transformations)):
-            # Apply the inverse transformation to the points
-            transformed_points, jacobian_dx, jacobian_dp = t._inverse_transform(points, dx=dx, dp=dp or (dx and index != len(self.transformations)), **kwargs) # (Npoints, input_dim_t), (Npoints, input_dim_t, output_dim_t), (Npoints, input_dim_t, Nparams_t)
-            # Append the transformed points and Jacobians to the lists
-            jacobian_dx_list.append(jacobian_dx)
-            jacobian_dp_list.append(jacobian_dp)
-
-            # Update the points for the next transformation
-            points = transformed_points
-
-        # Apply the chain rules to compute the Jacobians with respect to the parameters
-        if dp and all(jacobian_dx_list[i] is not None for i in range(len(jacobian_dx_list) - 1)) and all(jacobian_dp_list[i] is not None for i in range(len(jacobian_dp_list))):
-            jacobian_dp = numpy.empty((Npoints, self.input_dim, self.Nparams), dtype=numpy.float64)
-
-            start = 0
-            # Boucle over the transformations to compute the Jacobian with respect to the parameters
-            for index, t in enumerate(reversed(self.transformations)):
-                end = start + t.Nparams
-                jacobian_dp_t = jacobian_dp_list[index]  # (Npoints, input_dim_t, Nparams_t)
-                for index_2 in range(index + 1, len(reversed(self.transformations))):
-                    # Compute the chain rule for the Jacobian with respect to the parameters
-                    jacobian_dp_t = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index_2], jacobian_dp_t)
-                jacobian_dp[:, :, start:end] = jacobian_dp_t  # (Npoints, input_dim_t, Nparams_t)
-                start = end
-        else:
-            jacobian_dp = None
-
-        # Apply the chain rules to compute the Jacobians with respect to the input points
-        if dx and all(jacobian_dx_list[i] is not None for i in range(len(jacobian_dx_list))):
-            # Compute the Jacobian with respect to the input points
-            jacobian_dx = jacobian_dx_list[0] # (Npoints, input_dim_-1, output_dim_-1)
-            for index, t in enumerate(reversed(self.transformations[:-1])):
-                # Apply the chain rule for the Jacobian with respect to the input points
-                jacobian_dx = numpy.einsum("nij, njk -> nik", jacobian_dx_list[index], jacobian_dx)
-        else:
-            jacobian_dx = None
-
-        return (
-            points,  # (Npoints, input_dim)
-            jacobian_dx,  # (Npoints, input_dim, output_dim) if dx is True, otherwise None
-            jacobian_dp  # (Npoints, input_dim, Nparams) if dp is True, otherwise None
-        )
-
-              
-
-
-
-
-
-
-
-
-
-
-class TransformInvertion(Transform):
-    r"""
-    A class to represent the inversion of a transformation.
-
-    This class allows to invert a transformation and apply it to the input points.
-    It inherits from the `Transform` class and overrides the `_transform` and `_inverse_transform` methods to apply the inverse transformation.
-
-    Parameters
-    ----------
-    transform : Transform
-        The transformation to be inverted. Must be an instance of the `Transform` class or its subclasses.
-
-    """
-    def __init__(self, transform: Transform):
-        super().__init__()
-        if not isinstance(transform, Transform):
-            raise TypeError(f"transform must be an instance of Transform, got {type(transform)}")
-        self.transform = transform
-
-    @property
-    def input_dim(self) -> int:
-        r"""
-        The input dimension is the output dimension of the transformation to be inverted.
-        """
-        return self.transform.output_dim
-    
-    @property
-    def output_dim(self) -> int:
-        r"""
-        The output dimension is the input dimension of the transformation to be inverted.
-        """
-        return self.transform.input_dim
-    
-    @property
-    def Nparams(self) -> int:
-        r"""
-        The number of parameters is the same as the number of parameters of the transformation to be inverted.
-        """
-        return self.transform.Nparams
-    
-    @property
-    def parameters(self) -> numpy.ndarray:
-        r"""
-        The parameters are the same as the parameters of the transformation to be inverted.
-        """
-        return self.transform.parameters
-    
-    @parameters.setter
-    def parameters(self, value: numpy.ndarray):
-        self.transform.parameters = value
-
-    def is_set(self) -> bool:
-        r"""
-        Check if the parameters of the transformation to be inverted are set.
-        """
-        return self.transform.is_set()
-    
-    def _transform(
-            self,
-            points: numpy.ndarray,
-            *,
-            dx: bool = False,
-            dp: bool = False,
-            **kwargs
-    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
-        r"""
-        The transform method is the inverse of the transformation to be inverted.
-        """
-        return self.transform._inverse_transform(points, dx=dx, dp=dp, **kwargs)
-    
-
-    def _inverse_transform(
-            self,
-            points: numpy.ndarray,
-            *,
-            dx: bool = False,
-            dp: bool = False,
-            **kwargs
-    ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
-        r"""
-        The inverse transform method is the direct transformation of the transformation to be inverted.
-        """
-        return self.transform._transform(points, dx=dx, dp=dp, **kwargs)

@@ -1,21 +1,13 @@
-pydistort.objects.Transform
+pydistort.core.Transform
 =============================
 
-.. autoclass:: pydistort.objects.Transform
+.. autoclass:: pydistort.core.Transform
     :members:
     :undoc-members:
     :private-members:
     :show-inheritance:
 
-
-.. autoclass:: pydistort.objects.TransformComposition
-    :members:
-    :undoc-members:
-    :private-members:
-    :show-inheritance:
-
-
-.. autoclass:: pydistort.objects..TransformResult
+.. autoclass:: pydistort.core.TransformResult
     :members:
     :show-inheritance:
 

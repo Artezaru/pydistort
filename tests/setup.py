@@ -6,7 +6,7 @@ import cv2
 import numpy
 
 from pydistort import Cv2Distortion, ZernikeDistortion
-from pydistort.objects import Intrinsic
+from pydistort import Cv2Intrinsic
 
 def CSV():
     """Return is setup.json has 'csv' set to True."""
@@ -100,7 +100,7 @@ def ORI_MATK():
 def ORI_NORMALIZED_POINTS():
     """Return the normalized points from the original image."""
     image_points = ORI_IMAGE_POINTS()
-    intrinsic = Intrinsic()
+    intrinsic = Cv2Intrinsic()
     intrinsic.intrinsic_matrix = ORI_MATK()
     normalized_points, _, _ = intrinsic._inverse_transform(image_points, dx=False, dp=False)
     return normalized_points

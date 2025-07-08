@@ -1,5 +1,5 @@
 from pydistort import distort_image, Cv2Distortion
-from pydistort.objects import Intrinsic
+from pydistort.core import Intrinsic
 import cv2
 import os
 import numpy

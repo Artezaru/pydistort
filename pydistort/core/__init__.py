@@ -1,7 +1,13 @@
 __all__ = []
 
-from .transform import Transform, TransformResult, TransformComposition, TransformInvertion
-__all__.extend(["Transform", "TransformResult", "TransformComposition", "TransformInvertion"])
+from .transform import Transform, TransformResult
+__all__.extend(["Transform", "TransformResult"])
+
+from .transform_inversion import TransformInversion
+__all__.extend(["TransformInversion"])
+
+from .transform_composition import TransformComposition
+__all__.extend(["TransformComposition"])
 
 from .extrinsic import Extrinsic, ExtrinsicResult, InverseExtrinsicResult
 __all__.extend(["Extrinsic", "ExtrinsicResult", "InverseExtrinsicResult"])

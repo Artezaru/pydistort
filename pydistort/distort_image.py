@@ -3,9 +3,9 @@ import numpy
 import cv2
 import scipy
 
-from .objects.distortion import Distortion
+from .core.distortion import Distortion
 from .no_distortion import NoDistortion
-from .objects.intrinsic import Intrinsic
+from .cv2_intrinsic import Cv2Intrinsic
 
 
 def distort_image(
@@ -126,7 +126,7 @@ def distort_image(
         distortion = NoDistortion()
     
     # Create the intrinsic and distortion objects
-    intrinsic = Intrinsic()
+    intrinsic = Cv2Intrinsic()
     K = numpy.asarray(K, dtype=numpy.float64)
     if K.size == 4:
         intrinsic.intrinsic_vector = K

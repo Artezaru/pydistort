@@ -3,12 +3,12 @@ from numbers import Integral, Number
 import numpy
 import cv2
 
-from .objects.distortion import Distortion
+from .core.distortion import Distortion
 
 
 class Cv2Distortion(Distortion):
     r"""
-    Class to apply distortion with the OpenCV distortion model.
+    Subclass of :class:`pydistort.core.Distortion` to represent the distortion transformation using OpenCV model.
 
     Distort the given ``normalized_points`` using the distortion model to obtain the ``distorted_points``.
 
@@ -1222,9 +1222,9 @@ class Cv2Distortion(Distortion):
         return True 
     
     
-    def _transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the distortion transformation.
+        This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the distortion transformation.
         This method allows to transform the ``normalized_points`` to the ``distorted_points`` using the distortion model.
 
         .. note::
@@ -1489,8 +1489,8 @@ class Cv2Distortion(Distortion):
 
     def _transform_opencv(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the distortion transformation using OpenCV ``projectPoints`` function.
-        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.objects.Transform.transform` method.
+        This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the distortion transformation using OpenCV ``projectPoints`` function.
+        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.core.Transform.transform` method.
 
         .. note::
 
@@ -1559,9 +1559,9 @@ class Cv2Distortion(Distortion):
     
 
 
-    def _inverse_transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False, max_iter: int = 10, eps: float = 1e-8) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _inverse_transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False, max_iter: int = 10, eps: float = 1e-8) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse distortion transformation.
+        This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse distortion transformation.
         This method allows to transform the ``distorted_points`` to the ``normalized_points`` using the distortion model.
 
         .. note::
@@ -1622,7 +1622,7 @@ class Cv2Distortion(Distortion):
 
         .. note::
 
-            This method is not as optimized as the parent method :meth:`pydistort.objects.Transform.optimized_input_points`.
+            This method is not as optimized as the parent method :meth:`pydistort.core.Transform.optimized_input_points`.
             This implementation is provided to fit the zero-order approximation of OpenCV's undistortion function.
 
         Parameters
@@ -1770,10 +1770,10 @@ class Cv2Distortion(Distortion):
         return normalized_points, None, None
 
 
-    def _inverse_transform_opencv(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _inverse_transform_opencv(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse distortion transformation using OpenCV ``undistortPoints`` function.
-        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.objects.Transform.inverse_transform` method.
+        This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse distortion transformation using OpenCV ``undistortPoints`` function.
+        To use this method, set the ``opencv`` parameter to True in the :meth:`pydistort.core.Transform.inverse_transform` method.
 
         .. note::
 

@@ -1,21 +1,21 @@
-from typing import Optional
+from typing import Optional, Tuple
 from dataclasses import dataclass
 import numpy
 from py3dframe import Frame
 import cv2
 
-from .transform import Transform, TransformResult
+from .core import Extrinsic, ExtrinsicResult, InverseExtrinsicResult
 
 @dataclass
-class ExtrinsicResult(TransformResult):
+class Cv2ExtrinsicResult(ExtrinsicResult):
     r"""
-    Subclass of TransformResult to represent the result of the extrinsic transformation.
+    Subclass of :class:`pydistort.core.ExtrinsicResult` to represent the result of the extrinsic transformation in the cv2 format.
 
     This class is used to store the result of transforming the ``world_3dpoints`` to ``normalized_points``, and the optional Jacobians.
 
-    - ``transformed_points``: The transformed normalized points in the camera coordinate system.
-    - ``jacobian_dx``: The Jacobian of the normalized points with respect to the input 3D world points if ``dx`` is True. Otherwise None. Shape (..., 2, 3).
-    - ``jacobian_dp``: The Jacobian of the normalized points with respect to the pose parameters (rotation and translation) if ``dp`` is True. Otherwise None. Shape (..., 2, 6), where the last dimension represents (dr, dt).
+    - ``transformed_points``: The transformed normalized points in the camera coordinate system. Shape (..., 2).
+    - ``jacobian_dx``: The Jacobian of the normalized points with respect to the input world 3D points if ``dx`` is True. Otherwise None. Shape (..., 2, 3), where the last dimension represents (dx, dy, dz).
+    - ``jacobian_dp``: The Jacobian of the normalized points with respect to the extrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).
 
     Some properties are provided for convenience:
 
@@ -28,18 +28,6 @@ class ExtrinsicResult(TransformResult):
         If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
 
     """
-    @property
-    def normalized_points(self) -> numpy.ndarray:
-        r"""
-        Get the transformed normalized points in the camera coordinate system.
-
-        Returns
-        -------
-        numpy.ndarray
-            The transformed normalized points. Shape (..., 2).
-        """
-        return self.transformed_points
-
     @property
     def jacobian_dr(self) -> Optional[numpy.ndarray]:
         r"""
@@ -71,15 +59,15 @@ class ExtrinsicResult(TransformResult):
 
 
 @dataclass
-class InverseExtrinsicResult(TransformResult):
+class InverseCv2ExtrinsicResult(InverseExtrinsicResult):
     r"""
-    Subclass of TransformResult to represent the result of the inverse extrinsic transformation.
+    Subclass of :pydistort.core.InverseExtrinsicResult` to represent the result of the inverse extrinsic transformation in the cv2 format.
 
     This class is used to store the result of transforming the ``normalized_points`` back to ``world_3dpoints``, and the optional Jacobians.
 
-    - ``transformed_points``: The transformed world 3D points. Shape (..., 3).
-    - ``jacobian_dx``: The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None. Shape (..., 3, 2).
-    - ``jacobian_dp``: The Jacobian of the world 3D points with respect to the pose parameters (rotation and translation) if ``dp`` is True. Otherwise None. Shape (..., 3, 6), where the last dimension represents (dr, dt).
+    - ``transformed_points``: The transformed world 3D points in the camera coordinate system. Shape (..., 3).
+    - ``jacobian_dx``: The Jacobian of the world 3D points with respect to the input normalized points if ``dx`` is True. Otherwise None. Shape (..., 3, 2), where the last dimension represents (dx, dy).
+    - ``jacobian_dp``: The Jacobian of the world 3D points with respect to the extrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 3, 6), where the last dimension represents (rx, ry, rz, tx, ty, tz).
 
     Some properties are provided for convenience:
 
@@ -89,21 +77,9 @@ class InverseExtrinsicResult(TransformResult):
 
     .. warning::
 
-        If ``transpose`` is set to True during the inverse transformation, the output points will have shape (input_dim, ...) instead of (..., input_dim), same for the Jacobian matrices.
+        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
 
     """
-    @property
-    def world_3dpoints(self) -> numpy.ndarray:
-        r"""
-        Get the transformed world 3D points.
-
-        Returns
-        -------
-        numpy.ndarray
-            The transformed world 3D points. Shape (..., 3).
-        """
-        return self.transformed_points
-    
     @property
     def jacobian_dr(self) -> Optional[numpy.ndarray]:
         r"""
@@ -136,30 +112,17 @@ class InverseExtrinsicResult(TransformResult):
 
 
 
-class Extrinsic(Transform):
+
+
+class Cv2Extrinsic(Extrinsic):
     r"""
-    .. note::
-
-        This class represents the extrinsic transformation, which is the first step of the process.
-
-    The process to correspond a 3D-world point to a 2D-image point in the stenopic camera model is as follows:
-
-    1. The ``world_3dpoints`` (:math:`X_W`) are expressed in the camera coordinate system using the rotation and translation matrices to obtain the ``camera_3dpoints`` (:math:`X_C`).
-    2. The ``camera_3dpoints`` (:math:`X_C`) are normalized by dividing by the third coordinate to obtain the ``normalized_points`` (:math:`x_N`).
-    3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).
-    4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic matrix K to obtain the ``image_points`` (:math:`x_I`).
-
-    This tranformation can be decomposed into 3 main steps:
-
-    1. **Extrinsic**: Transform the ``world 3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
-    2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model.
-    3. **Intrinsic**: Transform the ``distorted_points`` to ``image_points`` using the intrinsic matrix K.
+    Subclass of :class:`pydistort.core.Extrinsic` to represent the extrinsic transformation using OpenCV conventions.
 
     .. note::
 
         To manage only ``world_3dpoints`` to ``camera_3dpoints``, use the package py3dframe (https://github.com/Artezaru/py3dframe).
 
-    The equation used for the extrinsic transformation is:    
+    The equation used for the extrinsic transformation in the cv2 convention is: 
 
     .. math::
 
@@ -172,7 +135,7 @@ class Extrinsic(Transform):
 
     .. note::
 
-        To compute the translation vector and the rotation vector, you can use cv2.Rodrigues() or py3dframe.Frame with convention 0.
+        To compute the translation vector and the rotation vector, you can use cv2.Rodrigues() or py3dframe.Frame with convention 4.
 
     Parameters
     ----------
@@ -189,12 +152,12 @@ class Extrinsic(Transform):
     .. code-block:: python
 
         import numpy as np
-        from pydistort.objects import Extrinsic
+        from pydistort import Cv2Extrinsic
 
         rvec = np.array([0.1, 0.2, 0.3])
         tvec = np.array([0.5, 0.5, 0.5])
 
-        extrinsic = Extrinsic(rvec, tvec)
+        extrinsic = Cv2Extrinsic(rvec, tvec)
 
     Then you can use the extrinsic object to transform ``world_3dpoints`` to ``camera_points``:
 
@@ -238,8 +201,8 @@ class Extrinsic(Transform):
 
         For more information about the transformation process, see:
 
-        - :meth:`pydistort.objects.Extrinsic._transform` to transform the ``world_3dpoints`` to ``normalized_points``.
-        - :meth:`pydistort.objects.Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.
+        - :meth:`pydistort.Cv2Extrinsic._transform` to transform the ``world_3dpoints`` to ``normalized_points``.
+        - :meth:`pydistort.Cv2Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.
     
     """
     def __init__(self, rvec: Optional[numpy.ndarray] = None, tvec: Optional[numpy.ndarray] = None):
@@ -255,28 +218,23 @@ class Extrinsic(Transform):
         self.tvec = tvec
 
     # =============================================
-    # Properties for ABC Transform Class
+    # Overwrite some properties from the base class
     # =============================================
     @property
-    def input_dim(self) -> int:
-        return 3 # The input is a 3D point (x, y, z)
-    
-    @property
-    def output_dim(self) -> int:
-        return 2 # The output is a 2D point (x, y)
-
-    @property
     def Nparams(self) -> int:
-        return 6 # The number of parameters is 6 (3 for rotation and 3 for translation)
+        return 6 # The number of parameters is 6 (3 for rotation and 3 for translation) even if parameters are not set.
     
     @property
     def result_class(self) -> type:
-        return ExtrinsicResult
+        return Cv2ExtrinsicResult
     
     @property
     def inverse_result_class(self) -> type:
-        return InverseExtrinsicResult
+        return InverseCv2ExtrinsicResult
     
+    # =============================================
+    # Implement the parameters property
+    # =============================================
     @property
     def parameters(self) -> Optional[numpy.ndarray]:
         r"""
@@ -287,7 +245,7 @@ class Extrinsic(Transform):
         Returns
         -------
         Optional[numpy.ndarray]
-            The parameters of the extrinsic transformation. Shape (6,).
+            The parameters of the extrinsic transformation. Shape (6,) or None if not set.
         """
         if self._rvec is None or self._tvec is None:
             return None
@@ -321,7 +279,7 @@ class Extrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.objects.Extrinsic.rotation_vector` or ``rvec`` to set the rotation vector of the extrinsic transformation.
+            - :meth:`pydistort.Cv2Extrinsic.rotation_vector` or ``rvec`` to set the rotation vector of the extrinsic transformation.
 
         Returns
         -------
@@ -366,7 +324,7 @@ class Extrinsic(Transform):
 
         .. seealso::
 
-            - :meth:`pydistort.objects.Extrinsic.translation_vector` or ``tvec`` to set the translation vector of the extrinsic transformation.
+            - :meth:`pydistort.Cv2Extrinsic.translation_vector` or ``tvec`` to set the translation vector of the extrinsic transformation.
 
         Returns
         -------
@@ -460,7 +418,7 @@ class Extrinsic(Transform):
         """
         if self._rvec is None or self._tvec is None:
             return None
-        return Frame(translation=self._tvec, rotation_vector=self._rvec, convention=0)
+        return Frame(translation=self._tvec, rotation_vector=self._rvec, convention=4)
     
     @frame.setter
     def frame(self, frame: Optional[Frame]) -> None:
@@ -470,8 +428,8 @@ class Extrinsic(Transform):
             return
         if not isinstance(frame, Frame):
             raise ValueError("Frame must be a py3dframe.Frame object.")
-        self._rvec = frame.get_global_rotation_vector(convention=0)
-        self._tvec = frame.get_global_translation(convention=0)
+        self._rvec = frame.get_global_rotation_vector(convention=4)
+        self._tvec = frame.get_global_translation(convention=4)
 
     # =============================================
     # Display the extrinsic parameters
@@ -485,7 +443,7 @@ class Extrinsic(Transform):
         str
             A string representation of the extrinsic parameters.
         """
-        return f"Extrinsic Pose: rvec={self._rvec}, tvec={self._tvec}"
+        return f"Cv2 Extrinsic Pose: rvec={self._rvec}, tvec={self._tvec}"
     
     # =============================================
     # Methods for ABC Transform Class
@@ -500,10 +458,11 @@ class Extrinsic(Transform):
             True if both rotation vector and translation vector are set, False otherwise.
         """
         return self._rvec is not None and self._tvec is not None
+    
 
-    def _transform(self, world_3dpoints: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(self, world_3dpoints: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.transform` method to perform the extrinsic transformation.
+        This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the extrinsic transformation.
         This method allows to transform the ``world_3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
 
         .. note::
@@ -578,8 +537,7 @@ class Extrinsic(Transform):
 
         # Compute the jacobian with respect to the world points
         if dx:
-            points_camera_flat_dx = numpy.empty((Npoints, 3, 3), dtype=numpy.float64) # shape (Npoints, 3, 3)
-            points_camera_flat_dx[:, :, :] = rmat[numpy.newaxis, :, :] # shape (Npoints, 3, 3)
+            points_camera_flat_dx = numpy.broadcast_to(rmat, (Npoints, 3, 3))
             X_C_dx = points_camera_flat_dx[:, 0, :] # shape (Npoints, 3)
             Y_C_dx = points_camera_flat_dx[:, 1, :] # shape (Npoints, 3)
             Z_C_dx = points_camera_flat_dx[:, 2, :] # shape (Npoints, 3)
@@ -631,9 +589,9 @@ class Extrinsic(Transform):
         return normalized_points_flat, jacobian_flat_dx, jacobian_flat_dp
     
 
-    def _inverse_transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, depth: Optional[numpy.ndarray] = None) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _inverse_transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, depth: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
-        This method is called by the :meth:`pydistort.objects.Transform.inverse_transform` method to perform the inverse extrinsic transformation.
+        This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse extrinsic transformation.
         This method allows to transform the ``normalized_points`` back to ``world_3dpoints`` using the extrinsic parameters (rotation and translation).
 
         .. note::
@@ -752,9 +710,9 @@ class Extrinsic(Transform):
             world_3dpoints_flat_dp = numpy.empty((Npoints, 3, 6), dtype=numpy.float64) # shape (Npoints, 3, 6)
             for k in range(3):
                 world_3dpoints_flat_dp[:, :, k] = (points_camera_flat - self._tvec[numpy.newaxis, :]) @ rmat_inv_dr[:, :, k].T
-            world_3dpoints_flat_dp[:, :, 3] = -rmat_inv @ numpy.array([1.0, 0.0, 0.0], dtype=numpy.float64)[numpy.newaxis, :]
-            world_3dpoints_flat_dp[:, :, 4] = -rmat_inv @ numpy.array([0.0, 1.0, 0.0], dtype=numpy.float64)[numpy.newaxis, :]
-            world_3dpoints_flat_dp[:, :, 5] = -rmat_inv @ numpy.array([0.0, 0.0, 1.0], dtype=numpy.float64)[numpy.newaxis, :]
+            world_3dpoints_flat_dp[:, :, 3] = - numpy.array([1.0, 0.0, 0.0], dtype=numpy.float64)[numpy.newaxis, :] @ rmat_inv.T
+            world_3dpoints_flat_dp[:, :, 4] = - numpy.array([0.0, 1.0, 0.0], dtype=numpy.float64)[numpy.newaxis, :] @ rmat_inv.T
+            world_3dpoints_flat_dp[:, :, 5] = - numpy.array([0.0, 0.0, 1.0], dtype=numpy.float64)[numpy.newaxis, :] @ rmat_inv.T
 
         if not dx:
             world_3dpoints_flat_dx = None

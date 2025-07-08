@@ -2,10 +2,10 @@ from typing import Optional
 import numpy
 
 
-from .objects.distortion import Distortion
+from .core.distortion import Distortion
 from .no_distortion import NoDistortion
-from .objects.intrinsic import Intrinsic
-from .objects.extrinsic import Extrinsic
+from .cv2_intrinsic import Cv2Intrinsic
+from .cv2_extrinsic import Cv2Extrinsic
 
 
 
@@ -118,7 +118,7 @@ def undistort_points(
         distortion = NoDistortion()
 
     # Create the intrinsic and distortion objects
-    intrinsic = Intrinsic()
+    intrinsic = Cv2Intrinsic()
     K = numpy.asarray(K, dtype=numpy.float64)
     if K.size == 4:
         intrinsic.intrinsic_vector = K
@@ -127,7 +127,7 @@ def undistort_points(
     else:
         raise ValueError("K must be of shape (4,) or (3, 3)")
     
-    intrinsic_projection = Intrinsic()
+    intrinsic_projection = Cv2Intrinsic()
     P = numpy.asarray(P, dtype=numpy.float64)
     if P.size == 4:
         intrinsic_projection.intrinsic_vector = P
@@ -136,7 +136,7 @@ def undistort_points(
     else:
         raise ValueError("P must be of shape (4,) or (3, 3)")
     
-    rectification = Extrinsic()
+    rectification = Cv2Extrinsic()
     rectification.translation_vector = numpy.zeros((3,), dtype=numpy.float64)
     R = numpy.asarray(R, dtype=numpy.float64)
     if R.size == 3:

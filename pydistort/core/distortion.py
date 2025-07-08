@@ -1,5 +1,3 @@
-from typing import Optional, Tuple
-from abc import abstractmethod
 from dataclasses import dataclass
 import numpy
 
@@ -11,7 +9,7 @@ from .transform import Transform, TransformResult
 @dataclass
 class DistortionResult(TransformResult):
     r"""
-    Subclass of TransformResult to represent the result of the distortion transformation.
+    Subclass of :class:`pydistort.core.TransformResult` to represent the result of the distortion transformation.
 
     This class is used to store the result of transforming the ``normalized_points`` to ``distorted_points``, and the optional Jacobians.
 
@@ -46,10 +44,12 @@ class DistortionResult(TransformResult):
     
 
 
+
+
 @dataclass
 class InverseDistortionResult(TransformResult):
     r"""
-    Subclass of TransformResult to represent the result of the inverse distortion transformation.
+    Subclass of :class:`pydistort.core.TransformResult` to represent the result of the inverse distortion transformation.
 
     This class is used to store the result of transforming the ``distorted_points`` back to ``normalized_points``, and the optional Jacobians.
 
@@ -86,6 +86,8 @@ class InverseDistortionResult(TransformResult):
 
 
 
+
+
 class Distortion(Transform):
     r"""
     .. note::
@@ -101,8 +103,8 @@ class Distortion(Transform):
 
     This tranformation can be decomposed into 3 main steps:
 
-    1. **Extrinsic**: Transform the ``world 3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
-    2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model.
+    1. **Extrinsic**: Transform the ``world_3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
+    2. **Distortion**: Transform the ``normalized_points`` to ``distorted_points`` using the distortion model (this class).
     3. **Intrinsic**: Transform the ``distorted_points`` to ``image_points`` using the intrinsic matrix K.
 
     .. note::
@@ -111,13 +113,9 @@ class Distortion(Transform):
 
         The subclasses should implement the following methods:
 
-        - "parameters": property to return the distortion parameters in a numpy array.
-        - "Nparams": property to return the number of distortion parameters.
+        - "parameters": property to return the distortion parameters in a 1D numpy array.
         - "is_set": to check if the distortion parameters are set.
         - "_transform": to apply distortion to a set of points. The transformation is applied to the ``normalized_points`` (:math:`x_N`) to obtain the ``distorted_points`` (:math:`x_D`).
-
-        The following methods are implemented in this class but can be overridden in the subclasses:
-
         - "_inverse_transform": to remove distortion from a set of points. The transformation is applied to the ``distorted_points`` (:math:`x_D`) to obtain the ``normalized_points`` (:math:`x_N`).
 
     Some aliases are provided for convenience:
@@ -187,17 +185,3 @@ class Distortion(Transform):
             The result of the inverse distortion transformation.
         """
         return self.inverse_transform(*args, **kwargs)
-
-    # =============================================
-    # Common Properties and Methods for Distortion Class
-    # =============================================  
-    def __repr__(self) -> str:
-        r"""
-        String representation of the Distortion class.
-
-        Returns
-        -------
-        str
-            A string representation of the distortion model.
-        """
-        return f"{self.__class__.__name__} with {self.Nparams} parameters: {self.parameters if self.is_set() else 'not set'}"

@@ -1,13 +1,13 @@
 from typing import Optional, Tuple
 import numpy
 
-from .objects.distortion import Distortion
+from .core.distortion import Distortion
 
 class NoDistortion(Distortion):
     r"""
     Class to represent the empty distortion model where the ``distorted_points`` are equal to the ``normalized_points``.
 
-    The NoDistortionmodel is used when there is no distortion in the camera.
+    The NoDistortion model is used when there is no distortion in the camera.
     """
     def __init__(self):
         super().__init__()
@@ -89,7 +89,7 @@ class NoDistortion(Distortion):
             The points in distorted coordinates to be transformed. Shape (Npoints, 2).
 
         dx : bool, optional
-            If True, the jacobian with respect to the normalized points is computed. Default is True
+            If True, the jacobian with respect to the distorted points is computed. Default is True
 
         dp : bool, optional
             If True, the jacobian with respect to the distortion parameters is computed. Default is True

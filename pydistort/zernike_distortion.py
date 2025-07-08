@@ -1,10 +1,9 @@
 from typing import Optional, Tuple
 from numbers import Integral, Number
 import numpy
-import cv2
 from pyzernike import xy_zernike_polynomial_up_to_order, zernike_order_to_index
 
-from .objects.distortion import Distortion, DistortionResult
+from .core.distortion import Distortion
 
 
 class ZernikeDistortion(Distortion):

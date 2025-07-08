@@ -234,118 +234,77 @@ def test_pydistort_project_vs_opencv_timer(Nparams, mode):
 
 
 
-def test_pydistort_project_zernike():
-    """Compare project_points and opencv.projectPoints for various Nparams in time."""
-    if setup.TIMER():
-        pydistort_alljac_times = []
-        pydistort_alljac_faster_times = []
-        pydistort_times = []
-        pydistort_nojac_times = []
-        Nzer_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        Npoints = 1_000_000
-        for Nzer in Nzer_list:
-            distortion = ZernikeDistortion(Nzer=Nzer)
-            distortion.parameters = np.random.rand(distortion.Nparams) * 0.01  # Random coefficients for testing
-            distortion.radius = np.sqrt(2)  # Set radius to sqrt(2) for testing
+# def test_pydistort_project_zernike():
+#     """Compare project_points and opencv.projectPoints for various Nparams in time."""
+#     if setup.TIMER():
+#         pydistort_alljac_times = []
+#         pydistort_alljac_faster_times = []
+#         pydistort_times = []
+#         pydistort_nojac_times = []
+#         Nzer_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+#         Npoints = 1_000_000
+#         for Nzer in Nzer_list:
+#             distortion = ZernikeDistortion(Nzer=Nzer)
+#             distortion.parameters = np.random.rand(distortion.Nparams) * 0.01  # Random coefficients for testing
+#             distortion.radius = np.sqrt(2)  # Set radius to sqrt(2) for testing
 
-            # Test points
-            points = np.random.uniform(-1.0, 1.0, size=(Npoints, 2))  # shape (Npoints, 2)
+#             # Test points
+#             points = np.random.uniform(-1.0, 1.0, size=(Npoints, 2))  # shape (Npoints, 2)
 
-            # Camera intrinsics
-            fx, fy = 1000.0, 950.0
-            cx, cy = 320.0, 240.0
-            K = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
+#             # Camera intrinsics
+#             fx, fy = 1000.0, 950.0
+#             cx, cy = 320.0, 240.0
+#             K = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
 
-            # Rotation and translation
-            rvec = np.array([0.01, 0.02, 0.03])  # small rotation
-            tvec = np.array([0.1, -0.1, 0.2])    # small translation
+#             # Rotation and translation
+#             rvec = np.array([0.01, 0.02, 0.03])  # small rotation
+#             tvec = np.array([0.1, -0.1, 0.2])    # small translation
 
-            # Test points
-            points = np.random.uniform(-1.0, 1.0, size=(Npoints, 2))  # shape (Npoints, 2)
-            points = np.concatenate((points, 5.0 * np.ones((Npoints, 1))), axis=1) # shape (Npoints, 3)
+#             # Test points
+#             points = np.random.uniform(-1.0, 1.0, size=(Npoints, 2))  # shape (Npoints, 2)
+#             points = np.concatenate((points, 5.0 * np.ones((Npoints, 1))), axis=1) # shape (Npoints, 3)
 
-            # Projection (analytic)
-            start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=False)
-            elapsed_time = time.perf_counter() - start_time
-            pydistort_alljac_times.append(elapsed_time)
+#             # Projection (analytic)
+#             start_time = time.perf_counter()
+#             result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=False)
+#             elapsed_time = time.perf_counter() - start_time
+#             pydistort_alljac_times.append(elapsed_time)
 
-            # Projection (analytic, faster dx)
-            start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=True)
-            elapsed_time = time.perf_counter() - start_time
-            pydistort_alljac_faster_times.append(elapsed_time)
+#             # Projection (analytic, faster dx)
+#             start_time = time.perf_counter()
+#             result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=True)
+#             elapsed_time = time.perf_counter() - start_time
+#             pydistort_alljac_faster_times.append(elapsed_time)
 
-            # Projection (analytic)
-            start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=True)
-            elapsed_time = time.perf_counter() - start_time
-            pydistort_times.append(elapsed_time)
+#             # Projection (analytic)
+#             start_time = time.perf_counter()
+#             result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=True)
+#             elapsed_time = time.perf_counter() - start_time
+#             pydistort_times.append(elapsed_time)
 
-            # Projection (analytic)
-            start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=False)
-            elapsed_time = time.perf_counter() - start_time
-            pydistort_nojac_times.append(elapsed_time)
+#             # Projection (analytic)
+#             start_time = time.perf_counter()
+#             result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=False)
+#             elapsed_time = time.perf_counter() - start_time
+#             pydistort_nojac_times.append(elapsed_time)
 
-        # Print times in a table fomat:
-        if setup.VERBOSE():
-            print("\n\n ======== Zernike Distortion Project Points Time Comparison ========")
-            print(f"Npoints: {Npoints}")
-            print(f"{'Nzer':<15} {'pydistort (all Jacobians)':<30} {'pydistort (faster Jacobians)':<30} {'pydistort (cv2 Jacobians)':<30} {'pydistort (no Jacobians)':<30}")
-            for i, Nzer in enumerate(Nzer_list):
-                print(f"{Nzer:<15} {pydistort_alljac_times[i]:<30.4f} {pydistort_alljac_faster_times[i]:<30.4f} {pydistort_times[i]:<30.4f} {pydistort_nojac_times[i]:<30.4f}")
+#         # Print times in a table fomat:
+#         if setup.VERBOSE():
+#             print("\n\n ======== Zernike Distortion Project Points Time Comparison ========")
+#             print(f"Npoints: {Npoints}")
+#             print(f"{'Nzer':<15} {'pydistort (all Jacobians)':<30} {'pydistort (faster Jacobians)':<30} {'pydistort (cv2 Jacobians)':<30} {'pydistort (no Jacobians)':<30}")
+#             for i, Nzer in enumerate(Nzer_list):
+#                 print(f"{Nzer:<15} {pydistort_alljac_times[i]:<30.4f} {pydistort_alljac_faster_times[i]:<30.4f} {pydistort_times[i]:<30.4f} {pydistort_nojac_times[i]:<30.4f}")
 
-        if setup.CSV():
-            # Write times to a CSV file
-            csv_filename = "ZernikeDistortion_project_points_time_comparison.csv"
-            csv_filename = os.path.join(os.path.dirname(__file__), csv_filename)
-            with open(csv_filename, mode='w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(['Nzer', 'pydistort_alljac_times', 'pydistort_alljac_faster_times', 'pydistort_times', 'pydistort_nojac_times'])
-                for i, Nzer in enumerate(Nzer_list):
-                    writer.writerow([Nzer, pydistort_alljac_times[i], pydistort_alljac_faster_times[i], pydistort_times[i], pydistort_nojac_times[i]])
-
-
+#         if setup.CSV():
+#             # Write times to a CSV file
+#             csv_filename = "ZernikeDistortion_project_points_time_comparison.csv"
+#             csv_filename = os.path.join(os.path.dirname(__file__), csv_filename)
+#             with open(csv_filename, mode='w', newline='') as file:
+#                 writer = csv.writer(file)
+#                 writer.writerow(['Nzer', 'pydistort_alljac_times', 'pydistort_alljac_faster_times', 'pydistort_times', 'pydistort_nojac_times'])
+#                 for i, Nzer in enumerate(Nzer_list):
+#                     writer.writerow([Nzer, pydistort_alljac_times[i], pydistort_alljac_faster_times[i], pydistort_times[i], pydistort_nojac_times[i]])
 
 
-from pydistort import project_points_bis
 
-@pytest.mark.parametrize("Nparams", [5, 8, 12, 14])
-@pytest.mark.parametrize("mode", ["strong_coefficients", "weak_coefficients"])
-def test_pydistort_project_bis_vs_classic_project(Nparams, mode):
-    """Compare project_points_bis and project_points."""
-    distortion = setup.CV2_DISTORTION(Nparams, mode)
-
-    # Camera intrinsics
-    fx, fy = 1000.0, 950.0
-    cx, cy = 320.0, 240.0
-    K = np.array([[fx, 0, cx], [0, fy, cy], [0, 0, 1]])
-
-    # Rotation and translation
-    rvec = np.array([0.01, 0.02, 0.03])
-    tvec = np.array([0.1, -0.1, 0.2])    # small translation
-
-    # 3D points
-    points_3d = np.array([
-        [0.0, 0.0, 5.0],
-        [0.1, -0.1, 5.0],
-        [-0.1, 0.2, 5.0],
-        [0.2, 0.1, 5.0],
-        [-0.2, -0.2, 5.0]
-    ])
-
-    # Project with classic method
-    result_classic = project_points(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True)
-
-    # Project with bis method
-    result_bis = project_points_bis(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True)
-
-    # Comparaison
-    np.testing.assert_allclose(result_classic.image_points, result_bis.image_points, rtol=1e-5, atol=1e-8, equal_nan=True)
-
-    np.testing.assert_allclose(result_classic.jacobian_dp[:,:,:6], result_bis.jacobian_dp[:,:,:6], rtol=1e-5, atol=1e-8, equal_nan=True)
-    np.testing.assert_allclose(result_classic.jacobian_dp[:,:,6:10], result_bis.jacobian_dp[:,:,6 + Nparams:], rtol=1e-5, atol=1e-8, equal_nan=True)
-    np.testing.assert_allclose(result_classic.jacobian_dp[:,:,10:], result_bis.jacobian_dp[:,:,6:6 + Nparams], rtol=1e-5, atol=1e-8, equal_nan=True)
-
-    np.testing.assert_allclose(result_classic.jacobian_dx, result_bis.jacobian_dx, rtol=1e-5, atol=1e-8, equal_nan=True)
