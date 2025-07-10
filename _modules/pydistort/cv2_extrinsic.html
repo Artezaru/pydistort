@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.cv2_extrinsic &#8212; pydistort 2.0.8 documentation</title>
+    <title>pydistort.cv2_extrinsic &#8212; pydistort 3.0.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=722443bc"></script>
+    <script src="../../_static/documentation_options.js?v=08bfcbec"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/cv2_extrinsic';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.8 documentation</p>
+    <p class="title logo__title">pydistort 3.0.1 documentation</p>
   
 </a></div>
     
@@ -315,7 +315,7 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">py3dframe</span><span class="w"> </span><span class="kn">import</span> <span class="n">Frame</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extrinsic</span><span class="p">,</span> <span class="n">ExtrinsicResult</span><span class="p">,</span> <span class="n">InverseExtrinsicResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extrinsic</span>
 
 
 <div class="viewcode-block" id="Cv2Extrinsic">
@@ -436,13 +436,27 @@
         <span class="k">return</span> <span class="mi">6</span> <span class="c1"># The number of parameters is 6 (3 for rotation and 3 for translation) even if parameters are not set.</span>
     
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ExtrinsicResult</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">inverse_result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">InverseExtrinsicResult</span>
-    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jacobian_short_hand</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Short-hand notation for the Jacobian matrices with respect to the extrinsic parameters.</span>
+
+<span class="sd">        - ``dr``: The Jacobian of the normalized points with respect to the rotation vector. It has shape (..., 2, 3).</span>
+<span class="sd">        - ``dt``: The Jacobian of the normalized points with respect to the translation vector. It has shape (..., 2, 3).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Tuple[int, int, Optional[str]]]</span>
+<span class="sd">            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:</span>
+
+<span class="sd">            - start index (int): The starting index of the parameters to include in the custom Jacobian view.</span>
+<span class="sd">            - end index (int): The ending index of the parameters to include in the custom Jacobian view.</span>
+<span class="sd">            - doc (Optional[str]): A documentation string for the custom Jacobian view.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;dr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Jacobian with respect to the rotation vector (rvec)&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;dt&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Jacobian with respect to the translation vector (tvec)&quot;</span><span class="p">),</span>
+        <span class="p">}</span>
+
     <span class="c1"># =============================================</span>
     <span class="c1"># Implement the parameters property</span>
     <span class="c1"># =============================================</span>
@@ -473,35 +487,6 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Parameters must be a 1D array of shape (6,).&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">rotation_vector</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>  <span class="c1"># First 3 elements are the rotation vector</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">translation_vector</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>  <span class="c1"># Last 3 elements are the translation vector</span>
-
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_short_hand</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Property to return a dictionary of short-hand notation for the Jacobian matrices.</span>
-<span class="sd">        </span>
-<span class="sd">        This dictionary can be used to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.</span>
-
-<span class="sd">        .. code-block:: python</span>
-
-<span class="sd">            {</span>
-<span class="sd">                &quot;dk&quot;: (0, 2, &quot;Custom Jacobian view for two first parameters related to k1 and k2&quot;),</span>
-<span class="sd">                &quot;dother&quot;: (2, 4, &quot;Custom Jacobian view for other parameters related to k3 and k4&quot;),</span>
-<span class="sd">            }</span>
-<span class="sd">        </span>
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Dict[str, Tuple[int, int, Optional[str]]]</span>
-<span class="sd">            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:</span>
-
-<span class="sd">            - start index (int): The starting index of the parameters to include in the custom Jacobian view.</span>
-<span class="sd">            - end index (int): The ending index of the parameters to include in the custom Jacobian view.</span>
-<span class="sd">            - doc (Optional[str]): A documentation string for the custom Jacobian view.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;dr&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Jacobian with respect to the rotation vector (rvec)&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;dt&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;Jacobian with respect to the translation vector (tvec)&quot;</span><span class="p">),</span>
-        <span class="p">}</span>
 
     <span class="c1"># =============================================</span>
     <span class="c1"># translation vector</span>

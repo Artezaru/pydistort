@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.core.Extrinsic &#8212; pydistort 2.0.8 documentation</title>
+    <title>pydistort.core.Extrinsic &#8212; pydistort 3.0.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=722443bc"></script>
+    <script src="../_static/documentation_options.js?v=08bfcbec"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.8 documentation</p>
+    <p class="title logo__title">pydistort 3.0.1 documentation</p>
   
 </a></div>
     
@@ -286,6 +286,13 @@
 <li class="toctree-l1"><a class="reference internal" href="cv2_distortion.html">pydistort.Cv2Distortion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions (as OPENCV):</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
@@ -390,6 +397,23 @@
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.core.Extrinsic._abc_impl" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic._inverse_result_class">
+<span class="sig-name descname"><span class="pre">_inverse_result_class</span></span><a class="headerlink" href="#pydistort.core.Extrinsic._inverse_result_class" title="Link to this definition">#</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pydistort.core.InverseExtrinsicResult" title="pydistort.core.extrinsic.InverseExtrinsicResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">InverseExtrinsicResult</span></code></a></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic._jacobian_short_hand">
+<span class="sig-name descname"><span class="pre">_jacobian_short_hand</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#pydistort.core.Extrinsic._jacobian_short_hand" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic._result_class">
+<span class="sig-name descname"><span class="pre">_result_class</span></span><a class="headerlink" href="#pydistort.core.Extrinsic._result_class" title="Link to this definition">#</a></dt>
+<dd><p>alias of <a class="reference internal" href="#pydistort.core.ExtrinsicResult" title="pydistort.core.extrinsic.ExtrinsicResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExtrinsicResult</span></code></a></p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="pydistort.core.Extrinsic.input_dim">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.core.Extrinsic.input_dim" title="Link to this definition">#</a></dt>
@@ -406,21 +430,6 @@
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="pydistort.core.Extrinsic.inverse_result_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inverse_result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.core.Extrinsic.inverse_result_class" title="Link to this definition">#</a></dt>
-<dd><p>Property to return the class used for the result of the inverse transformation.</p>
-<p>The default is <cite>TransformResult</cite>, but subclasses can override this to return a different class.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The class used for the result of the inverse transformation.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>type</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
 <dt class="sig sig-object py" id="pydistort.core.Extrinsic.output_dim">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_dim</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pydistort.core.Extrinsic.output_dim" title="Link to this definition">#</a></dt>
 <dd><p>Property to return the output dimension of the transformation.</p>
@@ -431,21 +440,6 @@
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.core.Extrinsic.result_class">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">type</span></em><a class="headerlink" href="#pydistort.core.Extrinsic.result_class" title="Link to this definition">#</a></dt>
-<dd><p>Property to return the class used for the result of the transformation.</p>
-<p>The default is <cite>TransformResult</cite>, but subclasses can override this to return a different class.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The class used for the result of the transformation.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>type</p>
 </dd>
 </dl>
 </dd></dl>
@@ -573,10 +567,11 @@
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic"><code class="docutils literal notranslate"><span class="pre">Extrinsic</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._abc_impl"><code class="docutils literal notranslate"><span class="pre">Extrinsic._abc_impl</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic._inverse_result_class</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._jacobian_short_hand"><code class="docutils literal notranslate"><span class="pre">Extrinsic._jacobian_short_hand</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic._result_class</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.input_dim"><code class="docutils literal notranslate"><span class="pre">Extrinsic.input_dim</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic.inverse_result_class</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.output_dim"><code class="docutils literal notranslate"><span class="pre">Extrinsic.output_dim</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic.result_class</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.ExtrinsicResult"><code class="docutils literal notranslate"><span class="pre">ExtrinsicResult</span></code></a><ul class="nav section-nav flex-column">

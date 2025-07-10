@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.core.distortion &#8212; pydistort 2.0.8 documentation</title>
+    <title>pydistort.core.distortion &#8212; pydistort 3.0.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=722443bc"></script>
+    <script src="../../../_static/documentation_options.js?v=08bfcbec"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/core/distortion';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.8 documentation</p>
+    <p class="title logo__title">pydistort 3.0.1 documentation</p>
   
 </a></div>
     
@@ -444,6 +444,7 @@
 <span class="sd">    - ``undistort``: Alias for the `inverse_transform` method to remove distortion from a set of points.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># =============================================</span>
     <span class="c1"># Properties for ABC Transform Class</span>
     <span class="c1"># =============================================</span>
@@ -462,6 +463,10 @@
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">inverse_result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">InverseDistortionResult</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jacobian_short_hand</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
     
     <span class="c1"># =============================================</span>
     <span class="c1"># Aliases for Distortion Class</span>

@@ -1,4 +1,4 @@
 pydistort.undistort_points
 ==================================
 
-.. autofunction:: pydistort.undistort_points
+Not yet implemented.

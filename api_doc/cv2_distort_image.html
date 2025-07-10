@@ -1,0 +1,655 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pydistort.cv2_distort_image &#8212; pydistort 3.0.1 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=08bfcbec"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api_doc/cv2_distort_image';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pydistort.project_points" href="project_points.html" />
+    <link rel="prev" title="pydistort.cv2_undistort_image" href="cv2_undistort_image.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">pydistort 3.0.1 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API Reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage.html">
+    Usage
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><p aria-level="2" class="caption" role="heading"><span class="caption-text">Transformation Classes:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="transform.html">pydistort.core.Transform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_inversion.html">pydistort.core.TransformInversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transform_composition.html">pydistort.core.TranformComposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extrinsic.html">pydistort.core.Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.core.Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.core.Distortion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic and Intrinsic Classes:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_intrinsic.html">pydistort.Cv2Intrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="skew_intrinsic.html">pydistort.SkewIntrinsic</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Distortion Models:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="no_distortion.html">pydistort.NoDistortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_distortion.html">pydistort.Cv2Distortion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions (as OPENCV):</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.cv2_distort_image</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="undistort_points.html">pydistort.undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="undistort_image.html">pydistort.undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="distort_image.html">pydistort.distort_image</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API Reference</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.cv2_distort_image</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pydistort-cv2-distort-image">
+<h1>pydistort.cv2_distort_image<a class="headerlink" href="#pydistort-cv2-distort-image" title="Link to this heading">#</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pydistort.cv2_distort_image">
+<span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">cv2_distort_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distortion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="distortion.html#pydistort.core.Distortion" title="pydistort.core.distortion.Distortion"><span class="pre">Distortion</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'undistort'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpolation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'linear'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_distort_image.html#cv2_distort_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.cv2_distort_image" title="Link to this definition">#</a></dt>
+<dd><p>Distort an image using the camera intrinsic and distortion coefficients.</p>
+<p>This method use the same architecture as the <cite>cv2.undistort</cite> function from OpenCV, but it is implemented for the distortion and in a more flexible way to allow the use of different distortion models.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">pydistort.distort_image()</span></code> for a more general distort function that can handle different types of points and transformations (extrinsic, intrinsic, distortion).</p></li>
+</ul>
+</div>
+<p>The process to undistort an image is as follows:</p>
+<ol class="arabic simple">
+<li><p>The output pixels are converted to a normalized coordinate system using the intrinsic matrix K.</p></li>
+<li><p>The normalized points are undistorted by the distortion model using the coefficients <span class="math notranslate nohighlight">\(\{\lambda_1, \lambda_2, \lambda_3, \ldots\}\)</span>.</p></li>
+<li><p>The undistorted points are projected back to the input image coordinate system using the intrinsic matrix K.</p></li>
+<li><p>The distorted image is obtained by mapping the pixels from the original image to the distorted points.</p></li>
+</ol>
+<p>The given image <code class="docutils literal notranslate"><span class="pre">src</span></code> is assumed to be in the image coordinate system and expressed in 2D coordinates with shape (H, W, [C], [D]).
+If the user gives an identity matrix K, it is equivalent to giving directly the normalized points.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>For an image the X dimension corresponds to the width and the Y dimension corresponds to the height.</p></li>
+<li><p>Pixel [0, 1] is at XY = [1, 0] in the image coordinate system.</p></li>
+</ul>
+</div>
+<p>Linear interpolation is used for each method to compute the pixel values in the distorted image.</p>
+<p>Fill Values for the output image are set to 0.0.</p>
+<section id="method-1-undistort">
+<h2>METHOD 1 : Undistort<a class="headerlink" href="#method-1-undistort" title="Link to this heading">#</a></h2>
+<p>The mapping is performed using OpenCV’s <cite>cv2.remap</cite> function, which requires the source image and the mapping of pixel coordinates.
+The mapping of pixel coordinates is performed using the <code class="docutils literal notranslate"><span class="pre">undistort</span></code> method of the distortion model, which applies the inverse distortion to the normalized points.</p>
+<p>In this case, the output pixels (<code class="docutils literal notranslate"><span class="pre">distorted_image</span></code>) are projected back to the input image coordinate system using the intrinsic matrix K.
+Then an interpolation is performed in the input image where the known points are a perfect regular grid of pixels !</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Iterative non-linear optimization is used to find the undistorted points.</p>
+</div>
+<p>Different interpolation methods can be used, such as “linear”, “nearest”, etc. The default is “linear”.
+The table below shows the available interpolation methods for METHOD 1:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Interpolation</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>“linear”</p></td>
+<td><p>Linear interpolation (default). Use cv2.INTER_LINEAR.</p></td>
+</tr>
+<tr class="row-odd"><td><p>“nearest”</p></td>
+<td><p>Nearest neighbor interpolation. Use cv2.INTER_NEAREST.</p></td>
+</tr>
+<tr class="row-even"><td><p>“cubic”</p></td>
+<td><p>Bicubic interpolation. Use cv2.INTER_CUBIC.</p></td>
+</tr>
+<tr class="row-odd"><td><p>“area”</p></td>
+<td><p>Resampling using pixel area relation. Use cv2.INTER_AREA.</p></td>
+</tr>
+<tr class="row-even"><td><p>“lanczos4”</p></td>
+<td><p>Lanczos interpolation over 8x8 pixel neighborhood. Use cv2.INTER_LANCZOS4.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="method-2-distort">
+<h2>METHOD 2 : Distort<a class="headerlink" href="#method-2-distort" title="Link to this heading">#</a></h2>
+<p>The mapping is performed using scipy <cite>scipy.interpolate</cite> function, which requires the source image and the mapping of pixel coordinates.
+The mapping of pixel coordinates is performed using the <code class="docutils literal notranslate"><span class="pre">distort</span></code> method of the distortion model, which applies the distortion to the normalized points.</p>
+<p>In this case, the input pixels (<code class="docutils literal notranslate"><span class="pre">src</span></code>) are projected to the output image coordinate system using the intrinsic matrix K.
+Then an interpolation is performed in the output image for all the output pixels where the known points are a irregular cloud of points.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Time computation is higher than the first method.</p></li>
+<li><p>Output values are not integer values (even if the input image is integer), so the user must apply (numpy.round) to the output image to get integer values.</p></li>
+</ul>
+</div>
+<p>Different interpolation methods can be used, such as “linear”, etc. The default is “linear”.
+The table below shows the available interpolation methods for METHOD 2:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Interpolation</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>“linear”</p></td>
+<td><p>Linear interpolation (default). Use scipy.interpolate.LinearNDInterpolator</p></td>
+</tr>
+<tr class="row-odd"><td><p>“nearest”</p></td>
+<td><p>Nearest neighbor interpolation. Use scipy.interpolate.NearestNDInterpolator</p></td>
+</tr>
+<tr class="row-even"><td><p>“clough”</p></td>
+<td><p>Piecewise cubic interpolation. Use scipy.interpolate.CloughTocher2DInterpolator.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">param src<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The input image to be undistorted. Shape (H, W, …) where H is the height, W is the width.</p>
+</dd>
+<dt class="field-even">type src<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+<dt class="field-odd">param K<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The intrinsic camera matrix (or vector). Shape (3, 3) or (4,).
+If None, the identity intrinsic matrix is used.</p>
+</dd>
+<dt class="field-even">type K<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[numpy.ndarray]</p>
+</dd>
+<dt class="field-odd">param distortion<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The distortion model to be applied. If None, no distortion is applied.</p>
+</dd>
+<dt class="field-even">type distortion<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optional[Distortion]</p>
+</dd>
+<dt class="field-odd">param method<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The method to use for undistortion. The value can be “undistort” or “distort”.</p>
+<ul class="simple">
+<li><p>“undistort”: Uses OpenCV’s <cite>cv2.remap</cite> and the <code class="docutils literal notranslate"><span class="pre">undistort</span></code> method of the distortion model.</p></li>
+<li><p>“distort”: Uses <cite>scipy.interpolate</cite> and the <code class="docutils literal notranslate"><span class="pre">distort</span></code> method of the distortion model.</p></li>
+</ul>
+</dd>
+<dt class="field-even">type method<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param interpolation<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The interpolation method to be used for remapping the pixels. Default is “linear”.</p>
+</dd>
+<dt class="field-even">type interpolation<span class="colon">:</span></dt>
+<dd class="field-even"><p>str, optional</p>
+</dd>
+<dt class="field-odd">param kwargs<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Additional arguments to be passed to the distortion model “undistort” method.</p>
+</dd>
+<dt class="field-even">type kwargs<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The undistorted image. Shape (H, W, …) where H is the height.</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydistort</span><span class="w"> </span><span class="kn">import</span> <span class="n">cv2_distort_image</span><span class="p">,</span> <span class="n">Cv2Distortion</span>
+
+<span class="c1"># Define the intrinsic camera matrix</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">320.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">240.0</span><span class="p">],</span>
+                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+
+<span class="c1"># Define the distortion model (optional)</span>
+<span class="n">distortion</span> <span class="o">=</span> <span class="n">Cv2Distortion</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+
+<span class="c1"># Load the image to be distorted</span>
+<span class="n">src</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;image.jpg&#39;</span><span class="p">)</span>
+
+<span class="c1"># Distort the image</span>
+<span class="n">distorted_image</span> <span class="o">=</span> <span class="n">cv2_distort_image</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">distortion</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="cv2_undistort_image.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">pydistort.cv2_undistort_image</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="project_points.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">pydistort.project_points</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.cv2_distort_image"><code class="docutils literal notranslate"><span class="pre">cv2_distort_image()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api_doc/cv2_distort_image.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025-%Y, Artezaru.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

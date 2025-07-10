@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.cv2_intrinsic &#8212; pydistort 2.0.8 documentation</title>
+    <title>pydistort.cv2_intrinsic &#8212; pydistort 3.0.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=722443bc"></script>
+    <script src="../../_static/documentation_options.js?v=08bfcbec"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/cv2_intrinsic';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.8 documentation</p>
+    <p class="title logo__title">pydistort 3.0.1 documentation</p>
   
 </a></div>
     
@@ -310,135 +310,12 @@
                 <article class="bd-article">
                   
   <h1>Source code for pydistort.cv2_intrinsic</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Intrinsic</span><span class="p">,</span> <span class="n">IntrinsicResult</span><span class="p">,</span> <span class="n">InverseIntrinsicResult</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Intrinsic</span>
 
-
-
-
-
-
-
-<div class="viewcode-block" id="Cv2IntrinsicResult">
-<a class="viewcode-back" href="../../api_doc/cv2_intrinsic.html#pydistort.Cv2IntrinsicResult">[docs]</a>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Cv2IntrinsicResult</span><span class="p">(</span><span class="n">IntrinsicResult</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Subclass of :class:`pydistort.core.IntrinsicResult` to represent the result of the intrinsic transformation in the cv2 format.</span>
-
-<span class="sd">    This class is used to store the result of transforming the ``distorted_points`` (or ``normalized_points`` if no distortion is applied) to ``image_points``, and the optional Jacobians.</span>
-
-<span class="sd">    - ``transformed_points``: The transformed image points in the camera coordinate system. Shape (..., 2).</span>
-<span class="sd">    - ``jacobian_dx``: The Jacobian of the image points with respect to the input distorted points if ``dx`` is True. Otherwise None. Shape (..., 2, 2), where the last dimension represents (dx, dy).</span>
-<span class="sd">    - ``jacobian_dp``: The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 4), where the last dimension represents (fx, fy, cx, cy).</span>
-
-<span class="sd">    Some properties are provided for convenience:</span>
-
-<span class="sd">    - ``image_points``: Alias for ``transformed_points`` to represent the transformed image points. Shape (..., 2).</span>
-<span class="sd">    - ``jacobian_df``: Part of the Jacobian with respect to the focal lengths (fx, fy). Shape (..., 2, 2).</span>
-<span class="sd">    - ``jacobian_dc``: Part of the Jacobian with respect to the principal point (cx, cy). Shape (..., 2, 2).</span>
-
-<span class="sd">    .. note::</span>
-
-<span class="sd">        If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.</span>
-
-<span class="sd">    .. warning::</span>
-
-<span class="sd">        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the Jacobian of the image points with respect to the focal lengths.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Optional[numpy.ndarray]</span>
-<span class="sd">            The Jacobian with respect to focal lengths (df). Shape (..., 2, 2).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the Jacobian of the image points with respect to the principal point.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Optional[numpy.ndarray]</span>
-<span class="sd">            The Jacobian with respect to principal point (dc). Shape (..., 2, 2).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span></div>
-
-    
-
-
-<div class="viewcode-block" id="InverseCv2IntrinsicResult">
-<a class="viewcode-back" href="../../api_doc/cv2_intrinsic.html#pydistort.InverseCv2IntrinsicResult">[docs]</a>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">InverseCv2IntrinsicResult</span><span class="p">(</span><span class="n">InverseIntrinsicResult</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Subclass of :class:`pydistort.core.InverseIntrinsicResult` to represent the result of the inverse intrinsic transformation in the cv2 format.</span>
-
-<span class="sd">    This class is used to store the result of transforming the ``image_points`` back to ``distorted_points`` (or ``normalized_points`` if no distortion is applied), and the optional Jacobians.</span>
-
-<span class="sd">    - ``transformed_points``: The transformed distorted points in the camera coordinate system. Shape (..., 2).</span>
-<span class="sd">    - ``jacobian_dx``: The Jacobian of the distorted points with respect to the input image points if ``dx`` is True. Otherwise None. Shape (..., 2, 2), where the last dimension represents (dx, dy).</span>
-<span class="sd">    - ``jacobian_dp``: The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 4), where the last dimension represents (fx, fy, cx, cy).</span>
-
-<span class="sd">    Some properties are provided for convenience:</span>
-
-<span class="sd">    - ``distorted_points``: Alias for ``transformed_points`` to represent the transformed distorted points. Shape (..., 2).</span>
-<span class="sd">    - ``jacobian_df`` : Part of the Jacobian with respect to the focal lengths (fx, fy). Shape (..., 2, 2).</span>
-<span class="sd">    - ``jacobian_dc`` : Part of the Jacobian with respect to the principal point (cx, cy). Shape (..., 2, 2).</span>
-
-<span class="sd">    .. note::</span>
-
-<span class="sd">        If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.</span>
-
-<span class="sd">    .. warning::</span>
-
-<span class="sd">        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.</span>
-
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_df</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the Jacobian of the distorted points with respect to the focal lengths.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Optional[numpy.ndarray]</span>
-<span class="sd">            The Jacobian with respect to focal lengths (df). Shape (..., 2, 2).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">jacobian_dc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Get the Jacobian of the distorted points with respect to the principal point.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        Optional[numpy.ndarray]</span>
-<span class="sd">            The Jacobian with respect to principal point (dc). Shape (..., 2, 2).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">None</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">jacobian_dp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span></div>
-
-    
 
 
 
@@ -475,6 +352,11 @@
 <span class="sd">    .. warning::</span>
 
 <span class="sd">        No ``skew`` parameter is included in the intrinsic matrix in this implementation. If you need to include a skew parameter, you can use :class:`pydistort.SkewIntrinsic`.</span>
+
+<span class="sd">    Two short-hand notations are provided to access the jacobian with respect to focal length and principal point:</span>
+
+<span class="sd">    - ``jacobian_df``: The Jacobian of the image points with respect to the focal length parameters. It has shape (..., 2, 2), where the last dimension represents (df_x, df_y).</span>
+<span class="sd">    - ``jacobian_dc``: The Jacobian of the image points with respect to the principal point parameters. It has shape (..., 2, 2), where the last dimension represents (dc_x, dc_y).</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -552,13 +434,27 @@
         <span class="k">return</span> <span class="mi">4</span>  <span class="c1"># The intrinsic parameters are (fx, fy, cx, cy) even if some of them are not set.</span>
     
     <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">Cv2IntrinsicResult</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">inverse_result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">InverseCv2IntrinsicResult</span>
-    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_jacobian_short_hand</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Short-hand notation for the Jacobian matrices with respect to the intrinsic parameters.</span>
+
+<span class="sd">        - ``df``: The Jacobian of the normalized points with respect to the focal length parameters. It has shape (..., 2, 2), where the last dimension represents (df_x, df_y).</span>
+<span class="sd">        - ``dc``: The Jacobian of the normalized points with respect to the principal point parameters. It has shape (..., 2, 2), where the last dimension represents (dc_x, dc_y).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict[str, Tuple[int, int, Optional[str]]]</span>
+<span class="sd">            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:</span>
+
+<span class="sd">            - start index (int): The starting index of the parameters to include in the custom Jacobian view.</span>
+<span class="sd">            - end index (int): The ending index of the parameters to include in the custom Jacobian view.</span>
+<span class="sd">            - doc (Optional[str]): A documentation string for the custom Jacobian view.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;df&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Jacobian of the image points with respect to the focal length parameters (fx, fy)&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;dc&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Jacobian of the image points with respect to the principal point parameters (cx, cy)&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.core.extrinsic &#8212; pydistort 2.0.8 documentation</title>
+    <title>pydistort.core.extrinsic &#8212; pydistort 3.0.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=722443bc"></script>
+    <script src="../../../_static/documentation_options.js?v=08bfcbec"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/core/extrinsic';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.8 documentation</p>
+    <p class="title logo__title">pydistort 3.0.1 documentation</p>
   
 </a></div>
     
@@ -425,6 +425,11 @@
 <span class="sd">        - &quot;_inverse_transform&quot;: to remove extrinsic from a set of points. The transformation is applied to the ``normalized_points`` (:math:`x_N`) to obtain the ``world_3dpoints`` (:math:`X_W`).</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_result_class</span> <span class="o">=</span> <span class="n">ExtrinsicResult</span>
+    <span class="n">_inverse_result_class</span> <span class="o">=</span> <span class="n">InverseExtrinsicResult</span>
+    <span class="n">_jacobian_short_hand</span> <span class="o">=</span> <span class="p">{}</span>
+
     <span class="c1"># =============================================</span>
     <span class="c1"># Properties for ABC Transform Class</span>
     <span class="c1"># =============================================</span>
@@ -434,16 +439,9 @@
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">output_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">2</span> <span class="c1"># The output is a 2D point (x, y)</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ExtrinsicResult</span>
-    
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">inverse_result_class</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">type</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">InverseExtrinsicResult</span></div>
+        <span class="k">return</span> <span class="mi">2</span> <span class="c1"># The output is a 2D point (x, y)</span></div>
 
+    
 </pre></div>
 
                 </article>

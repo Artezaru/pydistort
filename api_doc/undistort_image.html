@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.undistort_image &#8212; pydistort 2.0.8 documentation</title>
+    <title>pydistort.undistort_image &#8212; pydistort 3.0.1 documentation</title>
   
   
   
@@ -38,10 +38,9 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=722443bc"></script>
+    <script src="../_static/documentation_options.js?v=08bfcbec"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_doc/undistort_image';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -111,7 +110,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.8 documentation</p>
+    <p class="title logo__title">pydistort 3.0.1 documentation</p>
   
 </a></div>
     
@@ -286,6 +285,13 @@
 <li class="toctree-l1"><a class="reference internal" href="cv2_distortion.html">pydistort.Cv2Distortion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions (as OPENCV):</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
@@ -354,65 +360,7 @@
                   
   <section id="pydistort-undistort-image">
 <h1>pydistort.undistort_image<a class="headerlink" href="#pydistort-undistort-image" title="Link to this heading">#</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="pydistort.undistort_image">
-<span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">undistort_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distortion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="distortion.html#pydistort.core.Distortion" title="pydistort.core.distortion.Distortion"><span class="pre">Distortion</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/undistort_image.html#undistort_image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.undistort_image" title="Link to this definition">#</a></dt>
-<dd><p>Undistort an image using the camera intrinsic and distortion coefficients.</p>
-<p>The process to undistort an image is as follows:</p>
-<ol class="arabic simple">
-<li><p>The output pixels are converted to a normalized coordinate system using the intrinsic matrix K.</p></li>
-<li><p>The normalized points are distorted by the distortion model using the coefficients <span class="math notranslate nohighlight">\(\{\lambda_1, \lambda_2, \lambda_3, \ldots\}\)</span>.</p></li>
-<li><p>The distorted points are projected back to the input image coordinate system using the intrinsic matrix K.</p></li>
-<li><p>The undistorted image is obtained by mapping the pixels from the original image to the undistorted points.</p></li>
-</ol>
-<p>The given image <code class="docutils literal notranslate"><span class="pre">src</span></code> is assumed to be in the image coordinate system and expressed in 2D coordinates with shape (H, W, [C], [D]).
-If the user gives an identity matrix K, it is equivalent to giving directly the normalized points.</p>
-<p>The mapping is performed using OpenCV’s <cite>cv2.remap</cite> function, which requires the source image and the mapping of pixel coordinates.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>For an image the X dimension corresponds to the width and the Y dimension corresponds to the height.</p></li>
-<li><p>Pixel [0, 1] is at XY = [1, 0] in the image coordinate system.</p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>src</strong> (<em>numpy.ndarray</em>) – The input image to be undistorted. Shape (H, W, …) where H is the height, W is the width.</p></li>
-<li><p><strong>K</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The intrinsic camera matrix (or vector). Shape (3, 3) or (4,).
-If None, the identity intrinsic matrix is used.</p></li>
-<li><p><strong>distortion</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="distortion.html#pydistort.core.Distortion" title="pydistort.core.Distortion"><em>Distortion</em></a><em>]</em>) – The distortion model to be applied. If None, no distortion is applied.</p></li>
-<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional arguments to be passed to the distortion model “distort” method.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The undistorted image. Shape (H, W, …) where H is the height, W is the width.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>numpy.ndarray</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydistort</span><span class="w"> </span><span class="kn">import</span> <span class="n">undistort_points</span><span class="p">,</span> <span class="n">Cv2Distortion</span>
-
-<span class="c1"># Define the intrinsic camera matrix</span>
-<span class="n">K</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">320.0</span><span class="p">],</span>
-                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">240.0</span><span class="p">],</span>
-                <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
-
-<span class="c1"># Define the distortion model (optional)</span>
-<span class="n">distortion</span> <span class="o">=</span> <span class="n">Cv2Distortion</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
-
-<span class="c1"># Load the image to be undistorted</span>
-<span class="n">src</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;image.jpg&#39;</span><span class="p">)</span>
-
-<span class="c1"># Undistort the image</span>
-<span class="n">undistorted_image</span> <span class="o">=</span> <span class="n">undistort_image</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">distortion</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd></dl>
-
+<p>Not yet implemented.</p>
 </section>
 
 
@@ -453,18 +401,6 @@ If None, the identity intrinsic matrix is used.</p></li>
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.undistort_image"><code class="docutils literal notranslate"><span class="pre">undistort_image()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.core.Intrinsic &#8212; pydistort 2.0.8 documentation</title>
+    <title>pydistort.core.Intrinsic &#8212; pydistort 3.0.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=722443bc"></script>
+    <script src="../_static/documentation_options.js?v=08bfcbec"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.8 documentation</p>
+    <p class="title logo__title">pydistort 3.0.1 documentation</p>
   
 </a></div>
     
@@ -286,6 +286,13 @@
 <li class="toctree-l1"><a class="reference internal" href="cv2_distortion.html">pydistort.Cv2Distortion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions (as OPENCV):</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
@@ -389,6 +396,33 @@
 <dt class="sig sig-object py" id="pydistort.core.Intrinsic._abc_impl">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.core.Intrinsic._abc_impl" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.core.Intrinsic._jacobian_short_hand">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_jacobian_short_hand</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#pydistort.core.Intrinsic._jacobian_short_hand" title="Link to this definition">#</a></dt>
+<dd><p>Property to return a dictionary of short-hand notation for the Jacobian matrices.</p>
+<p>This dictionary can be used to add custom views of the <cite>jacobian_dp</cite> matrix with respect to the parameters of the transformation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;dk&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Custom Jacobian view for two first parameters related to k1 and k2&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;dother&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Custom Jacobian view for other parameters related to k3 and k4&quot;</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>A dictionary where keys are names of the custom Jacobian views and values are tuples containing:</p>
+<ul class="simple">
+<li><p>start index (int): The starting index of the parameters to include in the custom Jacobian view.</p></li>
+<li><p>end index (int): The ending index of the parameters to include in the custom Jacobian view.</p></li>
+<li><p>doc (Optional[str]): A documentation string for the custom Jacobian view.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Tuple[int, int, Optional[str]]]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pydistort.core.Intrinsic.input_dim">
@@ -581,6 +615,7 @@
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Intrinsic"><code class="docutils literal notranslate"><span class="pre">Intrinsic</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Intrinsic._abc_impl"><code class="docutils literal notranslate"><span class="pre">Intrinsic._abc_impl</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Intrinsic._jacobian_short_hand"><code class="docutils literal notranslate"><span class="pre">Intrinsic._jacobian_short_hand</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Intrinsic.input_dim"><code class="docutils literal notranslate"><span class="pre">Intrinsic.input_dim</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Intrinsic.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Intrinsic.inverse_result_class</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Intrinsic.output_dim"><code class="docutils literal notranslate"><span class="pre">Intrinsic.output_dim</span></code></a></li>

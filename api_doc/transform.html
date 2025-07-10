@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.core.Transform &#8212; pydistort 2.0.8 documentation</title>
+    <title>pydistort.core.Transform &#8212; pydistort 3.0.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=722443bc"></script>
+    <script src="../_static/documentation_options.js?v=08bfcbec"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 2.0.8 documentation</p>
+    <p class="title logo__title">pydistort 3.0.1 documentation</p>
   
 </a></div>
     
@@ -286,6 +286,13 @@
 <li class="toctree-l1"><a class="reference internal" href="cv2_distortion.html">pydistort.Cv2Distortion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
 </ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions (as OPENCV):</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
+</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
@@ -379,9 +386,9 @@
 <p>This class provides the base for all transformations in the stenopic camera model. It defines the interface for extrinsic, distortion, and intrinsic transformations.</p>
 <p>Each sub-classes must implement the following methods and properties:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">input_dim</span></code>: (attribute) The dimension of the input points (should be 2 for 2D points).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">output_dim</span></code>: (attribute) The dimension of the output points (should be 2 for 2D points).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">parameters</span></code> (attribute) The parameters of the transformation in a 1D numpy array of shape (Nparams,).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">input_dim</span></code>: (property) The dimension of the input points (should be 2 for 2D points).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_dim</span></code>: (property) The dimension of the output points (should be 2 for 2D points).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">parameters</span></code> (property and setter) The parameters of the transformation in a 1D numpy array of shape (Nparams,).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">is_set</span></code>: (method) Check if the transformation is set (i.e., if the parameters are initialized).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">_transform</span></code>: (method) Apply the transformation to the given points.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">_inverse_transform</span></code>: (method) Apply the inverse transformation to the given points.</p></li>
@@ -390,7 +397,7 @@
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">result_class</span></code>: (property) The class used for the result of the transformation (sub-class of <code class="docutils literal notranslate"><span class="pre">TransformResult</span></code>). Default is <a class="reference internal" href="#pydistort.core.TransformResult" title="pydistort.core.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.core.TransformResult</span></code></a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">inverse_result_class</span></code>: (property) The class used for the result of the inverse transformation (sub-class of <code class="docutils literal notranslate"><span class="pre">TransformResult</span></code>). Default is <a class="reference internal" href="#pydistort.core.TransformResult" title="pydistort.core.TransformResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.core.TransformResult</span></code></a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">jacobian_short_hand</span></code>: (property) A dictionary of short-hand notation for the Jacobian matrices, which can be used to add custom views of the <code class="docutils literal notranslate"><span class="pre">jacobian_dp</span></code> matrix with respect to the parameters of the transformation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">_jacobian_short_hand</span></code>: (property) A dictionary of short-hand notation for the Jacobian matrices, which can be used to add custom views of the <code class="docutils literal notranslate"><span class="pre">jacobian_dp</span></code> matrix with respect to the parameters of the transformation.</p></li>
 </ul>
 <p>More details on the transformation methods are provided in the <cite>transform</cite> and <cite>inverse_transform</cite> methods.</p>
 <div class="admonition seealso">
@@ -450,6 +457,33 @@
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pydistort.core.Transform._jacobian_short_hand">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_jacobian_short_hand</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pydistort.core.Transform._jacobian_short_hand" title="Link to this definition">#</a></dt>
+<dd><p>Property to return a dictionary of short-hand notation for the Jacobian matrices.</p>
+<p>This dictionary can be used to add custom views of the <cite>jacobian_dp</cite> matrix with respect to the parameters of the transformation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s2">&quot;dk&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Custom Jacobian view for two first parameters related to k1 and k2&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;dother&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Custom Jacobian view for other parameters related to k3 and k4&quot;</span><span class="p">),</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><p>A dictionary where keys are names of the custom Jacobian views and values are tuples containing:</p>
+<ul class="simple">
+<li><p>start index (int): The starting index of the parameters to include in the custom Jacobian view.</p></li>
+<li><p>end index (int): The ending index of the parameters to include in the custom Jacobian view.</p></li>
+<li><p>doc (Optional[str]): A documentation string for the custom Jacobian view.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict[str, Tuple[int, int, Optional[str]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -603,33 +637,6 @@ Please use this parameter with caution, as it may lead to unexpected results if 
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pydistort.core.Transform.jacobian_short_hand">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">jacobian_short_hand</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pydistort.core.Transform.jacobian_short_hand" title="Link to this definition">#</a></dt>
-<dd><p>Property to return a dictionary of short-hand notation for the Jacobian matrices.</p>
-<p>This dictionary can be used to add custom views of the <cite>jacobian_dp</cite> matrix with respect to the parameters of the transformation.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-    <span class="s2">&quot;dk&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;Custom Jacobian view for two first parameters related to k1 and k2&quot;</span><span class="p">),</span>
-    <span class="s2">&quot;dother&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Custom Jacobian view for other parameters related to k3 and k4&quot;</span><span class="p">),</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><p>A dictionary where keys are names of the custom Jacobian views and values are tuples containing:</p>
-<ul class="simple">
-<li><p>start index (int): The starting index of the parameters to include in the custom Jacobian view.</p></li>
-<li><p>end index (int): The ending index of the parameters to include in the custom Jacobian view.</p></li>
-<li><p>doc (Optional[str]): A documentation string for the custom Jacobian view.</p></li>
-</ul>
-</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dict[str, Tuple[int, int, Optional[str]]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -970,6 +977,31 @@ Shape (…, output_dim, Nparams).</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.core.TransformResult.add_jacobian">
+<span class="sig-name descname"><span class="pre">add_jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/pydistort/core/transform.html#TransformResult.add_jacobian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.core.TransformResult.add_jacobian" title="Link to this definition">#</a></dt>
+<dd><p>Add a custom view of the <cite>jacobian_dp</cite> matrix to the <cite>TransformResult</cite> object.</p>
+<p>This method allows to add custom views of the <cite>jacobian_dp</cite> matrix with respect to the parameters of the transformation.
+The custom Jacobian can be accessed using the <cite>name</cite> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the custom Jacobian view.</p></li>
+<li><p><strong>start</strong> (<em>int</em>) – The starting index of the parameters to include in the custom Jacobian view.</p></li>
+<li><p><strong>end</strong> (<em>int</em>) – The ending index of the parameters to include in the custom Jacobian view.</p></li>
+<li><p><strong>doc</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – A documentation string for the custom Jacobian view. Default is None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.core.TransformResult.describe_jacobians">
+<span class="sig-name descname"><span class="pre">describe_jacobians</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/core/transform.html#TransformResult.describe_jacobians"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.core.TransformResult.describe_jacobians" title="Link to this definition">#</a></dt>
+<dd><p>Print the descriptions of the custom Jacobian views.</p>
+<p>This method prints the names and documentation strings of the custom Jacobian views added to the <cite>TransformResult</cite> object.</p>
+</dd></dl>
+
 </dd></dl>
 
 </section>
@@ -1025,12 +1057,12 @@ Shape (…, output_dim, Nparams).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform.Nparams"><code class="docutils literal notranslate"><span class="pre">Transform.Nparams</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform._abc_impl"><code class="docutils literal notranslate"><span class="pre">Transform._abc_impl</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform._inverse_transform"><code class="docutils literal notranslate"><span class="pre">Transform._inverse_transform()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform._jacobian_short_hand"><code class="docutils literal notranslate"><span class="pre">Transform._jacobian_short_hand</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform._transform"><code class="docutils literal notranslate"><span class="pre">Transform._transform()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform.input_dim"><code class="docutils literal notranslate"><span class="pre">Transform.input_dim</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform.inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Transform.inverse_result_class</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform.inverse_transform"><code class="docutils literal notranslate"><span class="pre">Transform.inverse_transform()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform.is_set"><code class="docutils literal notranslate"><span class="pre">Transform.is_set()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform.jacobian_short_hand"><code class="docutils literal notranslate"><span class="pre">Transform.jacobian_short_hand</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform.optimize_input_points"><code class="docutils literal notranslate"><span class="pre">Transform.optimize_input_points()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform.optimize_parameters"><code class="docutils literal notranslate"><span class="pre">Transform.optimize_parameters()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Transform.output_dim"><code class="docutils literal notranslate"><span class="pre">Transform.output_dim</span></code></a></li>
@@ -1044,6 +1076,8 @@ Shape (…, output_dim, Nparams).</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.TransformResult.transformed_points"><code class="docutils literal notranslate"><span class="pre">TransformResult.transformed_points</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.TransformResult.jacobian_dx"><code class="docutils literal notranslate"><span class="pre">TransformResult.jacobian_dx</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.TransformResult.jacobian_dp"><code class="docutils literal notranslate"><span class="pre">TransformResult.jacobian_dp</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.TransformResult.add_jacobian"><code class="docutils literal notranslate"><span class="pre">TransformResult.add_jacobian()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.TransformResult.describe_jacobians"><code class="docutils literal notranslate"><span class="pre">TransformResult.describe_jacobians()</span></code></a></li>
 </ul>
 </li>
 </ul>
