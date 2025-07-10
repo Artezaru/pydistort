@@ -1,4 +1,10 @@
 pydistort.project_points
 ==========================
 
-Not yet implemented.
+.. autofunction:: pydistort.project_points
+
+
+.. autoclass:: pydistort.ProjectPointsResult
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -3,9 +3,9 @@ import numpy
 
 
 from .core.distortion import Distortion
-from .no_distortion import NoDistortion
-from .cv2_intrinsic import Cv2Intrinsic
-from .cv2_extrinsic import Cv2Extrinsic
+from .distortion_objects.no_distortion import NoDistortion
+from .intrinsic_objects.cv2_intrinsic import Cv2Intrinsic
+from .extrinsic_objects.cv2_extrinsic import Cv2Extrinsic
 
 
 
@@ -52,7 +52,7 @@ def cv2_undistort_points(
         If None, the identity intrinsic matrix is used.
 
     distortion : Optional[Distortion]
-        The distortion model to be applied to the image points.
+        The distortion model to be applied to the normalized points.
         If None, a zero distortion is applied.
 
     R : Optional[numpy.ndarray], optional

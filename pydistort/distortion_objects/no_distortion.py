@@ -1,7 +1,7 @@
 from typing import Optional, Tuple
 import numpy
 
-from .core.distortion import Distortion
+from ..core.distortion import Distortion
 
 class NoDistortion(Distortion):
     r"""
@@ -33,7 +33,7 @@ class NoDistortion(Distortion):
         """
         return True
     
-    def _transform(self, normalized_points: numpy.ndarray, *, dx = True, dp = True) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(self, normalized_points: numpy.ndarray, *, dx = False, dp = False, **kwargs) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         """
         Where no distortion is applied, the normalized points are returned as distorted points.
 
@@ -51,10 +51,10 @@ class NoDistortion(Distortion):
             The points in normalized coordinates to be transformed. Shape (Npoints, 2).
 
         dx : bool, optional
-            If True, the jacobian with respect to the normalized points is computed. Default is True
+            If True, the jacobian with respect to the normalized points is computed. Default is False
 
         dp : bool, optional
-            If True, the jacobian with respect to the distortion parameters is computed. Default is True
+            If True, the jacobian with respect to the distortion parameters is computed. Default is False
 
         Returns
         -------
@@ -79,7 +79,7 @@ class NoDistortion(Distortion):
         return distorted_points, jacobian_dx, jacobian_dp
     
     
-    def _inverse_transform(self, distorted_points: numpy.ndarray, *, dx = True, dp = True) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _inverse_transform(self, distorted_points: numpy.ndarray, *, dx = False, dp = False, **kwargs) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         """
         The inverse transform for the no distortion model is the same as the transform, since the distorted points are equal to the normalized points.
 
@@ -89,10 +89,10 @@ class NoDistortion(Distortion):
             The points in distorted coordinates to be transformed. Shape (Npoints, 2).
 
         dx : bool, optional
-            If True, the jacobian with respect to the distorted points is computed. Default is True
+            If True, the jacobian with respect to the distorted points is computed. Default is False
 
         dp : bool, optional
-            If True, the jacobian with respect to the distortion parameters is computed. Default is True
+            If True, the jacobian with respect to the distortion parameters is computed. Default is False
 
         Returns
         -------

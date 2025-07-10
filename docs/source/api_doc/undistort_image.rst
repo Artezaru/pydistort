@@ -1,4 +1,4 @@
 pydistort.undistort_image
 ==================================
 
-Not yet implemented.
+.. autofunction:: pydistort.undistort_image

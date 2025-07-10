@@ -3,7 +3,7 @@ import numpy
 from py3dframe import Frame
 import cv2
 
-from .core import Extrinsic
+from ..core import Extrinsic
 
 
 class Cv2Extrinsic(Extrinsic):
@@ -371,7 +371,7 @@ class Cv2Extrinsic(Extrinsic):
         return self._rvec is not None and self._tvec is not None
     
 
-    def _transform(self, world_3dpoints: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(self, world_3dpoints: numpy.ndarray, *, dx: bool = False, dp: bool = False, **kwargs) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
         This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the extrinsic transformation.
         This method allows to transform the ``world_3dpoints`` to ``normalized_points`` using the extrinsic parameters (rotation and translation).
@@ -500,7 +500,7 @@ class Cv2Extrinsic(Extrinsic):
         return normalized_points_flat, jacobian_flat_dx, jacobian_flat_dp
     
 
-    def _inverse_transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, depth: Optional[numpy.ndarray] = None) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _inverse_transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, depth: Optional[numpy.ndarray] = None, **kwargs) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
         This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse extrinsic transformation.
         This method allows to transform the ``normalized_points`` back to ``world_3dpoints`` using the extrinsic parameters (rotation and translation).

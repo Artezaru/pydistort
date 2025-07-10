@@ -527,9 +527,9 @@ class Transform(ABC):
         TransformResult
             An object containing the transformed points and the Jacobian matrices if requested.
 
+            
         Developer Notes
-        ~~~~~~~~~~~~~~~
-        
+        ----------------
         The subclasses must implement the `_transform` method to apply the transformation to the input points.
         
         The `_transform` method should:
@@ -684,8 +684,7 @@ class Transform(ABC):
 
             
         Developer Notes
-        ~~~~~~~~~~~~~~~
-
+        ----------------
         The subclasses must implement the `_inverse_transform` method to apply the inverse transformation to the input points.
 
         The `_inverse_transform` method should:
@@ -875,11 +874,7 @@ class Transform(ABC):
         TypeError
             If the input and output points are not numpy arrays, or if the guess is not a numpy array.
 
-        Developer Notes
-        ~~~~~~~~~~~~~~~
-
-        The subclasses must implement the `_transform` method to apply the transformation to the input points.
-        The `_transform` method should return the transformed points and the Jacobian matrix with respect to the parameters of the transformation.
+            
         """
         if not _skip:
             # Check the boolean flags
@@ -1202,11 +1197,6 @@ class Transform(ABC):
         TypeError
             If the output points or guess are not numpy arrays, or if the guess is not a numpy array.
 
-        Developer Notes
-        ~~~~~~~~~~~~~~~
-
-        The subclasses must implement the `_transform` method to apply the transformation to the input points.
-        The `_transform` method should return the transformed points and the Jacobian matrix with respect to the input points.
 
         """
         if self.input_dim != self.output_dim:

@@ -2,14 +2,15 @@ from typing import Optional, Tuple, Dict
 from numbers import Number
 import numpy
 
-from .core import Intrinsic
+from ..core import Intrinsic
 
 
 
 
-class Cv2Intrinsic(Intrinsic):
+
+class SkewIntrinsic(Intrinsic):
     r"""
-    Subclass of :class:`pydistort.core.Intrinsic` to represent the intrinsic transformation using OpenCV conventions.
+    Subclass of :class:`pydistort.core.Intrinsic` to represent the intrinsic transformation with skew.
 
     The equation used for the intrinsic transformation is:    
 
@@ -24,25 +25,22 @@ class Cv2Intrinsic(Intrinsic):
     .. math::
 
         K = \begin{bmatrix}
-        f_x & 0 & c_x \\
+        f_x & s & c_x \\
         0 & f_y & c_y \\
         0 & 0 & 1
         \end{bmatrix}
 
-    where :math:`f_x` and :math:`f_y` are the focal lengths in pixels in x and y direction, :math:`c_x` and :math:`c_y` are the principal point coordinates in pixels.
+    where :math:`f_x` and :math:`f_y` are the focal lengths in pixels in x and y direction, :math:`c_x` and :math:`c_y` are the principal point coordinates in pixels, and :math:`s` is the skew parameter.
 
     .. note::
 
         If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.
 
-    .. warning::
-
-        No ``skew`` parameter is included in the intrinsic matrix in this implementation. If you need to include a skew parameter, you can use :class:`pydistort.SkewIntrinsic`.
-
-    Two short-hand notations are provided to access the jacobian with respect to focal length and principal point:
+    Three short-hand notations are provided to access the jacobian with respect to focal length, principal point, and skew:
 
     - ``jacobian_df``: The Jacobian of the image points with respect to the focal length parameters. It has shape (..., 2, 2), where the last dimension represents (df_x, df_y).
     - ``jacobian_dc``: The Jacobian of the image points with respect to the principal point parameters. It has shape (..., 2, 2), where the last dimension represents (dc_x, dc_y).
+    - ``jacobian_ds``: The Jacobian of the image points with respect to the skew parameter. It has shape (..., 2, 1), where the last dimension represents (ds).
 
     Parameters
     ----------
@@ -56,12 +54,12 @@ class Cv2Intrinsic(Intrinsic):
     .. code-block:: python
 
         import numpy as np
-        from pydistort import Cv2Intrinsic
+        from pydistort import SkewIntrinsic
 
-        intrinsic_matrix = np.array([[1000, 0, 320],
+        intrinsic_matrix = np.array([[1000, 2.3, 320],
                                      [0, 1000, 240],
                                      [0, 0, 1]])
-        intrinsic = Cv2Intrinsic(intrinsic_matrix)
+        intrinsic = SkewIntrinsic(intrinsic_matrix)
 
     Then you can use the intrinsic object to transform ``distorted_points`` to ``image_points``:
 
@@ -108,6 +106,7 @@ class Cv2Intrinsic(Intrinsic):
         self._fy = None
         self._cx = None
         self._cy = None
+        self._skew = None
 
         # Set the intrinsic matrix
         self.intrinsic_matrix = intrinsic_matrix
@@ -117,7 +116,7 @@ class Cv2Intrinsic(Intrinsic):
     # =============================================
     @property
     def Nparams(self) -> int:
-        return 4  # The intrinsic parameters are (fx, fy, cx, cy) even if some of them are not set.
+        return 5  # The intrinsic parameters are (fx, fy, cx, cy, skew) even if some of them are not set.
     
     @property
     def _jacobian_short_hand(self) -> Dict[str, Tuple[int, int, Optional[str]]]:
@@ -126,6 +125,7 @@ class Cv2Intrinsic(Intrinsic):
 
         - ``df``: The Jacobian of the normalized points with respect to the focal length parameters. It has shape (..., 2, 2), where the last dimension represents (df_x, df_y).
         - ``dc``: The Jacobian of the normalized points with respect to the principal point parameters. It has shape (..., 2, 2), where the last dimension represents (dc_x, dc_y).
+        - ``ds``: The Jacobian of the normalized points with respect to the skew parameter. It has shape (..., 2, 1), where the last dimension represents (ds).
 
         Returns
         -------
@@ -138,9 +138,10 @@ class Cv2Intrinsic(Intrinsic):
         """
         return {
             "df": (0, 2, "Jacobian of the image points with respect to the focal length parameters (fx, fy)"),
-            "dc": (2, 4, "Jacobian of the image points with respect to the principal point parameters (cx, cy)")
+            "dc": (2, 4, "Jacobian of the image points with respect to the principal point parameters (cx, cy)"),
+            "ds": (4, 5, "Jacobian of the image points with respect to the skew parameter (s)"),
         }
-
+    
     @property
     def parameters(self) -> Optional[numpy.ndarray]:
         r"""
@@ -153,7 +154,7 @@ class Cv2Intrinsic(Intrinsic):
         Returns
         -------
         Optional[numpy.ndarray]
-            The intrinsic parameters as a vector of shape (4,). If any of the parameters are not set, returns None.
+            The intrinsic parameters as a vector of shape (5,). If any of the parameters are not set, returns None.
         """
         return self.intrinsic_vector
     
@@ -349,6 +350,50 @@ class Cv2Intrinsic(Intrinsic):
     def cy(self, cy: Optional[Number]) -> None:
         self.principal_point_y = cy
 
+    
+    # =============================================
+    # Skew parameter
+    # =============================================
+    @property
+    def skew(self) -> Optional[float]:
+        r"""
+        Get or set the skew parameter of the intrinsic transformation.
+
+        The skew parameter is a float representing the skew of the camera in pixels.
+
+        This parameter is the component K[0, 1] of the intrinsic matrix K of the camera.
+
+        .. note::
+
+            An alias for ``skew`` is ``s``.
+
+        Returns
+        -------
+        Optional[float]
+            The skew parameter of the camera in pixels. (or None if not set)
+        """
+        return self._skew
+    
+    @skew.setter
+    def skew(self, s: Optional[Number]) -> None:
+        if s is None or numpy.isnan(s):
+            self._skew = None
+            return
+        if not isinstance(s, Number):
+            raise ValueError("Skew parameter must be a number.")
+        if not numpy.isfinite(s):
+            raise ValueError("Skew parameter must be a finite number.")
+        self._skew = float(s)
+
+    @property
+    def s(self) -> Optional[float]:
+        return self.skew
+    
+    @s.setter
+    def s(self, s: Optional[Number]) -> None:
+        self.skew = s
+
+
     # =============================================
     # Intrinsic matrix
     # =============================================
@@ -362,7 +407,7 @@ class Cv2Intrinsic(Intrinsic):
         .. math::
 
             K = \begin{bmatrix}
-            f_x & 0 & c_x \\
+            f_x & s & c_x \\
             0 & f_y & c_y \\
             0 & 0 & 1
             \end{bmatrix}
@@ -380,10 +425,10 @@ class Cv2Intrinsic(Intrinsic):
         Optional[numpy.ndarray]
             The intrinsic matrix of the camera. (or None if one of the parameters is not set)
         """
-        if self._fx is None or self._fy is None or self._cx is None or self._cy is None:
+        if self._fx is None or self._fy is None or self._cx is None or self._cy is None or self._skew is None:
             return None
         return numpy.array([
-            [self._fx, 0, self._cx],
+            [self._fx, self._skew, self._cx],
             [0, self._fy, self._cy],
             [0, 0, 1]
         ], dtype=numpy.float64)
@@ -395,13 +440,12 @@ class Cv2Intrinsic(Intrinsic):
             self._fy = None
             self._cx = None
             self._cy = None
+            self._skew = None
             return
         intrinsic_matrix = numpy.asarray(intrinsic_matrix, dtype=numpy.float64)
         if intrinsic_matrix.shape != (3, 3):
             raise ValueError("Intrinsic matrix must be a 3x3 matrix.")
-        # Check if a skew value is given
-        if abs(intrinsic_matrix[0, 1]) > 1e-6:
-            raise ValueError("Skew value is not supported by Cv2Intrinsic. Use SkewIntrinsic instead.")
+        # Check if non valid coefficients are given
         if abs(intrinsic_matrix[1, 0]) > 1e-6 or abs(intrinsic_matrix[2, 0]) > 1e-6 or abs(intrinsic_matrix[2, 1]) > 1e-6:
             raise ValueError("Some coefficients of the intrinsic matrix are unexpected.")
         # Set the intrinsic parameters
@@ -409,6 +453,7 @@ class Cv2Intrinsic(Intrinsic):
         self.fy = intrinsic_matrix[1, 1]
         self.cx = intrinsic_matrix[0, 2]
         self.cy = intrinsic_matrix[1, 2]
+        self.skew = intrinsic_matrix[0, 1]
 
     @property
     def K(self) -> Optional[numpy.ndarray]:
@@ -426,7 +471,7 @@ class Cv2Intrinsic(Intrinsic):
         r"""
         Get or set the intrinsic vector of the intrinsic transformation.
 
-        The intrinsic vector is a 4x1 vector representing the intrinsic parameters of the camera.
+        The intrinsic vector is a 5x1 vector representing the intrinsic parameters of the camera.
 
         .. math::
 
@@ -434,7 +479,8 @@ class Cv2Intrinsic(Intrinsic):
             f_x \\
             f_y \\
             c_x \\
-            c_y
+            c_y \\
+            s
             \end{bmatrix}
 
         .. note::
@@ -450,9 +496,9 @@ class Cv2Intrinsic(Intrinsic):
         Optional[numpy.ndarray]
             The intrinsic vector of the camera. (or None if one of the parameters is not set)
         """
-        if self._fx is None or self._fy is None or self._cx is None or self._cy is None:
+        if self._fx is None or self._fy is None or self._cx is None or self._cy is None or self._skew is None:
             return None
-        return numpy.array([self._fx, self._fy, self._cx, self._cy], dtype=numpy.float64)
+        return numpy.array([self._fx, self._fy, self._cx, self._cy, self._skew], dtype=numpy.float64)
     
     @intrinsic_vector.setter
     def intrinsic_vector(self, intrinsic_vector: Optional[numpy.ndarray]) -> None:
@@ -461,15 +507,17 @@ class Cv2Intrinsic(Intrinsic):
             self._fy = None
             self._cx = None
             self._cy = None
+            self._skew = None
             return
         intrinsic_vector = numpy.asarray(intrinsic_vector, dtype=numpy.float64).flatten()
-        if intrinsic_vector.size != 4:
-            raise ValueError("Intrinsic vector must be a 4x1 vector.")
+        if intrinsic_vector.size != 5:
+            raise ValueError("Intrinsic vector must be a 5x1 vector.")
         # Set the intrinsic parameters
         self.fx = intrinsic_vector[0]
         self.fy = intrinsic_vector[1]
         self.cx = intrinsic_vector[2]
         self.cy = intrinsic_vector[3]
+        self.skew = intrinsic_vector[4]
 
     @property
     def k(self) -> Optional[numpy.ndarray]:
@@ -491,7 +539,7 @@ class Cv2Intrinsic(Intrinsic):
         str
             The string representation of the intrinsic matrix.
         """
-        return f"Intrinsic matrix: fx={self._fx}, fy={self._fy}, cx={self._cx}, cy={self._cy}"
+        return f"Intrinsic matrix: fx={self._fx}, fy={self._fy}, cx={self._cx}, cy={self._cy}, skew={self._skew}\n"
     
 
     # =============================================
@@ -506,16 +554,10 @@ class Cv2Intrinsic(Intrinsic):
         bool
             True if all intrinsic parameters are set, False otherwise.
         """
-        return self._fx is not None and self._fy is not None and self._cx is not None and self._cy is not None
+        return self._fx is not None and self._fy is not None and self._cx is not None and self._cy is not None and self._skew is not None
     
 
-    def _transform(
-            self, 
-            distorted_points: numpy.ndarray, 
-            *, 
-            dx: bool = False, 
-            dp: bool = False
-        ) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, **kwargs) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
         This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the intrinsic transformation.
         This method allows to transform the ``distorted_points`` to ``image_points`` using the intrinsic parameters.
@@ -523,19 +565,19 @@ class Cv2Intrinsic(Intrinsic):
         .. note::
 
             For ``_transform`` the input must have shape (Npoints, 2) with float64 type.
-            The output has shape (Npoints, 2) for the image points and (Npoints, 2, 2) for the jacobian with respect to the distorted points and (Npoints, 2, 4) for the jacobian with respect to the intrinsic parameters.
+            The output has shape (Npoints, 2) for the image points and (Npoints, 2, 2) for the jacobian with respect to the distorted points and (Npoints, 2, 5) for the jacobian with respect to the intrinsic parameters.
 
         The equation used for the transformation is:
 
         .. math::
 
-            x_I = f_x \cdot x_D + c_x 
-
+            x_I = f_x \cdot x_D + s \cdot y_D + c_x
+            
         .. math::
 
             y_I = f_y \cdot y_D + c_y
 
-        where :math:`f_x` and :math:`f_y` are the focal lengths in pixels, and :math:`c_x` and :math:`c_y` are the coordinates of the principal point in pixels.
+        where :math:`f_x` and :math:`f_y` are the focal lengths in pixels, and :math:`c_x` and :math:`c_y` are the coordinates of the principal point in pixels and :math:`s` is the skew parameter.
 
         .. warning::
 
@@ -562,14 +604,14 @@ class Cv2Intrinsic(Intrinsic):
             The Jacobian of the image points with respect to the distorted points if ``dx`` is True. Otherwise None. Shape (Npoints, 2, 2), where the last dimension represents (dx, dy).
 
         jacobian_dp : Optional[numpy.ndarray]
-            The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (Npoints, 2, 4), where the last dimension represents (dfx, dfy, dcx, dcy).
+            The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (Npoints, 2, 5), where the last dimension represents (dfx, dfy, dcx, dcy, ds).
         """
         # Extract the useful coordinates
         x_D = distorted_points[:, 0] # shape (Npoints,)
         y_D = distorted_points[:, 1] # shape (Npoints,)
 
         # Compute the image points
-        x_I = self._fx * x_D + self._cx # shape (Npoints,)
+        x_I = self._fx * x_D + self._skew * y_D + self._cx # shape (Npoints,)
         y_I = self._fy * y_D + self._cy # shape (Npoints,)
 
         image_points_flat = numpy.empty(distorted_points.shape) # shape (Npoints, 2)
@@ -580,7 +622,7 @@ class Cv2Intrinsic(Intrinsic):
         if dx:
             jacobian_flat_dx = numpy.empty((*distorted_points.shape, 2), dtype=numpy.float64) # shape (Npoints, 2, 2)
             jacobian_flat_dx[:, 0, 0] = self._fx # shape (Npoints,)
-            jacobian_flat_dx[:, 0, 1] = 0.0 # shape (Npoints,)
+            jacobian_flat_dx[:, 0, 1] = self._skew # shape (Npoints,)
             jacobian_flat_dx[:, 1, 0] = 0.0 # shape (Npoints,)
             jacobian_flat_dx[:, 1, 1] = self._fy # shape (Npoints,)
         else:
@@ -588,23 +630,25 @@ class Cv2Intrinsic(Intrinsic):
 
         # Compute the jacobian with respect to the intrinsic parameters
         if dp:
-            jacobian_flat_dp = numpy.empty((*distorted_points.shape, 4), dtype=numpy.float64) # shape (Npoints, 2, 4)
+            jacobian_flat_dp = numpy.empty((*distorted_points.shape, 5), dtype=numpy.float64) # shape (Npoints, 2, 5)
             jacobian_flat_dp[:, 0, 0] = x_D # shape (Npoints,)
             jacobian_flat_dp[:, 0, 1] = 0.0 # shape (Npoints,)
             jacobian_flat_dp[:, 0, 2] = 1.0 # shape (Npoints,)
             jacobian_flat_dp[:, 0, 3] = 0.0 # shape (Npoints,)
+            jacobian_flat_dp[:, 0, 4] = y_D # shape (Npoints,)
 
             jacobian_flat_dp[:, 1, 0] = 0.0 # shape (Npoints,)
             jacobian_flat_dp[:, 1, 1] = y_D # shape (Npoints,)
             jacobian_flat_dp[:, 1, 2] = 0.0 # shape (Npoints,)
             jacobian_flat_dp[:, 1, 3] = 1.0 # shape (Npoints,)
+            jacobian_flat_dp[:, 1, 4] = 0.0 # shape (Npoints,)
         else:
             jacobian_flat_dp = None
 
         return image_points_flat, jacobian_flat_dx, jacobian_flat_dp
     
 
-    def _inverse_transform(self, image_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _inverse_transform(self, image_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, **kwargs) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
         This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse intrinsic transformation.
         This method allows to transform the ``image_points`` back to ``distorted_points`` using the intrinsic parameters.
@@ -618,13 +662,13 @@ class Cv2Intrinsic(Intrinsic):
 
         .. math::
 
-            x_D = \frac{x_I - c_x}{f_x}
+            x_D = \frac{x_I - s \cdot \left(\frac{y_I - c_y}{f_y}\right) - c_x}{f_x}
 
         .. math::
 
             y_D = \frac{y_I - c_y}{f_y}
 
-        where :math:`f_x` and :math:`f_y` are the focal lengths in pixels, and :math:`c_x` and :math:`c_y` are the coordinates of the principal point in pixels.
+        where :math:`f_x` and :math:`f_y` are the focal lengths in pixels, and :math:`c_x` and :math:`c_y` are the coordinates of the principal point in pixels and :math:`s` is the skew parameter.
 
         .. warning::
 
@@ -651,14 +695,14 @@ class Cv2Intrinsic(Intrinsic):
             The Jacobian of the distorted points with respect to the image points if ``dx`` is True. Otherwise None. Shape (Npoints, 2, 2), where the last dimension represents (dx, dy).
         
         jacobian_dp : Optional[numpy.ndarray]
-            The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (Npoints, 2, 4), where the last dimension represents (dfx, dfy, dcx, dcy).
+            The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (Npoints, 2, 5), where the last dimension represents (dfx, dfy, dcx, dcy, ds).
         """
         # Extract the useful coordinates
         x_I = image_points[:, 0] # shape (Npoints,)
         y_I = image_points[:, 1] # shape (Npoints,)
 
         # Compute the distorted points
-        x_D = (x_I - self._cx) / self._fx # shape (Npoints,)
+        x_D = (x_I - self._skew * (y_I - self._cy) / self._fy - self._cx) / self._fx # shape (Npoints,)
         y_D = (y_I - self._cy) / self._fy # shape (Npoints,)
 
         distorted_points_flat = numpy.empty(image_points.shape) # shape (Npoints, 2)
@@ -669,7 +713,7 @@ class Cv2Intrinsic(Intrinsic):
         if dx:
             jacobian_flat_dx = numpy.empty((*image_points.shape, 2), dtype=numpy.float64) # shape (Npoints, 2, 2)
             jacobian_flat_dx[:, 0, 0] = 1.0 / self._fx # shape (Npoints,)
-            jacobian_flat_dx[:, 0, 1] = 0.0 # shape (Npoints,)
+            jacobian_flat_dx[:, 0, 1] = - self._skew / (self._fx * self._fy) # shape (Npoints,)
             jacobian_flat_dx[:, 1, 0] = 0.0 # shape (Npoints,)
             jacobian_flat_dx[:, 1, 1] = 1.0 / self._fy # shape (Npoints,)
         else:
@@ -677,16 +721,18 @@ class Cv2Intrinsic(Intrinsic):
 
         # Compute the jacobian with respect to the intrinsic parameters
         if dp:
-            jacobian_flat_dp = numpy.empty((*image_points.shape, 4), dtype=numpy.float64) # shape (Npoints, 2, 4)
-            jacobian_flat_dp[:, 0, 0] = - x_D / self._fx # shape (Npoints,) because x_D = (x_I - c_x) / f_x
-            jacobian_flat_dp[:, 0, 1] = 0.0 # shape (Npoints,)
+            jacobian_flat_dp = numpy.empty((*image_points.shape, 5), dtype=numpy.float64) # shape (Npoints, 2, 5)
+            jacobian_flat_dp[:, 0, 0] = - x_D / self._fx # shape (Npoints,)
+            jacobian_flat_dp[:, 0, 1] = self._skew * y_D / (self._fx * self._fy) # shape (Npoints,)
             jacobian_flat_dp[:, 0, 2] = - 1.0 / self._fx # shape (Npoints,)
-            jacobian_flat_dp[:, 0, 3] = 0.0 # shape (Npoints,)
+            jacobian_flat_dp[:, 0, 3] = self._skew / (self._fx * self._fy) # shape (Npoints,)
+            jacobian_flat_dp[:, 0, 4] = - y_D / self._fx # shape (Npoints,)
 
             jacobian_flat_dp[:, 1, 0] = 0.0 # shape (Npoints,)
-            jacobian_flat_dp[:, 1, 1] = - y_D / self._fy # shape (Npoints,) because y_D = (y_I - c_y) / f_y
+            jacobian_flat_dp[:, 1, 1] = - y_D / self._fy # shape (Npoints,)
             jacobian_flat_dp[:, 1, 2] = 0.0 # shape (Npoints,)
-            jacobian_flat_dp[:, 1, 3] = -1.0 / self._fy # shape (Npoints,)
+            jacobian_flat_dp[:, 1, 3] = - 1.0 / self._fy # shape (Npoints,)
+            jacobian_flat_dp[:, 1, 4] = 0.0 # shape (Npoints,)
         else:
             jacobian_flat_dp = None
 

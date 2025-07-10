@@ -4,32 +4,31 @@ import cv2
 import scipy
 
 from .core.distortion import Distortion
+from .core.intrinsic import Intrinsic
+
 from .distortion_objects.no_distortion import NoDistortion
-from .intrinsic_objects.cv2_intrinsic import Cv2Intrinsic
+from .intrinsic_objects.no_intrinsic import NoIntrinsic
 
-
-def cv2_distort_image(
+def distort_image(
         src: numpy.ndarray,
-        K: Optional[numpy.ndarray],
+        intrinsic: Optional[Intrinsic],
         distortion: Optional[Distortion],
         method: str = "undistort",
         interpolation: str = "linear",
         **kwargs
     ) -> numpy.ndarray:
     r"""
-    Distort an image using the camera intrinsic and distortion transformations
+    Distort an image using the camera intrinsic and distortion coefficients.
 
-    This method use the same architecture as the `cv2.undistort` function from OpenCV, but it is implemented for the distortion and in a more flexible way to allow the use of different distortion models.
-    
     .. seealso::
 
-        - :func:`pydistort.distort_image` for a more general distort function that can handle different types of points and transformations (extrinsic, intrinsic, distortion).
+        To use a method usage-like OpenCV, use the :func:`pydistort.cv2_distort_image` function.
 
     The process to undistort an image is as follows:
 
-    1. The output pixels are converted to a normalized coordinate system using the intrinsic matrix K.
+    1. The output pixels are converted to a normalized coordinate system using the inverse intrinsic transformation.
     2. The normalized points are undistorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}`.
-    3. The undistorted points are projected back to the input image coordinate system using the intrinsic matrix K.
+    3. The undistorted points are projected back to the input image coordinate system using the same intrinsic transformation.
     4. The distorted image is obtained by mapping the pixels from the original image to the distorted points.
 
     The given image ``src`` is assumed to be in the image coordinate system and expressed in 2D coordinates with shape (H, W, [C], [D]).
@@ -106,9 +105,9 @@ def cv2_distort_image(
     src : numpy.ndarray
         The input image to be undistorted. Shape (H, W, ...) where H is the height, W is the width.
 
-    K : Optional[numpy.ndarray]
-        The intrinsic camera matrix (or vector). Shape (3, 3) or (4,).
-        If None, the identity intrinsic matrix is used.
+    intrinsic : Optional[Intrinsic]
+        The intrinsic transformation to be applied to the image points.
+        If None, a zero intrinsic is applied (i.e., identity transformation).
 
     distortion : Optional[Distortion]
         The distortion model to be applied. If None, no distortion is applied.
@@ -136,12 +135,15 @@ def cv2_distort_image(
     .. code-block:: python
 
         import numpy
-        from pydistort import cv2_distort_image, Cv2Distortion
+        from pydistort import distort_image, Cv2Distortion, Cv2Intrinsic
 
         # Define the intrinsic camera matrix
         K = numpy.array([[1000.0, 0.0, 320.0],
                         [0.0, 1000.0, 240.0],
                         [0.0, 0.0, 1.0]])
+
+        # Create the intrinsic object
+        intrinsic = Cv2Intrinsic(intrinsic_matrix=K)
 
         # Define the distortion model (optional)
         distortion = Cv2Distortion([0.1, 0.2, 0.3, 0.4, 0.5])
@@ -150,7 +152,7 @@ def cv2_distort_image(
         src = cv2.imread('image.jpg')
 
         # Distort the image
-        distorted_image = cv2_distort_image(src, K, distortion)
+        distorted_image = distort_image(src, intrinsic=intrinsic, distortion=distortion)
 
     """
     # Check if the method is valid
@@ -158,29 +160,20 @@ def cv2_distort_image(
         raise ValueError(f"Invalid method: {method}. Use 'undistort' or 'distort'.")
     
     # Set the default values if None
-    if K is None:
-        K = numpy.array([[1.0, 0.0, 0.0],
-                         [0.0, 1.0, 0.0],
-                         [0.0, 0.0, 1.0]], dtype=numpy.float64) 
+    if intrinsic is None:
+        intrinsic = NoIntrinsic()
     if distortion is None:
         distortion = NoDistortion()
-    
-    # Create the intrinsic and distortion objects
-    intrinsic = Cv2Intrinsic()
-    K = numpy.asarray(K, dtype=numpy.float64)
-    if K.size == 4:
-        intrinsic.intrinsic_vector = K
-    elif K.size == 9:
-        intrinsic.intrinsic_matrix = K
-    else:
-        raise ValueError("K must be of shape (4,) or (3, 3)")
 
-    if not isinstance(distortion, Distortion):
-        raise ValueError("distortion must be an instance of the Distortion class")
+    # Check the types of the parameters
+    if not isinstance(intrinsic, Intrinsic):
+        raise ValueError("intrinsic must be an instance of the Intrinsic class")
     if not intrinsic.is_set():
-        raise ValueError("The intrinsic matrix K must be set")
+        raise ValueError("The intrinsic object must be ready to transform the points, check is_set() method.")
+    if not isinstance(distortion, Distortion):
+        raise ValueError("distortion must be an instance of the Distortion class.")
     if not distortion.is_set():
-        raise ValueError("The distortion coefficients must be set")
+        raise ValueError("The distortion object must be ready to transform the points, check is_set() method.")
     
     # Check if the input image is a valid numpy array
     if not isinstance(src, numpy.ndarray):

@@ -3,7 +3,7 @@ from numbers import Integral, Number
 import numpy
 import cv2
 
-from .core.distortion import Distortion
+from ..core.distortion import Distortion
 
 
 class Cv2Distortion(Distortion):
@@ -1222,7 +1222,7 @@ class Cv2Distortion(Distortion):
         return True 
     
     
-    def _transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False, **kwargs) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
         This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the distortion transformation.
         This method allows to transform the ``normalized_points`` to the ``distorted_points`` using the distortion model.
@@ -1559,7 +1559,7 @@ class Cv2Distortion(Distortion):
     
 
 
-    def _inverse_transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False, max_iter: int = 10, eps: float = 1e-8) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _inverse_transform(self, distorted_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, opencv: bool = False, max_iter: int = 10, eps: float = 1e-8, **kwargs) -> Tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
         This method is called by the :meth:`pydistort.core.Transform.inverse_transform` method to perform the inverse distortion transformation.
         This method allows to transform the ``distorted_points`` to the ``normalized_points`` using the distortion model.

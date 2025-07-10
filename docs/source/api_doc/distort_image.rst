@@ -1,4 +1,4 @@
 pydistort.distort_image
 ==================================
 
-Not yet implemented.
+.. autofunction:: pydistort.distort_image

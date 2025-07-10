@@ -3,7 +3,7 @@ from numbers import Integral, Number
 import numpy
 from pyzernike import xy_zernike_polynomial_up_to_order, zernike_order_to_index
 
-from .core.distortion import Distortion
+from ..core.distortion import Distortion
 
 
 class ZernikeDistortion(Distortion):
@@ -746,7 +746,7 @@ class ZernikeDistortion(Distortion):
         return True 
     
 
-    def _transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
+    def _transform(self, normalized_points: numpy.ndarray, *, dx: bool = False, dp: bool = False, **kwargs) -> tuple[numpy.ndarray, Optional[numpy.ndarray], Optional[numpy.ndarray]]:
         r"""
         This method is called by the :meth:`pydistort.core.Transform.transform` method to perform the distortion transformation.
         This method allows to transform the ``normalized_points`` to the ``distorted_points`` using the distortion model.
