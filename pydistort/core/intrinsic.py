@@ -132,3 +132,9 @@ class Intrinsic(Transform):
     @property
     def inverse_result_class(self) -> type:
         return InverseIntrinsicResult
+    
+    @property
+    def _jacobian_short_hand(self) -> dict:
+        return {}
+    
+

@@ -124,6 +124,7 @@ class Distortion(Transform):
     - ``undistort``: Alias for the `inverse_transform` method to remove distortion from a set of points.
 
     """
+
     # =============================================
     # Properties for ABC Transform Class
     # =============================================
@@ -142,6 +143,10 @@ class Distortion(Transform):
     @property
     def inverse_result_class(self) -> type:
         return InverseDistortionResult
+    
+    @property
+    def _jacobian_short_hand(self) -> dict:
+        return {}
     
     # =============================================
     # Aliases for Distortion Class

@@ -105,6 +105,11 @@ class Extrinsic(Transform):
         - "_inverse_transform": to remove extrinsic from a set of points. The transformation is applied to the ``normalized_points`` (:math:`x_N`) to obtain the ``world_3dpoints`` (:math:`X_W`).
 
     """
+
+    _result_class = ExtrinsicResult
+    _inverse_result_class = InverseExtrinsicResult
+    _jacobian_short_hand = {}
+
     # =============================================
     # Properties for ABC Transform Class
     # =============================================
@@ -116,10 +121,3 @@ class Extrinsic(Transform):
     def output_dim(self) -> int:
         return 2 # The output is a 2D point (x, y)
     
-    @property
-    def result_class(self) -> type:
-        return ExtrinsicResult
-    
-    @property
-    def inverse_result_class(self) -> type:
-        return InverseExtrinsicResult

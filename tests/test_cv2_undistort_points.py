@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from pydistort import Cv2Distortion, undistort_points
+from pydistort import Cv2Distortion, cv2_undistort_points
 import cv2
 import time
 import csv
@@ -17,7 +17,7 @@ import setup
 @pytest.mark.parametrize("Nparams", [5, 8, 12, 14])
 @pytest.mark.parametrize("mode", ["weak_coefficients"])
 def test_pydistort_undistort_vs_opencv(Nparams, mode):
-    """Compare Cv2Distortion.undistort_points and OpenCV undistortPoints."""
+    """Compare Cv2Distortion.cv2_undistort_points and OpenCV undistortPoints."""
     distortion = setup.CV2_DISTORTION(Nparams, mode)
 
     K = setup.ORI_MATK()
@@ -37,7 +37,7 @@ def test_pydistort_undistort_vs_opencv(Nparams, mode):
     points = setup.ORI_IMAGE_POINTS()
 
     # Undistort with your method
-    undistorted_points = undistort_points(points, K=K, distortion=distortion, R=R, P=P)
+    undistorted_points = cv2_undistort_points(points, K=K, distortion=distortion, R=R, P=P)
 
     # Undistort with OpenCV
     points_cv = np.ascontiguousarray(points.reshape(-1, 1, 2), dtype=np.float64)
@@ -51,7 +51,7 @@ def test_pydistort_undistort_vs_opencv(Nparams, mode):
 @pytest.mark.parametrize("Nparams", [None])
 @pytest.mark.parametrize("mode", ["weak_coefficients"])
 def test_pydistort_undistort_vs_opencv_timer(Nparams, mode):
-    """Compare pydistort.undistort_points and OpenCV undistortPoints for speed."""
+    """Compare pydistort.cv2_undistort_points and OpenCV undistortPoints for speed."""
     if setup.TIMER():
         pydistort_times = []
         opencv_times = []
@@ -78,7 +78,7 @@ def test_pydistort_undistort_vs_opencv_timer(Nparams, mode):
 
             # Distortion (analytic)
             start_time = time.perf_counter()
-            undistorted_points = undistort_points(points, K=K, distortion=distortion, R=R, P=P)
+            undistorted_points = cv2_undistort_points(points, K=K, distortion=distortion, R=R, P=P)
             elapsed_time = time.perf_counter() - start_time
             pydistort_times.append(elapsed_time)
 
@@ -100,7 +100,7 @@ def test_pydistort_undistort_vs_opencv_timer(Nparams, mode):
 
         if setup.CSV():
             # Write times to a CSV file
-            csv_filename = "Cv2Distortion_undistort_points_time_comparison.csv"
+            csv_filename = "Cv2Distortion_cv2_undistort_points_time_comparison.csv"
             csv_filename = os.path.join(os.path.dirname(__file__), csv_filename)
             with open(csv_filename, mode='w', newline='') as file:
                 writer = csv.writer(file)

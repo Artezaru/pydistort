@@ -9,7 +9,7 @@ from .cv2_extrinsic import Cv2Extrinsic
 
 
 
-def undistort_points(
+def cv2_undistort_points(
         image_points: numpy.ndarray,
         K: Optional[numpy.ndarray],
         distortion: Optional[Distortion],
@@ -20,6 +20,12 @@ def undistort_points(
     ) -> numpy.ndarray:
     r"""
     Undistort 2D image points using the camera intrinsic and distortion coefficients.
+
+    This method use the same architecture as the `cv2.undistortPoints` function from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.
+    
+    .. seealso::
+
+        - :func:`pydistort.undistort_points` for a more general undistortion function that can handle different types of points and transformations (extrinsic, intrinsic, distortion).
 
     The process to undistort a 2D-image point is as follows:
 
@@ -77,7 +83,7 @@ def undistort_points(
     .. code-block:: python
 
         import numpy
-        from pydistort import undistort_points, Cv2Distortion
+        from pydistort import cv2_undistort_points, Cv2Distortion
         from py3dframe import Frame
 
         # Define the 2D image points in the camera coordinate system
@@ -96,13 +102,13 @@ def undistort_points(
         distortion = Cv2Distortion([0.1, 0.2, 0.3, 0.4, 0.5])
 
         # Undistort the 2D image points
-        normalized_points = undistort_points(image_points, K=K, distortion=distortion)
+        normalized_points = cv2_undistort_points(image_points, K=K, distortion=distortion)
 
     To return the undistorted points in the image coordinate system, you can provide a projection matrix P equal to the intrinsic matrix K:
 
     .. code-block:: python
 
-        undistorted_points = undistort_points(image_points, K=K, distortion=distortion, P=K)
+        undistorted_points = cv2_undistort_points(image_points, K=K, distortion=distortion, P=K)
     
     """
     # Set the default values if None

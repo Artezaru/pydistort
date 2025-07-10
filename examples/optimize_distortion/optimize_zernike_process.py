@@ -12,7 +12,7 @@ import csv
 import copy
 import skimage
 
-from pydistort import ZernikeDistortion, distort_image
+from pydistort import ZernikeDistortion, cv2_distort_image
 
 
 
@@ -116,7 +116,7 @@ real_distortion.radius = radius
 real_distortion.center = center
 
 # Distort the image
-distorted_image = distort_image(src=image, K=None, distortion=real_distortion, method="undistort")
+distorted_image = cv2_distort_image(src=image, K=None, distortion=real_distortion, method="undistort", interpolation="cubic")
 distorted_image = distorted_image.astype(numpy.uint8)
 
 # Save the distorted image
@@ -355,7 +355,7 @@ plt.tight_layout()
 # ============== OPTIMIZE THE DISTORTION PARAMETERS =============================
 # ===============================================================================
 
-Nzer = 6 # Maximum order of Zernike polynomials to use
+Nzer = 7 # Maximum order of Zernike polynomials to use
 real_distortion_cropped_extended = copy.deepcopy(real_distortion)
 real_distortion_cropped_extended.Nzer = Nzer
 
@@ -373,7 +373,7 @@ center_optimization = (image_width / 2, image_height / 2)
 mask_optimisation = numpy.sqrt((pixel_points[:,0] - center_optimization[0])**2 + (pixel_points[:,1] - center_optimization[1])**2) <= radius_optimization
 
 # Parameters for optimization
-mas_iter = 4
+mas_iter = 1
 eps = 1e-8
 reg_factor = 0.0
 precond_jacobi = True 
@@ -544,17 +544,17 @@ ax6_colorbar = plt.colorbar(ax6.collections[0], ax=ax6, orientation='vertical')
 ax6.set_title("Optimized Flow Displacement Field (Y)")
 ax6.set_aspect('equal')
 ax7 = fig_optimized_flow_displacement_fields.add_subplot(3, 3, 7)
-ax7.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=numpy.linalg.norm(flow_displacement_field[::jump] - optimized_flow_displacement_field[::jump], axis=1), cmap='seismic', s=20, edgecolor='none', vmin=abs_error_vmin, vmax=abs_error_vmax)
+ax7.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=numpy.linalg.norm(real_displacement_field[::jump] - optimized_flow_displacement_field[::jump], axis=1), cmap='seismic', s=20, edgecolor='none', vmin=abs_error_vmin, vmax=abs_error_vmax)
 ax7_colorbar = plt.colorbar(ax7.collections[0], ax=ax7, orientation='vertical')
 ax7.set_title("Difference (Magnitude)")
 ax7.set_aspect('equal')
 ax8 = fig_optimized_flow_displacement_fields.add_subplot(3, 3, 8)
-ax8.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=(flow_displacement_field[::jump, 0] - optimized_flow_displacement_field[::jump, 0]), cmap='seismic', s=20, edgecolor='none', vmin=error_vmin, vmax=error_vmax)
+ax8.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=(real_displacement_field[::jump, 0] - optimized_flow_displacement_field[::jump, 0]), cmap='seismic', s=20, edgecolor='none', vmin=error_vmin, vmax=error_vmax)
 ax8_colorbar = plt.colorbar(ax8.collections[0], ax=ax8, orientation='vertical')
 ax8.set_title("Difference (X)")
 ax8.set_aspect('equal')
 ax9 = fig_optimized_flow_displacement_fields.add_subplot(3, 3, 9)
-ax9.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=(flow_displacement_field[::jump, 1] - optimized_flow_displacement_field[::jump, 1]), cmap='seismic', s=20, edgecolor='none', vmin=error_vmin, vmax=error_vmax)
+ax9.scatter(pixel_points[::jump, 0], pixel_points[::jump, 1], c=(real_displacement_field[::jump, 1] - optimized_flow_displacement_field[::jump, 1]), cmap='seismic', s=20, edgecolor='none', vmin=error_vmin, vmax=error_vmax)
 ax9_colorbar = plt.colorbar(ax9.collections[0], ax=ax9, orientation='vertical')
 ax9.set_title("Difference (Y)")
 ax9.set_aspect('equal')
@@ -591,8 +591,3 @@ plt.tight_layout()
 
 
 
-
-
-
-
-# %%

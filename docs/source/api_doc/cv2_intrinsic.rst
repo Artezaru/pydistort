@@ -7,11 +7,3 @@ pydistort.Cv2Intrinsic
     :undoc-members:
     :private-members:
 
-
-.. autoclass:: pydistort.Cv2IntrinsicResult
-    :members:
-    :show-inheritance:
-
-.. autoclass:: pydistort.InverseCv2IntrinsicResult
-    :members:
-    :show-inheritance:

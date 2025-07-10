@@ -3,7 +3,7 @@ import numpy
 from py3dframe import Frame
 import cv2
 
-from .core import Extrinsic, ExtrinsicResult, InverseExtrinsicResult
+from .core import Extrinsic
 
 
 class Cv2Extrinsic(Extrinsic):
@@ -122,13 +122,27 @@ class Cv2Extrinsic(Extrinsic):
         return 6 # The number of parameters is 6 (3 for rotation and 3 for translation) even if parameters are not set.
     
     @property
-    def result_class(self) -> type:
-        return ExtrinsicResult
-    
-    @property
-    def inverse_result_class(self) -> type:
-        return InverseExtrinsicResult
-    
+    def _jacobian_short_hand(self) -> Dict[str, Tuple[int, int, Optional[str]]]:
+        r"""
+        Short-hand notation for the Jacobian matrices with respect to the extrinsic parameters.
+
+        - ``dr``: The Jacobian of the normalized points with respect to the rotation vector. It has shape (..., 2, 3).
+        - ``dt``: The Jacobian of the normalized points with respect to the translation vector. It has shape (..., 2, 3).
+
+        Returns
+        -------
+        Dict[str, Tuple[int, int, Optional[str]]]
+            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:
+
+            - start index (int): The starting index of the parameters to include in the custom Jacobian view.
+            - end index (int): The ending index of the parameters to include in the custom Jacobian view.
+            - doc (Optional[str]): A documentation string for the custom Jacobian view.
+        """
+        return {
+            "dr": (0, 3, "Jacobian with respect to the rotation vector (rvec)"),
+            "dt": (3, 6, "Jacobian with respect to the translation vector (tvec)"),
+        }
+
     # =============================================
     # Implement the parameters property
     # =============================================
@@ -159,35 +173,6 @@ class Cv2Extrinsic(Extrinsic):
             raise ValueError("Parameters must be a 1D array of shape (6,).")
         self.rotation_vector = params[:3]  # First 3 elements are the rotation vector
         self.translation_vector = params[3:]  # Last 3 elements are the translation vector
-
-
-    @property
-    def jacobian_short_hand(self) -> Dict[str, Tuple[int, int, Optional[str]]]:
-        r"""
-        Property to return a dictionary of short-hand notation for the Jacobian matrices.
-        
-        This dictionary can be used to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.
-
-        .. code-block:: python
-
-            {
-                "dk": (0, 2, "Custom Jacobian view for two first parameters related to k1 and k2"),
-                "dother": (2, 4, "Custom Jacobian view for other parameters related to k3 and k4"),
-            }
-        
-        Returns
-        -------
-        Dict[str, Tuple[int, int, Optional[str]]]
-            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:
-
-            - start index (int): The starting index of the parameters to include in the custom Jacobian view.
-            - end index (int): The ending index of the parameters to include in the custom Jacobian view.
-            - doc (Optional[str]): A documentation string for the custom Jacobian view.
-        """
-        return {
-            "dr": (0, 3, "Jacobian with respect to the rotation vector (rvec)"),
-            "dt": (3, 6, "Jacobian with respect to the translation vector (tvec)"),
-        }
 
     # =============================================
     # translation vector

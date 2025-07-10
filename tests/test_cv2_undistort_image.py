@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from pydistort import undistort_image
+from pydistort import cv2_undistort_image
 import cv2
 
 import os
@@ -13,11 +13,11 @@ import setup
 
 @pytest.mark.parametrize("Nparams", [5, 8, 12, 14])
 @pytest.mark.parametrize("mode", ["weak_coefficients", "strong_coefficients"])
-def test_pydistort_undistort_image_vs_opencv(Nparams, mode):
-    """Compare Cv2Distortion.undistort_image and OpenCV undistort for accuracy."""
+def test_pydistort_cv2_undistort_image_vs_opencv(Nparams, mode):
+    """Compare Cv2Distortion.cv2_undistort_image and OpenCV undistort for accuracy."""
     if mode == "strong_coefficients":
         if setup.WARNINGS():
-            print("[WARNING] test_pydistort_undistort_image_vs_opencv - strong_coefficients (TEST ERROR)")
+            print("[WARNING] test_pydistort_cv2_undistort_image_vs_opencv - strong_coefficients (TEST ERROR)")
         return
     
     distortion = setup.CV2_DISTORTION(Nparams, mode)
@@ -29,7 +29,7 @@ def test_pydistort_undistort_image_vs_opencv(Nparams, mode):
     K = setup.ORI_MATK()
 
     # Undistort with pydistort
-    result = undistort_image(image, K=K, distortion=distortion)
+    result = cv2_undistort_image(image, K=K, distortion=distortion)
 
     # Undistort with OpenCV
     result_cv2 = cv2.undistort(image, K, distortion.parameters)
@@ -59,3 +59,22 @@ def test_pydistort_undistort_image_vs_opencv(Nparams, mode):
 
 
 
+
+
+def test_pydistort_cv2_undistort_image_interpolation():
+    """Test cv2_undistort_image with different interpolation methods."""
+    distortion = setup.CV2_DISTORTION(8, "weak_coefficients")
+
+    # Create a grid image with wave pattern
+    image = setup.ORI_IMAGE()
+
+    # Camera intrinsics
+    K = setup.ORI_MATK()
+
+    # Test different interpolation methods
+    for interpolation in ["linear", "nearest", "cubic", "area", "lanczos4"]:
+        result = cv2_undistort_image(image, K=K, distortion=distortion, interpolation=interpolation)
+
+        # Check if the result is not None and has the same shape as the input image
+        assert result is not None, f"Result should not be None for interpolation method {interpolation}"
+        assert result.shape == image.shape, f"Output shape does not match input shape for interpolation method {interpolation}"

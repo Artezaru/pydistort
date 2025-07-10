@@ -1,0 +1,1 @@
+Nmean = 10 for each noise  ! 

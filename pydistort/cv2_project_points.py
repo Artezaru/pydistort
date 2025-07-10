@@ -10,7 +10,7 @@ from .cv2_extrinsic import Cv2Extrinsic
 
 
 @dataclass
-class ProjectPointsResult(TransformResult):
+class Cv2ProjectPointsResult(TransformResult):
     r"""
     Subclass of TransformResult to represent the result of the projection transformation from 3D world points to 2D image points.
 
@@ -121,7 +121,7 @@ class ProjectPointsResult(TransformResult):
 
 
 
-def project_points(
+def cv2_project_points(
         world_3dpoints: numpy.ndarray, 
         rvec: Optional[numpy.ndarray],
         tvec: Optional[numpy.ndarray], 
@@ -132,9 +132,15 @@ def project_points(
         dp: bool = False,
         faster_dx: bool = True,
         **kwargs
-    ) -> ProjectPointsResult:
+    ) -> Cv2ProjectPointsResult:
     r"""
     Project 3D points to 2D image points using the camera intrinsic and extrinsic matrix and distortion coefficients.
+
+    This method use the same architecture as the `cv2.projectPoints` function from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.
+    
+    .. seealso::
+
+        - :func:`pydistort.project_points` for a more general projection function that can handle different types of points and transformations (extrinsic, intrinsic, distortion).
 
     The process to correspond a 3D-world point to a 2D-image point is as follows:
 
@@ -227,7 +233,7 @@ def project_points(
         
     Returns
     -------
-    ProjectPointsResult
+    Cv2ProjectPointsResult
         The result of the projection transformation.
 
         
@@ -239,7 +245,7 @@ def project_points(
     .. code-block:: python
 
         import numpy
-        from pydistort import project_points, Cv2Distortion
+        from pydistort import cv2_project_points, Cv2Distortion
 
         # Define the 3D points in the world coordinate system
         world_3dpoints = numpy.array([[0.0, 0.0, 5.0],
@@ -261,7 +267,7 @@ def project_points(
         distortion = Cv2Distortion([0.1, 0.2, 0.3, 0.4, 0.5])
 
         # Project the 3D points to 2D image points
-        result = project_points(world_3dpoints, rvec=rvec, tvec=tvec, K=K, distortion=distortion)
+        result = cv2_project_points(world_3dpoints, rvec=rvec, tvec=tvec, K=K, distortion=distortion)
         print("Projected image points:")
         print(result.image_points) # shape (5, 2)
 
@@ -270,7 +276,7 @@ def project_points(
     .. code-block:: python
 
         # Project the 3D points to 2D image points with Jacobians
-        result = project_points(world_3dpoints, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True)
+        result = cv2_project_points(world_3dpoints, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True)
 
         print("Jacobian with respect to 3D points:")
         print(result.jacobian_dx) # shape (5, 2, 3)
@@ -386,7 +392,7 @@ def project_points(
         jacobian_dp = numpy.moveaxis(jacobian_dp, -2, 0) if dp else None # (..., 2, 4) -> (2, ..., 4)
 
     # Return the result
-    result = ProjectPointsResult(
+    result = Cv2ProjectPointsResult(
         transformed_points=image_points,
         jacobian_dx=jacobian_dx,
         jacobian_dp=jacobian_dp

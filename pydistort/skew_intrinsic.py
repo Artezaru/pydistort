@@ -1,156 +1,10 @@
-from typing import Optional, Tuple
-from dataclasses import dataclass
+from typing import Optional, Tuple, Dict
 from numbers import Number
 import numpy
 
-from .core import Intrinsic, IntrinsicResult, InverseIntrinsicResult
+from .core import Intrinsic
 
 
-
-
-
-
-
-@dataclass
-class SkewIntrinsicResult(IntrinsicResult):
-    r"""
-    Subclass of :class:`pydistort.core.IntrinsicResult` to represent the result of the intrinsic transformation with skew.
-
-    This class is used to store the result of transforming the ``distorted_points`` (or ``normalized_points`` if no distortion is applied) to ``image_points``, and the optional Jacobians.
-
-    - ``transformed_points``: The transformed image points in the camera coordinate system. Shape (..., 2).
-    - ``jacobian_dx``: The Jacobian of the image points with respect to the input distorted points if ``dx`` is True. Otherwise None. Shape (..., 2, 2), where the last dimension represents (dx, dy).
-    - ``jacobian_dp``: The Jacobian of the image points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 5), where the last dimension represents (fx, fy, cx, cy, skew).
-    
-    Some properties are provided for convenience:
-
-    - ``image_points``: Alias for ``transformed_points`` to represent the transformed image points. Shape (..., 2).
-    - ``jacobian_df`` : Part of the Jacobian with respect to the focal lengths (fx, fy). Shape (..., 2, 2).
-    - ``jacobian_dc`` : Part of the Jacobian with respect to the principal point (cx, cy). Shape (..., 2, 2).
-    - ``jacobian_ds`` : Part of the Jacobian with respect to the skew parameter. Shape (..., 2, 1).
-
-    .. note::
-
-        If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.
-
-    .. warning::
-
-        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
-
-    """
-    @property
-    def jacobian_df(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the image points with respect to the focal lengths.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to focal lengths (df). Shape (..., 2, 2).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 0:2]
-    
-    @property
-    def jacobian_dc(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the image points with respect to the principal point.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to principal point (dc). Shape (..., 2, 2).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 2:4]
-    
-    @property
-    def jacobian_ds(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the image points with respect to the skew parameter.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to skew (ds). Shape (..., 2, 1).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 4:5]
-    
-
-
-@dataclass
-class InverseSkewIntrinsicResult(InverseIntrinsicResult):
-    r"""
-    Subclass of :class:`pydistort.core.InverseIntrinsicResult` to represent the result of the inverse intrinsic transformation in the cv2 format.
-
-    This class is used to store the result of transforming the ``image_points`` back to ``distorted_points`` (or ``normalized_points`` if no distortion is applied), and the optional Jacobians.
-
-    - ``transformed_points``: The transformed distorted points in the camera coordinate system. Shape (..., 2).
-    - ``jacobian_dx``: The Jacobian of the distorted points with respect to the input image points if ``dx`` is True. Otherwise None. Shape (..., 2, 2), where the last dimension represents (dx, dy).
-    - ``jacobian_dp``: The Jacobian of the distorted points with respect to the intrinsic parameters if ``dp`` is True. Otherwise None. Shape (..., 2, 5), where the last dimension represents (fx, fy, cx, cy, skew).
-    
-    Some properties are provided for convenience:
-
-    - ``distorted_points``: Alias for ``transformed_points`` to represent the transformed distorted points. Shape (..., 2).
-    - ``jacobian_df`` : Part of the Jacobian with respect to the focal lengths (fx, fy). Shape (..., 2, 2).
-    - ``jacobian_dc`` : Part of the Jacobian with respect to the principal point (cx, cy). Shape (..., 2, 2).
-    - ``jacobian_ds`` : Part of the Jacobian with respect to the skew parameter. Shape (..., 2, 1).
-
-    .. note::
-
-        If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.
-
-    .. warning::
-
-        If ``transpose`` is set to True during the transformation, the output points will have shape (output_dim, ...) instead of (..., output_dim), same for the Jacobian matrices.
-
-    """
-    @property
-    def jacobian_df(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the distorted points with respect to the focal lengths.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to focal lengths (df). Shape (..., 2, 2).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 0:2]
-    
-    @property
-    def jacobian_dc(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the distorted points with respect to the principal point.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to principal point (dc). Shape (..., 2, 2).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 2:4]
-    
-    @property
-    def jacobian_ds(self) -> Optional[numpy.ndarray]:
-        r"""
-        Get the Jacobian of the distorted points with respect to the skew parameter.
-
-        Returns
-        -------
-        Optional[numpy.ndarray]
-            The Jacobian with respect to skew (ds). Shape (..., 2, 1).
-        """
-        if self.jacobian_dp is None:
-            return None
-        return self.jacobian_dp[..., 4:5]
-    
 
 
 
@@ -181,6 +35,12 @@ class SkewIntrinsic(Intrinsic):
     .. note::
 
         If no distortion is applied, the ``distorted_points`` are equal to the ``normalized_points``.
+
+    Three short-hand notations are provided to access the jacobian with respect to focal length, principal point, and skew:
+
+    - ``jacobian_df``: The Jacobian of the image points with respect to the focal length parameters. It has shape (..., 2, 2), where the last dimension represents (df_x, df_y).
+    - ``jacobian_dc``: The Jacobian of the image points with respect to the principal point parameters. It has shape (..., 2, 2), where the last dimension represents (dc_x, dc_y).
+    - ``jacobian_ds``: The Jacobian of the image points with respect to the skew parameter. It has shape (..., 2, 1), where the last dimension represents (ds).
 
     Parameters
     ----------
@@ -259,12 +119,28 @@ class SkewIntrinsic(Intrinsic):
         return 5  # The intrinsic parameters are (fx, fy, cx, cy, skew) even if some of them are not set.
     
     @property
-    def result_class(self) -> type:
-        return SkewIntrinsicResult
-    
-    @property
-    def inverse_result_class(self) -> type:
-        return InverseSkewIntrinsicResult
+    def _jacobian_short_hand(self) -> Dict[str, Tuple[int, int, Optional[str]]]:
+        r"""
+        Short-hand notation for the Jacobian matrices with respect to the intrinsic parameters.
+
+        - ``df``: The Jacobian of the normalized points with respect to the focal length parameters. It has shape (..., 2, 2), where the last dimension represents (df_x, df_y).
+        - ``dc``: The Jacobian of the normalized points with respect to the principal point parameters. It has shape (..., 2, 2), where the last dimension represents (dc_x, dc_y).
+        - ``ds``: The Jacobian of the normalized points with respect to the skew parameter. It has shape (..., 2, 1), where the last dimension represents (ds).
+
+        Returns
+        -------
+        Dict[str, Tuple[int, int, Optional[str]]]
+            A dictionary where keys are names of the custom Jacobian views and values are tuples containing:
+
+            - start index (int): The starting index of the parameters to include in the custom Jacobian view.
+            - end index (int): The ending index of the parameters to include in the custom Jacobian view.
+            - doc (Optional[str]): A documentation string for the custom Jacobian view.
+        """
+        return {
+            "df": (0, 2, "Jacobian of the image points with respect to the focal length parameters (fx, fy)"),
+            "dc": (2, 4, "Jacobian of the image points with respect to the principal point parameters (cx, cy)"),
+            "ds": (4, 5, "Jacobian of the image points with respect to the skew parameter (s)"),
+        }
     
     @property
     def parameters(self) -> Optional[numpy.ndarray]:

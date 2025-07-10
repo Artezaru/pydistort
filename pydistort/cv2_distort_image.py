@@ -8,15 +8,22 @@ from .no_distortion import NoDistortion
 from .cv2_intrinsic import Cv2Intrinsic
 
 
-def distort_image(
+def cv2_distort_image(
         src: numpy.ndarray,
         K: Optional[numpy.ndarray],
         distortion: Optional[Distortion],
         method: str = "undistort",
+        interpolation: str = "linear",
         **kwargs
     ) -> numpy.ndarray:
     r"""
     Distort an image using the camera intrinsic and distortion coefficients.
+
+    This method use the same architecture as the `cv2.undistort` function from OpenCV, but it is implemented for the distortion and in a more flexible way to allow the use of different distortion models.
+    
+    .. seealso::
+
+        - :func:`pydistort.distort_image` for a more general distort function that can handle different types of points and transformations (extrinsic, intrinsic, distortion).
 
     The process to undistort an image is as follows:
 
@@ -50,10 +57,27 @@ def distort_image(
 
         Iterative non-linear optimization is used to find the undistorted points.
 
+    Different interpolation methods can be used, such as "linear", "nearest", etc. The default is "linear".
+    The table below shows the available interpolation methods for METHOD 1:
+
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | Interpolation  | Description                                                                                                    |
+    +================+================================================================================================================+
+    | "linear"       | Linear interpolation (default). Use cv2.INTER_LINEAR.                                                          |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "nearest"      | Nearest neighbor interpolation. Use cv2.INTER_NEAREST.                                                         |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "cubic"        | Bicubic interpolation. Use cv2.INTER_CUBIC.                                                                    |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "area"         | Resampling using pixel area relation. Use cv2.INTER_AREA.                                                      |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "lanczos4"     | Lanczos interpolation over 8x8 pixel neighborhood. Use cv2.INTER_LANCZOS4.                                     |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+
     METHOD 2 : Distort
     ------------------------------
 
-    The mapping is performed using scipy `scipy.interpolate.LinearNDInterpolator` function, which requires the source image and the mapping of pixel coordinates.
+    The mapping is performed using scipy `scipy.interpolate` function, which requires the source image and the mapping of pixel coordinates.
     The mapping of pixel coordinates is performed using the ``distort`` method of the distortion model, which applies the distortion to the normalized points.
 
     In this case, the input pixels (``src``) are projected to the output image coordinate system using the intrinsic matrix K.
@@ -63,6 +87,19 @@ def distort_image(
 
         - Time computation is higher than the first method.
         - Output values are not integer values (even if the input image is integer), so the user must apply (numpy.round) to the output image to get integer values.
+
+    Different interpolation methods can be used, such as "linear", etc. The default is "linear".
+    The table below shows the available interpolation methods for METHOD 2:
+
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | Interpolation  | Description                                                                                                    |
+    +================+================================================================================================================+
+    | "linear"       | Linear interpolation (default). Use scipy.interpolate.LinearNDInterpolator                                     |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "nearest"      | Nearest neighbor interpolation. Use scipy.interpolate.NearestNDInterpolator                                    |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "clough"       | Piecewise cubic interpolation. Use scipy.interpolate.CloughTocher2DInterpolator.                               |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
 
     Parameters
     ----------
@@ -80,7 +117,10 @@ def distort_image(
         The method to use for undistortion. The value can be "undistort" or "distort".
 
         - "undistort": Uses OpenCV's `cv2.remap` and the ``undistort`` method of the distortion model.
-        - "distort": Uses `scipy.interpolate.LinearNDInterpolator` and the ``distort`` method of the distortion model.
+        - "distort": Uses `scipy.interpolate` and the ``distort`` method of the distortion model.
+
+    interpolation : str, optional
+        The interpolation method to be used for remapping the pixels. Default is "linear".
 
     kwargs : dict
         Additional arguments to be passed to the distortion model "undistort" method.
@@ -96,7 +136,7 @@ def distort_image(
     .. code-block:: python
 
         import numpy
-        from pydistort import undistort_points, Cv2Distortion
+        from pydistort import cv2_distort_image, Cv2Distortion
 
         # Define the intrinsic camera matrix
         K = numpy.array([[1000.0, 0.0, 320.0],
@@ -106,11 +146,11 @@ def distort_image(
         # Define the distortion model (optional)
         distortion = Cv2Distortion([0.1, 0.2, 0.3, 0.4, 0.5])
 
-        # Load the image to be undistorted
+        # Load the image to be distorted
         src = cv2.imread('image.jpg')
 
-        # Undistort the image
-        undistorted_image = undistort_image(src, K, distortion)
+        # Distort the image
+        distorted_image = cv2_distort_image(src, K, distortion)
 
     """
     # Check if the method is valid
@@ -149,6 +189,31 @@ def distort_image(
     if src.ndim < 2 or src.ndim > 4:
         raise ValueError("src must have 2 to 4 dimensions (H, W, [C], [D])")
     
+    # Get the interpolation method
+    if method == "undistort":
+        if interpolation == "linear":
+            interpolation_method = cv2.INTER_LINEAR
+        elif interpolation == "nearest":
+            interpolation_method = cv2.INTER_NEAREST
+        elif interpolation == "cubic":
+            interpolation_method = cv2.INTER_CUBIC
+        elif interpolation == "area":
+            interpolation_method = cv2.INTER_AREA
+        elif interpolation == "lanczos4":
+            interpolation_method = cv2.INTER_LANCZOS4
+        else:
+            raise ValueError(f"Invalid interpolation method for METHOD 1: {interpolation}. Available methods: 'linear', 'nearest', 'cubic', 'area', 'lanczos4'.")
+    elif method == "distort":
+        if interpolation == "linear":
+            interpolation_method = scipy.interpolate.LinearNDInterpolator
+        elif interpolation == "nearest":
+            interpolation_method = scipy.interpolate.NearestNDInterpolator
+        elif interpolation == "clough":
+            interpolation_method = scipy.interpolate.CloughTocher2DInterpolator
+        else:
+            raise ValueError(f"Invalid interpolation method for METHOD 2: {interpolation}. Available methods: 'linear', 'nearest', 'clough'.")
+    
+    
     # Construct the pixel points in the image coordinate system
     height, width = src.shape[:2]
     pixel_points = numpy.indices((height, width), dtype=numpy.float64) # shape (2, H, W)
@@ -175,11 +240,12 @@ def distort_image(
         map_y = undistorted_pixel_points[0, :, :]  # Y coordinates, shape (H, W)
 
         # Remap the image using OpenCV
-        distorted_image = cv2.remap(src, map_x.astype(numpy.float32), map_y.astype(numpy.float32), interpolation=cv2.INTER_LINEAR)
-        distorted_image = cv2.remap(src, map_x.astype(numpy.float32), map_y.astype(numpy.float32), interpolation=cv2.INTER_CUBIC)
+        distorted_image = cv2.remap(src, map_x.astype(numpy.float32), map_y.astype(numpy.float32), interpolation=interpolation_method, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0))
 
         return distorted_image
     
+
+
     elif method == "distort":
 
         # Distort the pixel points using the distortion model

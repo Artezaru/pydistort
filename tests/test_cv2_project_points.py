@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from pydistort import Cv2Distortion, project_points, NoDistortion, ZernikeDistortion
+from pydistort import Cv2Distortion, cv2_project_points, NoDistortion, ZernikeDistortion
 import cv2
 import time
 import csv
@@ -35,7 +35,7 @@ def print_jacobian_differences(jac1, jac2, rtol=1e-5, atol=1e-8):
 @pytest.mark.parametrize("Nparams", [5, 8, 12, 14])
 @pytest.mark.parametrize("mode", ["strong_coefficients", "weak_coefficients"])
 def test_pydistort_project_vs_opencv(Nparams, mode):
-    """Compare Cv2Distortion.project_points and OpenCV projectPoints."""
+    """Compare Cv2Distortion.cv2_project_points and OpenCV projectPoints."""
     distortion = setup.CV2_DISTORTION(Nparams, mode)
 
     # Camera intrinsics
@@ -57,7 +57,7 @@ def test_pydistort_project_vs_opencv(Nparams, mode):
     ])
 
     # Project with your method
-    result = project_points(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, faster_dx=False, dp=True)
+    result = cv2_project_points(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, faster_dx=False, dp=True)
 
     # Project with OpenCV
     object_points = np.ascontiguousarray(points_3d.reshape(-1, 1, 3), dtype=np.float64)
@@ -91,7 +91,7 @@ def test_pydistort_project_vs_opencv(Nparams, mode):
 @pytest.mark.parametrize("Nparams", [5, 8, 12, 14])
 @pytest.mark.parametrize("mode", ["strong_coefficients", "weak_coefficients"])
 def test_pydistort_project_faster_vs_opencv(Nparams, mode):
-    """Compare Cv2Distortion.project_points and OpenCV projectPoints."""
+    """Compare Cv2Distortion.cv2_project_points and OpenCV projectPoints."""
     distortion = setup.CV2_DISTORTION(Nparams, mode)
 
     # Camera intrinsics
@@ -113,7 +113,7 @@ def test_pydistort_project_faster_vs_opencv(Nparams, mode):
     ])
 
     # Project with your method
-    result = project_points(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, faster_dx=True, dp=True)
+    result = cv2_project_points(points_3d, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, faster_dx=True, dp=True)
    
     # Project with OpenCV
     object_points = np.ascontiguousarray(points_3d.reshape(-1, 1, 3), dtype=np.float64)
@@ -151,7 +151,7 @@ def test_pydistort_project_faster_vs_opencv(Nparams, mode):
 @pytest.mark.parametrize("Nparams", [None])
 @pytest.mark.parametrize("mode", ["strong_coefficients"])
 def test_pydistort_project_vs_opencv_timer(Nparams, mode):
-    """Compare project_points and opencv.projectPoints for various Nparams in time."""
+    """Compare cv2_project_points and opencv.projectPoints for various Nparams in time."""
     if setup.TIMER():
         pydistort_alljac_times = []
         pydistort_alljac_faster_times = []
@@ -178,25 +178,25 @@ def test_pydistort_project_vs_opencv_timer(Nparams, mode):
 
             # Projection (analytic)
             start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=False)
+            result = cv2_project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=False)
             elapsed_time = time.perf_counter() - start_time
             pydistort_alljac_times.append(elapsed_time)
 
             # Projection (analytic, faster dx)
             start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=True)
+            result = cv2_project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=True)
             elapsed_time = time.perf_counter() - start_time
             pydistort_alljac_faster_times.append(elapsed_time)
 
             # Projection (analytic)
             start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=True)
+            result = cv2_project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=True)
             elapsed_time = time.perf_counter() - start_time
             pydistort_times.append(elapsed_time)
 
             # Projection (analytic)
             start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=False)
+            result = cv2_project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=False)
             elapsed_time = time.perf_counter() - start_time
             pydistort_nojac_times.append(elapsed_time)
 
@@ -223,7 +223,7 @@ def test_pydistort_project_vs_opencv_timer(Nparams, mode):
 
         if setup.CSV():
             # Write times to a CSV file
-            csv_filename = "Cv2Distortion_project_points_time_comparison.csv"
+            csv_filename = "Cv2Distortion_cv2_project_points_time_comparison.csv"
             csv_filename = os.path.join(os.path.dirname(__file__), csv_filename)
             with open(csv_filename, mode='w', newline='') as file:
                 writer = csv.writer(file)
@@ -235,7 +235,7 @@ def test_pydistort_project_vs_opencv_timer(Nparams, mode):
 
 
 def test_pydistort_project_zernike():
-    """Compare project_points and opencv.projectPoints for various Nparams in time."""
+    """Compare cv2_project_points and opencv.projectPoints for various Nparams in time."""
     if setup.TIMER():
         pydistort_alljac_times = []
         pydistort_alljac_faster_times = []
@@ -266,25 +266,25 @@ def test_pydistort_project_zernike():
 
             # Projection (analytic)
             start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=False)
+            result = cv2_project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=False)
             elapsed_time = time.perf_counter() - start_time
             pydistort_alljac_times.append(elapsed_time)
 
             # Projection (analytic, faster dx)
             start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=True)
+            result = cv2_project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=True, dp=True, faster_dx=True)
             elapsed_time = time.perf_counter() - start_time
             pydistort_alljac_faster_times.append(elapsed_time)
 
             # Projection (analytic)
             start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=True)
+            result = cv2_project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=True)
             elapsed_time = time.perf_counter() - start_time
             pydistort_times.append(elapsed_time)
 
             # Projection (analytic)
             start_time = time.perf_counter()
-            result = project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=False)
+            result = cv2_project_points(points, rvec=rvec, tvec=tvec, K=K, distortion=distortion, dx=False, dp=False)
             elapsed_time = time.perf_counter() - start_time
             pydistort_nojac_times.append(elapsed_time)
 
@@ -298,7 +298,7 @@ def test_pydistort_project_zernike():
 
         if setup.CSV():
             # Write times to a CSV file
-            csv_filename = "ZernikeDistortion_project_points_time_comparison.csv"
+            csv_filename = "ZernikeDistortion_cv2_project_points_time_comparison.csv"
             csv_filename = os.path.join(os.path.dirname(__file__), csv_filename)
             with open(csv_filename, mode='w', newline='') as file:
                 writer = csv.writer(file)

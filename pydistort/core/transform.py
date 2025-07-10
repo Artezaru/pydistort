@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import Optional, Tuple, Dict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import numpy
 import copy
 import matplotlib.pyplot as plt
-
+import scipy
 
 @dataclass
 class TransformResult:
@@ -51,64 +51,66 @@ class TransformResult:
     transformed_points: numpy.ndarray
     jacobian_dx: Optional[numpy.ndarray] = None
     jacobian_dp: Optional[numpy.ndarray] = None
-    # _custom_jacobians: Dict[str, Tuple[int, int, Optional[str]]] = {}
+    _custom_jacobians: Dict[str, Tuple[int, int, Optional[str]]] = field(default_factory=dict, init=False, repr=False) # To avoid mutability issues, we use field with default_factory
 
-    # def add_jacobian(self, name: str, start: int, end: int, doc: Optional[str] = None) -> None:
-    #     r"""
-    #     Add a custom view of the `jacobian_dp` matrix to the `TransformResult` object.
+    def add_jacobian(self, name: str, start: int, end: int, doc: Optional[str] = None) -> None:
+        r"""
+        Add a custom view of the `jacobian_dp` matrix to the `TransformResult` object.
 
-    #     This method allows to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.
-    #     The custom Jacobian can be accessed using the `name` attribute.
+        This method allows to add custom views of the `jacobian_dp` matrix with respect to the parameters of the transformation.
+        The custom Jacobian can be accessed using the `name` attribute.
 
-    #     Parameters
-    #     ----------
-    #     name : str
-    #         The name of the custom Jacobian view.
+        Parameters
+        ----------
+        name : str
+            The name of the custom Jacobian view.
         
-    #     start : int
-    #         The starting index of the parameters to include in the custom Jacobian view.
+        start : int
+            The starting index of the parameters to include in the custom Jacobian view.
         
-    #     end : int
-    #         The ending index of the parameters to include in the custom Jacobian view.
+        end : int
+            The ending index of the parameters to include in the custom Jacobian view.
         
-    #     doc : Optional[str], optional
-    #         A documentation string for the custom Jacobian view. Default is None.
-    #     """
-    #     if not isinstance(name, str):
-    #         raise TypeError(f"name must be a string, got {type(name)}")
-    #     if not isinstance(start, int):
-    #         raise TypeError(f"start must be an integer, got {type(start)}")
-    #     if not isinstance(end, int):
-    #         raise TypeError(f"end must be an integer, got {type(end)}")
-    #     if not doc is None and not isinstance(doc, str):
-    #         raise TypeError(f"doc must be a string, got {type(doc)}")
+        doc : Optional[str], optional
+            A documentation string for the custom Jacobian view. Default is None.
+        """
+        if not isinstance(name, str):
+            raise TypeError(f"name must be a string, got {type(name)}")
+        if not isinstance(start, int):
+            raise TypeError(f"start must be an integer, got {type(start)}")
+        if not isinstance(end, int):
+            raise TypeError(f"end must be an integer, got {type(end)}")
+        if not doc is None and not isinstance(doc, str):
+            raise TypeError(f"doc must be a string, got {type(doc)}")
         
-    #     if start < 0 or end < 0 or start >= end or end > self.jacobian_dp.shape[-1]:
-    #         raise ValueError(f"Invalid range for custom Jacobian view: start={start}, end={end}, Nparams={self.jacobian_dp.shape[-1]}")
-        
-    #     self._custom_jacobians[name] = (start, end, doc)
+        if self.jacobian_dp is not None:
+            
+            if start < 0 or end < 0 or start >= end or end > self.jacobian_dp.shape[-1]:
+                raise ValueError(f"Invalid range for custom Jacobian view: start={start}, end={end}, Nparams={self.jacobian_dp.shape[-1]}")
+            
+            self._custom_jacobians[name] = (start, end, doc)
 
-    # def __getattr__(self, key):
-    #     if key.startswith("jacobian_"):
-    #         name = key[len("jacobian_"):]
-    #         if name in self._custom_jacobians:
-    #             if self.jacobian_dp is None:
-    #                 return None
-    #             start, end, _ = self._custom_jacobians[name]
-    #             return self.jacobian_dp[..., start:end]
-    #     raise AttributeError(f"'TransformResult' object has no attribute '{key}'")
+    def __getattr__(self, key):
+        if key.startswith("jacobian_"):
+            name = key[len("jacobian_"):]
+            if name in self._custom_jacobians:
+                if self.jacobian_dp is None:
+                    return None
+                start, end, _ = self._custom_jacobians[name]
+                return self.jacobian_dp[..., start:end]
+        raise AttributeError(f"'TransformResult' object has no attribute '{key}'")
 
-    # def describe_jacobians(self):
-    #     r"""
-    #     Print the descriptions of the custom Jacobian views.
+    def describe_jacobians(self):
+        r"""
+        Print the descriptions of the custom Jacobian views.
 
-    #     This method prints the names and documentation strings of the custom Jacobian views added to the `TransformResult` object.
-    #     """
-    #     print("tranformed_points: The transformed points after applying the transformation with shape (..., output_dim)")
-    #     print("jacobian_dx: The Jacobian matrix with respect to the input points with shape (..., output_dim, input_dim) [or None if not computed]")
-    #     print("jacobian_dp: The Jacobian matrix with respect to the parameters of the transformation with shape (..., output_dim, Nparams) [or None if not computed]")
-    #     for name, (start, end, doc) in self._custom_jacobians.items():
-    #         print(f"jacobian_{name}: {doc if doc is not None else 'No description provided'} with shape (..., output_dim, {end - start}) [or None if not computed], view of jacobian_dp[..., {start}:{end}]")
+        This method prints the names and documentation strings of the custom Jacobian views added to the `TransformResult` object.
+        """
+        print("tranformed_points: The transformed points after applying the transformation with shape (..., output_dim)")
+        print("jacobian_dx: The Jacobian matrix with respect to the input points with shape (..., output_dim, input_dim) [or None if not computed]")
+        print("jacobian_dp: The Jacobian matrix with respect to the parameters of the transformation with shape (..., output_dim, Nparams) [or None if not computed]")
+        for name, (start, end, doc) in self._custom_jacobians.items():
+            print(f"jacobian_{name}: {doc if doc is not None else 'No description provided'} with shape (..., output_dim, {end - start}) [or None if not computed], view of jacobian_dp[..., {start}:{end}]")
 
 
 
@@ -152,9 +154,9 @@ class Transform(ABC):
 
     Each sub-classes must implement the following methods and properties:
 
-    - ``input_dim``: (attribute) The dimension of the input points (should be 2 for 2D points).
-    - ``output_dim``: (attribute) The dimension of the output points (should be 2 for 2D points).
-    - ``parameters`` (attribute) The parameters of the transformation in a 1D numpy array of shape (Nparams,).
+    - ``input_dim``: (property) The dimension of the input points (should be 2 for 2D points).
+    - ``output_dim``: (property) The dimension of the output points (should be 2 for 2D points).
+    - ``parameters`` (property and setter) The parameters of the transformation in a 1D numpy array of shape (Nparams,).
     - ``is_set``: (method) Check if the transformation is set (i.e., if the parameters are initialized).
     - ``_transform``: (method) Apply the transformation to the given points.
     - ``_inverse_transform``: (method) Apply the inverse transformation to the given points.
@@ -163,7 +165,7 @@ class Transform(ABC):
 
     - ``result_class``: (property) The class used for the result of the transformation (sub-class of ``TransformResult``). Default is :class:`pydistort.core.TransformResult`.
     - ``inverse_result_class``: (property) The class used for the result of the inverse transformation (sub-class of ``TransformResult``). Default is :class:`pydistort.core.TransformResult`.
-    - ``jacobian_short_hand``: (property) A dictionary of short-hand notation for the Jacobian matrices, which can be used to add custom views of the ``jacobian_dp`` matrix with respect to the parameters of the transformation.
+    - ``_jacobian_short_hand``: (property) A dictionary of short-hand notation for the Jacobian matrices, which can be used to add custom views of the ``jacobian_dp`` matrix with respect to the parameters of the transformation.
 
     More details on the transformation methods are provided in the `transform` and `inverse_transform` methods. 
 
@@ -212,7 +214,7 @@ class Transform(ABC):
         return TransformResult
     
     @property
-    def jacobian_short_hand(self) -> Dict[str, Tuple[int, int, Optional[str]]]:
+    def _jacobian_short_hand(self) -> Dict[str, Tuple[int, int, Optional[str]]]:
         r"""
         Property to return a dictionary of short-hand notation for the Jacobian matrices.
         
@@ -432,12 +434,12 @@ class Transform(ABC):
         TransformResult
             The result of the transformation.
         """
-        # if not isinstance(transform_result, TransformResult):
-        #     raise TypeError(f"transform_result must be an instance of TransformResult, got {type(transform_result)}")
+        if not isinstance(transform_result, TransformResult):
+            raise TypeError(f"transform_result must be an instance of TransformResult, got {type(transform_result)}")
         
-        # # Add custom Jacobian views to the TransformResult object
-        # for name, (start, end, doc) in self.jacobian_short_hand.items():
-        #     transform_result.add_jacobian(name, start, end, doc=doc)
+        # Add custom Jacobian views to the TransformResult object
+        for name, (start, end, doc) in self._jacobian_short_hand.items():
+            transform_result.add_jacobian(name, start, end, doc=doc)
         
         return transform_result
 
@@ -1303,7 +1305,7 @@ class Transform(ABC):
             J = jacobian_dx # shape (Nopt, dim, dim)
 
             # Solve the linear system to find the delta
-            delta_itk = numpy.array([numpy.linalg.solve(J[i], R[i]) for i in range(Nopt)], dtype=numpy.float64) # shape (Nopt, dim)
+            delta_itk = numpy.array([scipy.linalg.solve(J[i], R[i]) for i in range(Nopt)], dtype=numpy.float64) # shape (Nopt, dim)
 
             # Update the input points
             input_points[mask, :] = input_points[mask, :] + delta_itk
@@ -1318,17 +1320,4 @@ class Transform(ABC):
                 input_points = numpy.moveaxis(input_points, -1, 0) # (..., dim) -> (dim, ...)
 
         return input_points
-
-
-            
-
-
-
-
-
-
-
-
-
-
 

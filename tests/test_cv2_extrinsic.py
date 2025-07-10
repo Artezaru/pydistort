@@ -53,7 +53,7 @@ def test_transform_inverse_transform_consistency(default):
 
 def test_jacobian_analytic_numeric_match(default):
     """Test that the analytic Jacobian of the extrinsic transform matches the numeric approximation."""
-    points = numpy.random.rand(10, 3)  # Random 2D points
+    points = numpy.random.rand(10, 3)  # Random 3D points
     result_analytic = default.transform(points, dx=True, dp=True)
     epsilon = 1e-8
 
@@ -129,3 +129,14 @@ def test_inverse_jacobian_analytic_numeric_match(default):
             print(f"Jacobian mismatch with respect to parameter '{dp_labels[i]}'")
             raise e
 
+def test_custom_jacobian_view(default):
+    """Test that custom Jacobian views can be created and accessed correctly."""
+    points = numpy.random.rand(10, 3)  # Random 3D points
+    result = default.transform(points, dx=True, dp=True)
+
+    numpy.testing.assert_allclose(
+        result.jacobian_dr, result.jacobian_dp[..., 0:3], rtol=1e-3, atol=1e-5
+    )
+    numpy.testing.assert_allclose(
+        result.jacobian_dt, result.jacobian_dp[..., 3:6], rtol=1e-3, atol=1e-5
+    )

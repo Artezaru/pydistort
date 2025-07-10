@@ -7,14 +7,21 @@ from .no_distortion import NoDistortion
 from .cv2_intrinsic import Cv2Intrinsic
 
 
-def undistort_image(
+def cv2_undistort_image(
         src: numpy.ndarray,
         K: Optional[numpy.ndarray],
         distortion: Optional[Distortion],
+        interpolation: str = "linear",
         **kwargs
     ) -> numpy.ndarray:
     r"""
     Undistort an image using the camera intrinsic and distortion coefficients.
+
+    This method use the same architecture as the `cv2.undistort` function from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.
+    
+    .. seealso::
+
+        - :func:`pydistort.undistort_image` for a more general undistort function that can handle different types of points and transformations (extrinsic, intrinsic, distortion).
 
     The process to undistort an image is as follows:
 
@@ -28,6 +35,23 @@ def undistort_image(
 
     The mapping is performed using OpenCV's `cv2.remap` function, which requires the source image and the mapping of pixel coordinates.
 
+    Different interpolation methods can be used, such as "linear", "nearest", etc. The default is "linear".
+    The table below shows the available interpolation methods:
+
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | Interpolation  | Description                                                                                                    |
+    +================+================================================================================================================+
+    | "linear"       | Linear interpolation (default). Use cv2.INTER_LINEAR.                                                          |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "nearest"      | Nearest neighbor interpolation. Use cv2.INTER_NEAREST.                                                         |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "cubic"        | Bicubic interpolation. Use cv2.INTER_CUBIC.                                                                    |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "area"         | Resampling using pixel area relation. Use cv2.INTER_AREA.                                                      |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "lanczos4"     | Lanczos interpolation over 8x8 pixel neighborhood. Use cv2.INTER_LANCZOS4.                                     |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    
     .. note::
 
         - For an image the X dimension corresponds to the width and the Y dimension corresponds to the height.
@@ -45,6 +69,9 @@ def undistort_image(
     distortion : Optional[Distortion]
         The distortion model to be applied. If None, no distortion is applied.
 
+    interpolation : str, optional
+        The interpolation method to be used for remapping the pixels. Default is "linear".
+
     kwargs : dict
         Additional arguments to be passed to the distortion model "distort" method.
     
@@ -59,7 +86,7 @@ def undistort_image(
     .. code-block:: python
 
         import numpy
-        from pydistort import undistort_points, Cv2Distortion
+        from pydistort import cv2_undistort_image, Cv2Distortion
 
         # Define the intrinsic camera matrix
         K = numpy.array([[1000.0, 0.0, 320.0],
@@ -73,7 +100,7 @@ def undistort_image(
         src = cv2.imread('image.jpg')
 
         # Undistort the image
-        undistorted_image = undistort_image(src, K, distortion)
+        undistorted_image = cv2_undistort_image(src, K, distortion)
 
     """
     # Set the default values if None
@@ -108,6 +135,20 @@ def undistort_image(
     if src.ndim < 2 or src.ndim > 4:
         raise ValueError("src must have 2 to 4 dimensions (H, W, [C], [D])")
     
+    # Get the interpolation method
+    if interpolation == "linear":
+        interpolation_method = cv2.INTER_LINEAR
+    elif interpolation == "nearest":
+        interpolation_method = cv2.INTER_NEAREST
+    elif interpolation == "cubic":
+        interpolation_method = cv2.INTER_CUBIC
+    elif interpolation == "area":
+        interpolation_method = cv2.INTER_AREA
+    elif interpolation == "lanczos4":
+        interpolation_method = cv2.INTER_LANCZOS4
+    else:
+        raise ValueError(f"Invalid interpolation method: {interpolation}. Available methods: 'linear', 'nearest', 'cubic', 'area', 'lanczos4'.")
+    
     # Construct the pixel points in the image coordinate system
     height, width = src.shape[:2]
     pixel_points = numpy.indices((height, width), dtype=numpy.float64) # shape (2, H, W)
@@ -132,7 +173,7 @@ def undistort_image(
     map_y = distorted_pixel_points[0, :, :]  # Y' coordinates, shape (H, W)
 
     # Remap the image using OpenCV
-    undistorted_image = cv2.remap(src, map_x.astype(numpy.float32), map_y.astype(numpy.float32), interpolation=cv2.INTER_LINEAR, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0))
+    undistorted_image = cv2.remap(src, map_x.astype(numpy.float32), map_y.astype(numpy.float32), interpolation=interpolation_method, borderMode=cv2.BORDER_CONSTANT, borderValue=(0,0,0))
 
     return undistorted_image
 

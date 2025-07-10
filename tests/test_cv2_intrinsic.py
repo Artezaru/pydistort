@@ -118,3 +118,14 @@ def test_inverse_jacobian_analytic_numeric_match(default):
             print(f"Jacobian mismatch with respect to parameter '{dp_labels[i]}'")
             raise e
 
+def test_custom_jacobian_view(default):
+    """Test that custom Jacobian views can be created and accessed correctly."""
+    points = numpy.random.rand(10, 2)  # Random 2D points
+    result = default.transform(points, dx=True, dp=True)
+
+    numpy.testing.assert_allclose(
+        result.jacobian_df, result.jacobian_dp[..., :2], rtol=1e-3, atol=1e-5
+    )
+    numpy.testing.assert_allclose(
+        result.jacobian_dc, result.jacobian_dp[..., 2:4], rtol=1e-3, atol=1e-5
+    )
