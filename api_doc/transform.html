@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.core.Transform &#8212; pydistort 3.0.1 documentation</title>
+    <title>pydistort.core.Transform &#8212; pydistort 3.1.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=08bfcbec"></script>
+    <script src="../_static/documentation_options.js?v=796a81b5"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.0.1 documentation</p>
+    <p class="title logo__title">pydistort 3.1.1 documentation</p>
   
 </a></div>
     
@@ -276,7 +276,7 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic and Intrinsic Classes:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_intrinsic.html">pydistort.NoIntrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_intrinsic.html">pydistort.Cv2Intrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="skew_intrinsic.html">pydistort.SkewIntrinsic</a></li>
 </ul>
@@ -286,14 +286,19 @@
 <li class="toctree-l1"><a class="reference internal" href="cv2_distortion.html">pydistort.Cv2Distortion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions (as OPENCV):</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic Models:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="no_extrinsic.html">pydistort.NoExtrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as PYDISTORT):</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="undistort_points.html">pydistort.undistort_points</a></li>
@@ -691,10 +696,6 @@ The guess must be given in the (Npoints, dim) float64 format.
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ValueError</strong> – If the output points do not have the expected shape, or if the input and output dimensions do not match the transformation’s input and output dimensions.</p></li>
 <li><p><strong>TypeError</strong> – If the output points or guess are not numpy arrays, or if the guess is not a numpy array.</p></li>
-<li><p><strong>Developer Notes</strong> – </p></li>
-<li><p><strong>~~~~~~~~~~~~~~~</strong> – </p></li>
-<li><p><strong>The subclasses must implement the _transform method to apply the transformation to the input points.</strong> – </p></li>
-<li><p><strong>The _transform method should return the transformed points and the Jacobian matrix with respect to the input points.</strong> – </p></li>
 </ul>
 </dd>
 </dl>
@@ -765,10 +766,6 @@ The guess must be given in the (Nparams,) float64 format.
 <dd class="field-even"><ul class="simple">
 <li><p><strong>ValueError</strong> – If the input and output points do not have the same number of points, or if the input and output dimensions do not match the transformation’s input and output dimensions.</p></li>
 <li><p><strong>TypeError</strong> – If the input and output points are not numpy arrays, or if the guess is not a numpy array.</p></li>
-<li><p><strong>Developer Notes</strong> – </p></li>
-<li><p><strong>~~~~~~~~~~~~~~~</strong> – </p></li>
-<li><p><strong>The subclasses must implement the _transform method to apply the transformation to the input points.</strong> – </p></li>
-<li><p><strong>The _transform method should return the transformed points and the Jacobian matrix with respect to the parameters</strong><strong> of </strong><strong>the transformation.</strong> – </p></li>
 </ul>
 </dd>
 </dl>
@@ -893,24 +890,29 @@ Please use this parameter with caution, as it may lead to unexpected results if 
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>TransformResult</em> – An object containing the transformed points and the Jacobian matrices if requested.</p></li>
-<li><p><em>Developer Notes</em></p></li>
-<li><p><em>~~~~~~~~~~~~~~~</em></p></li>
-<li><p>The subclasses must implement the <cite>_transform</cite> method to apply the transformation to the input points.</p></li>
-<li><p>The <cite>_transform</cite> method should</p></li>
-<li><p><em>- take the input points as a numpy array of shape (Npoints, input_dim)</em></p></li>
-<li><p><em>- return 3 numpy arrays</em> –</p>
+<dd class="field-even"><p>An object containing the transformed points and the Jacobian matrices if requested.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pydistort.core.TransformResult" title="pydistort.core.TransformResult">TransformResult</a></p>
+</dd>
+</dl>
+<section id="id1">
+<h2>Developer Notes<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<p>The subclasses must implement the <cite>_transform</cite> method to apply the transformation to the input points.</p>
+<p>The <cite>_transform</cite> method should:</p>
 <ul>
+<li><p>take the input points as a numpy array of shape (Npoints, input_dim)</p></li>
+<li><p>return 3 numpy arrays:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p><cite>transformed_points</cite>: The transformed points of shape (Npoints, output_dim).</p></li>
 <li><p><cite>jacobian_dx</cite>: The Jacobian matrix with respect to the input points of shape (Npoints, output_dim, input_dim) if <cite>dx</cite> is True, otherwise None.</p></li>
 <li><p><cite>jacobian_dp</cite>: The Jacobian matrix with respect to the parameters of the transformation of shape (Npoints, output_dim, Nparams) if <cite>dp</cite> is True, otherwise None.</p></li>
 </ul>
+</div></blockquote>
 </li>
 </ul>
-</p>
-</dd>
-</dl>
+</section>
 </dd></dl>
 
 </dd></dl>

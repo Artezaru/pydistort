@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.cv2_project_points &#8212; pydistort 3.0.1 documentation</title>
+    <title>pydistort.cv2_project_points &#8212; pydistort 3.1.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=08bfcbec"></script>
+    <script src="../../_static/documentation_options.js?v=796a81b5"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/cv2_project_points';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.0.1 documentation</p>
+    <p class="title logo__title">pydistort 3.1.1 documentation</p>
   
 </a></div>
     
@@ -316,9 +316,9 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.core.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformResult</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.core.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.no_distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoDistortion</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.cv2_intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cv2Intrinsic</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.cv2_extrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cv2Extrinsic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.distortion_objects.no_distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoDistortion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.intrinsic_objects.cv2_intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cv2Intrinsic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.extrinsic_objects.cv2_extrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cv2Extrinsic</span>
 
 
 <div class="viewcode-block" id="Cv2ProjectPointsResult">
@@ -525,7 +525,7 @@
 <span class="sd">        If None, the identity intrinsic matrix is used.</span>
 
 <span class="sd">    distortion : Optional[Distortion]</span>
-<span class="sd">        The distortion model to be applied to the image points.</span>
+<span class="sd">        The distortion model to be applied to the normalized points.</span>
 <span class="sd">        If None, a zero distortion is applied.</span>
 
 <span class="sd">    transpose : bool, optional</span>

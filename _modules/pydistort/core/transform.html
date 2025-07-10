@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.core.transform &#8212; pydistort 3.0.1 documentation</title>
+    <title>pydistort.core.transform &#8212; pydistort 3.1.1 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=08bfcbec"></script>
+    <script src="../../../_static/documentation_options.js?v=796a81b5"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/core/transform';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.0.1 documentation</p>
+    <p class="title logo__title">pydistort 3.1.1 documentation</p>
   
 </a></div>
     
@@ -864,9 +864,9 @@
 <span class="sd">        TransformResult</span>
 <span class="sd">            An object containing the transformed points and the Jacobian matrices if requested.</span>
 
+<span class="sd">            </span>
 <span class="sd">        Developer Notes</span>
-<span class="sd">        ~~~~~~~~~~~~~~~</span>
-<span class="sd">        </span>
+<span class="sd">        ----------------</span>
 <span class="sd">        The subclasses must implement the `_transform` method to apply the transformation to the input points.</span>
 <span class="sd">        </span>
 <span class="sd">        The `_transform` method should:</span>
@@ -1024,8 +1024,7 @@
 
 <span class="sd">            </span>
 <span class="sd">        Developer Notes</span>
-<span class="sd">        ~~~~~~~~~~~~~~~</span>
-
+<span class="sd">        ----------------</span>
 <span class="sd">        The subclasses must implement the `_inverse_transform` method to apply the inverse transformation to the input points.</span>
 
 <span class="sd">        The `_inverse_transform` method should:</span>
@@ -1218,11 +1217,7 @@
 <span class="sd">        TypeError</span>
 <span class="sd">            If the input and output points are not numpy arrays, or if the guess is not a numpy array.</span>
 
-<span class="sd">        Developer Notes</span>
-<span class="sd">        ~~~~~~~~~~~~~~~</span>
-
-<span class="sd">        The subclasses must implement the `_transform` method to apply the transformation to the input points.</span>
-<span class="sd">        The `_transform` method should return the transformed points and the Jacobian matrix with respect to the parameters of the transformation.</span>
+<span class="sd">            </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">_skip</span><span class="p">:</span>
             <span class="c1"># Check the boolean flags</span>
@@ -1548,11 +1543,6 @@
 <span class="sd">        TypeError</span>
 <span class="sd">            If the output points or guess are not numpy arrays, or if the guess is not a numpy array.</span>
 
-<span class="sd">        Developer Notes</span>
-<span class="sd">        ~~~~~~~~~~~~~~~</span>
-
-<span class="sd">        The subclasses must implement the `_transform` method to apply the transformation to the input points.</span>
-<span class="sd">        The `_transform` method should return the transformed points and the Jacobian matrix with respect to the input points.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">:</span>

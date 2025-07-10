@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.Cv2Intrinsic &#8212; pydistort 3.0.1 documentation</title>
+    <title>pydistort.Cv2Intrinsic &#8212; pydistort 3.1.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=08bfcbec"></script>
+    <script src="../_static/documentation_options.js?v=796a81b5"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pydistort.SkewIntrinsic" href="skew_intrinsic.html" />
-    <link rel="prev" title="pydistort.Cv2Extrinsic" href="cv2_extrinsic.html" />
+    <link rel="prev" title="pydistort.NoIntrinsic" href="no_intrinsic.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.0.1 documentation</p>
+    <p class="title logo__title">pydistort 3.1.1 documentation</p>
   
 </a></div>
     
@@ -276,7 +276,7 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic and Intrinsic Classes:</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="no_intrinsic.html">pydistort.NoIntrinsic</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.Cv2Intrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="skew_intrinsic.html">pydistort.SkewIntrinsic</a></li>
 </ul>
@@ -286,14 +286,19 @@
 <li class="toctree-l1"><a class="reference internal" href="cv2_distortion.html">pydistort.Cv2Distortion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions (as OPENCV):</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic Models:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="no_extrinsic.html">pydistort.NoExtrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as PYDISTORT):</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="undistort_points.html">pydistort.undistort_points</a></li>
@@ -363,7 +368,7 @@
 <h1>pydistort.Cv2Intrinsic<a class="headerlink" href="#pydistort-cv2intrinsic" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pydistort.Cv2Intrinsic">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">Cv2Intrinsic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intrinsic_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/cv2_intrinsic.html#Cv2Intrinsic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Intrinsic" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">Cv2Intrinsic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">intrinsic_matrix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/intrinsic_objects/cv2_intrinsic.html#Cv2Intrinsic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Intrinsic" title="Link to this definition">#</a></dt>
 <dd><p>Subclass of <a class="reference internal" href="intrinsic.html#pydistort.core.Intrinsic" title="pydistort.core.Intrinsic"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.core.Intrinsic</span></code></a> to represent the intrinsic transformation using OpenCV conventions.</p>
 <p>The equation used for the intrinsic transformation is:</p>
 <div class="math notranslate nohighlight">
@@ -464,7 +469,7 @@ f_x &amp; 0 &amp; c_x \\
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pydistort.Cv2Intrinsic._inverse_transform">
-<span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_intrinsic.html#Cv2Intrinsic._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Intrinsic._inverse_transform" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_inverse_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/intrinsic_objects/cv2_intrinsic.html#Cv2Intrinsic._inverse_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Intrinsic._inverse_transform" title="Link to this definition">#</a></dt>
 <dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.core.Transform.inverse_transform" title="pydistort.core.Transform.inverse_transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.core.Transform.inverse_transform()</span></code></a> method to perform the inverse intrinsic transformation.
 This method allows to transform the <code class="docutils literal notranslate"><span class="pre">image_points</span></code> back to <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> using the intrinsic parameters.</p>
 <div class="admonition note">
@@ -528,7 +533,7 @@ No checks are performed on the input points, so it is the user’s responsibilit
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pydistort.Cv2Intrinsic._transform">
-<span class="sig-name descname"><span class="pre">_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distorted_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_intrinsic.html#Cv2Intrinsic._transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Intrinsic._transform" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distorted_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pydistort/intrinsic_objects/cv2_intrinsic.html#Cv2Intrinsic._transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Intrinsic._transform" title="Link to this definition">#</a></dt>
 <dd><p>This method is called by the <a class="reference internal" href="transform.html#pydistort.core.Transform.transform" title="pydistort.core.Transform.transform"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pydistort.core.Transform.transform()</span></code></a> method to perform the intrinsic transformation.
 This method allows to transform the <code class="docutils literal notranslate"><span class="pre">distorted_points</span></code> to <code class="docutils literal notranslate"><span class="pre">image_points</span></code> using the intrinsic parameters.</p>
 <div class="admonition note">
@@ -703,7 +708,7 @@ c_y
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pydistort.Cv2Intrinsic.is_set">
-<span class="sig-name descname"><span class="pre">is_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydistort/cv2_intrinsic.html#Cv2Intrinsic.is_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Intrinsic.is_set" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">is_set</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/pydistort/intrinsic_objects/cv2_intrinsic.html#Cv2Intrinsic.is_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Intrinsic.is_set" title="Link to this definition">#</a></dt>
 <dd><p>Check if the intrinsic parameters are set.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -807,12 +812,12 @@ c_y
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="cv2_extrinsic.html"
+       href="no_intrinsic.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pydistort.Cv2Extrinsic</p>
+        <p class="prev-next-title">pydistort.NoIntrinsic</p>
       </div>
     </a>
     <a class="right-next"

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.cv2_undistort_points &#8212; pydistort 3.1.1 documentation</title>
+    <title>pydistort.undistort_points &#8212; pydistort 3.1.1 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
     <script src="../../_static/documentation_options.js?v=796a81b5"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/cv2_undistort_points';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/undistort_points';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -292,7 +292,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.cv2_undistort_points</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.undistort_points</span></li>
   </ul>
 </nav>
 </div>
@@ -309,73 +309,81 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for pydistort.cv2_undistort_points</h1><div class="highlight"><pre>
+  <h1>Source code for pydistort.undistort_points</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.core.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.core.intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Intrinsic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.core.extrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Extrinsic</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">.distortion_objects.no_distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoDistortion</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.intrinsic_objects.cv2_intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cv2Intrinsic</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">.extrinsic_objects.cv2_extrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cv2Extrinsic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.intrinsic_objects.no_intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoIntrinsic</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.extrinsic_objects.no_extrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoExtrinsic</span>
 
 
 
-<div class="viewcode-block" id="cv2_undistort_points">
-<a class="viewcode-back" href="../../api_doc/cv2_undistort_points.html#pydistort.cv2_undistort_points">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">cv2_undistort_points</span><span class="p">(</span>
+
+<div class="viewcode-block" id="undistort_points">
+<a class="viewcode-back" href="../../api_doc/undistort_points.html#pydistort.undistort_points">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">undistort_points</span><span class="p">(</span>
         <span class="n">image_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">K</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
+        <span class="n">intrinsic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Intrinsic</span><span class="p">],</span>
         <span class="n">distortion</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Distortion</span><span class="p">],</span>
-        <span class="n">R</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">P</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">R</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Extrinsic</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">P</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Intrinsic</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
         <span class="n">transpose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Undistort 2D image points using the camera intrinsic and distortion coefficients.</span>
+<span class="sd">    Undistort 2D image points using the camera intrinsic, distortion and extrinsic transformations.</span>
 
-<span class="sd">    This method use the same architecture as the `cv2.undistortPoints` function from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.</span>
-<span class="sd">    </span>
 <span class="sd">    .. seealso::</span>
 
-<span class="sd">        - :func:`pydistort.undistort_points` for a more general undistortion function that can handle different types of points and transformations (extrinsic, intrinsic, distortion).</span>
+<span class="sd">        To use a method usage-like OpenCV, use the :func:`pydistort.cv2_undistort_points` function.</span>
 
 <span class="sd">    The process to undistort a 2D-image point is as follows:</span>
 
-<span class="sd">    1. The ``image_points`` (:math:`x_I`) are normalized by multiplying by the inverse of the intrinsic matrix K to obtain the ``distorted_points`` (:math:`x_D`).</span>
+<span class="sd">    1. The ``image_points`` (:math:`x_I`) are normalized by applying the inverse intrinsic application to obtain the ``distorted_points`` (:math:`x_D`).</span>
 <span class="sd">    2. The ``distorted_points`` (:math:`x_D`) are undistorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``normalized_points`` (:math:`x_N`).</span>
-<span class="sd">    3. A rectification matrix R and a new projection matrix P can be applied to the ``normalized_points`` to return the ``undistorted_points`` in the space required by the user.</span>
+<span class="sd">    3. A rectification extrinsic operation R and a new projection intrinsic projection P can be applied to the ``normalized_points`` to return the ``undistorted_points`` in the space required by the user.</span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        The ``P = intrinsic`` to return the undistorted points in the image coordinate system.</span>
 
 <span class="sd">    .. warning::</span>
 
 <span class="sd">        Iterative non-linear optimization is used to find the undistorted points.</span>
 
 <span class="sd">    The given points ``image_points`` are assumed to be in the image coordinate system and expressed in 2D coordinates with shape (..., 2).</span>
-<span class="sd">    If the user gives an identity matrix K, it equivalent to give directly the normalized points.</span>
+<span class="sd">    If the user gives not give a intrinsic transformation, it equivalent to give directly the normalized points.</span>
 
-<span class="sd">    This method not compute the jacobians of the undistortion process, but it can be done by using the ``dx`` and ``dp`` flags in the intrinsic and distortion models.</span>
+<span class="sd">    This method not compute the jacobians of the undistortion process, but it can be done by using the ``dx`` and ``dp`` flags in the intrinsic and distortion models if they can compute the jacobians.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    image_points : numpy.ndarray</span>
 <span class="sd">        The 2D image points in the camera coordinate system. Shape (..., 2)</span>
 <span class="sd">        </span>
-<span class="sd">    K : Optional[numpy.ndarray]</span>
-<span class="sd">        The intrinsic camera matrix (or vector). Shape (3, 3) or (4,).</span>
-<span class="sd">        If None, the identity intrinsic matrix is used.</span>
+<span class="sd">    intrinsic : Optional[Intrinsic]</span>
+<span class="sd">        The intrinsic transformation to be applied to the image points.</span>
+<span class="sd">        If None, a zero intrinsic is applied (i.e., identity transformation).</span>
 
 <span class="sd">    distortion : Optional[Distortion]</span>
 <span class="sd">        The distortion model to be applied to the normalized points.</span>
-<span class="sd">        If None, a zero distortion is applied.</span>
+<span class="sd">        If None, a zero distortion is applied (i.e., identity transformation).</span>
 
-<span class="sd">    R : Optional[numpy.ndarray], optional</span>
-<span class="sd">        The rotation matrix (or vector) of the camera. Shape (3,) or (3, 3).</span>
-<span class="sd">        If None, the identity rotation is used. Default is None.</span>
+<span class="sd">    R : Optional[Extrinsic], optional</span>
+<span class="sd">        The rectification extrinsic transformation (rotation and translation) to be applied to the normalized points.</span>
+<span class="sd">        If None, a zero extrinsic is applied (i.e., identity transformation). Default is None.</span>
 
-<span class="sd">    P : Optional[numpy.ndarray], optional</span>
-<span class="sd">        The new projection matrix (or vector). Shape (3, 3) or (4,).</span>
-<span class="sd">        If None, the identity projection matrix is used. Default is None.</span>
+<span class="sd">    P : Optional[Intrinsic], optional</span>
+<span class="sd">        The projection intrinsic transformation to be applied to the normalized points.</span>
+<span class="sd">        If None, the intrinsic matrix is assumed to be the identity matrix (i.e., no projection transformation).</span>
+<span class="sd">        This is useful to return the undistorted points in the image coordinate system.</span>
 
 <span class="sd">    transpose : bool, optional</span>
 <span class="sd">        If True, the input points are assumed to be in the shape (2, ...) instead of (..., 2). Default is False.</span>
@@ -397,7 +405,7 @@
 <span class="sd">    .. code-block:: python</span>
 
 <span class="sd">        import numpy</span>
-<span class="sd">        from pydistort import cv2_undistort_points, Cv2Distortion</span>
+<span class="sd">        from pydistort import undistort_points, Cv2Distortion, Cv2Intrinsic</span>
 <span class="sd">        from py3dframe import Frame</span>
 
 <span class="sd">        # Define the 2D image points in the camera coordinate system</span>
@@ -411,71 +419,53 @@
 <span class="sd">        K = numpy.array([[1000.0, 0.0, 320.0],</span>
 <span class="sd">                        [0.0, 1000.0, 240.0],</span>
 <span class="sd">                        [0.0, 0.0, 1.0]])</span>
+<span class="sd">    </span>
+<span class="sd">        # Create the intrinsic object</span>
+<span class="sd">        intrinsic = Cv2Intrinsic(intrinsic_matrix=K)</span>
 
 <span class="sd">        # Define the distortion model (optional)</span>
 <span class="sd">        distortion = Cv2Distortion([0.1, 0.2, 0.3, 0.4, 0.5])</span>
 
 <span class="sd">        # Undistort the 2D image points</span>
-<span class="sd">        normalized_points = cv2_undistort_points(image_points, K=K, distortion=distortion)</span>
+<span class="sd">        normalized_points = undistort_points(image_points, intrinsic=intrinsic, distortion=distortion)</span>
 
-<span class="sd">    To return the undistorted points in the image coordinate system, you can provide a projection matrix P equal to the intrinsic matrix K:</span>
+<span class="sd">    To return the undistorted points in the image coordinate system, you can provide a projection P equal to the intrinsic K:</span>
 
 <span class="sd">    .. code-block:: python</span>
 
-<span class="sd">        undistorted_points = cv2_undistort_points(image_points, K=K, distortion=distortion, P=K)</span>
+<span class="sd">        undistorted_points = undistort_points(image_points, intrinsic=intrinsic, distortion=distortion, P=K)</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Set the default values if None</span>
-    <span class="k">if</span> <span class="n">K</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">K</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
-                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">R</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">R</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">P</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">P</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">intrinsic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">intrinsic</span> <span class="o">=</span> <span class="n">NoIntrinsic</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">distortion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">distortion</span> <span class="o">=</span> <span class="n">NoDistortion</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">R</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">NoExtrinsic</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">P</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">NoIntrinsic</span><span class="p">()</span>
 
-    <span class="c1"># Create the intrinsic and distortion objects</span>
-    <span class="n">intrinsic</span> <span class="o">=</span> <span class="n">Cv2Intrinsic</span><span class="p">()</span>
-    <span class="n">K</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">K</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="n">intrinsic</span><span class="o">.</span><span class="n">intrinsic_vector</span> <span class="o">=</span> <span class="n">K</span>
-    <span class="k">elif</span> <span class="n">K</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
-        <span class="n">intrinsic</span><span class="o">.</span><span class="n">intrinsic_matrix</span> <span class="o">=</span> <span class="n">K</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;K must be of shape (4,) or (3, 3)&quot;</span><span class="p">)</span>
-    
-    <span class="n">intrinsic_projection</span> <span class="o">=</span> <span class="n">Cv2Intrinsic</span><span class="p">()</span>
-    <span class="n">P</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">P</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="n">intrinsic_projection</span><span class="o">.</span><span class="n">intrinsic_vector</span> <span class="o">=</span> <span class="n">P</span>
-    <span class="k">elif</span> <span class="n">P</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
-        <span class="n">intrinsic_projection</span><span class="o">.</span><span class="n">intrinsic_matrix</span> <span class="o">=</span> <span class="n">P</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;P must be of shape (4,) or (3, 3)&quot;</span><span class="p">)</span>
-    
-    <span class="n">rectification</span> <span class="o">=</span> <span class="n">Cv2Extrinsic</span><span class="p">()</span>
-    <span class="n">rectification</span><span class="o">.</span><span class="n">translation_vector</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">R</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">R</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">rectification</span><span class="o">.</span><span class="n">rotation_vector</span> <span class="o">=</span> <span class="n">R</span>
-    <span class="k">elif</span> <span class="n">R</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">9</span><span class="p">:</span>
-        <span class="n">rectification</span><span class="o">.</span><span class="n">rotation_matrix</span> <span class="o">=</span> <span class="n">R</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;R must be of shape (3,) or (3, 3)&quot;</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distortion</span><span class="p">,</span> <span class="n">Distortion</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;distortion must be an instance of the Distortion class&quot;</span><span class="p">)</span>
+    <span class="c1"># Check the types of the parameters</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intrinsic</span><span class="p">,</span> <span class="n">Intrinsic</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;intrinsic must be an instance of the Intrinsic class&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">intrinsic</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The intrinsic matrix K must be set&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">intrinsic_projection</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The projection matrix P must be set&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">rectification</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The rectification matrix R must be set&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The intrinsic object must be ready to transform the points, check is_set() method.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">distortion</span><span class="p">,</span> <span class="n">Distortion</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;distortion must be an instance of the Distortion class.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">distortion</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The distortion coefficients must be set&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The distortion object must be ready to transform the points, check is_set() method.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">Extrinsic</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;R must be an instance of the Extrinsic class&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">R</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The rectification extrinsic object must be ready to transform the points, check is_set() method.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">Intrinsic</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;P must be an instance of the Intrinsic class&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">P</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The projection intrinsic object must be ready to transform the points, check is_set() method.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transpose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transpose must be a boolean value&quot;</span><span class="p">)</span>
     
     <span class="c1"># Create the array of points</span>
     <span class="n">points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">image_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
@@ -499,13 +489,13 @@
     <span class="c1"># Realize the transformation:</span>
     <span class="n">distorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">intrinsic</span><span class="o">.</span><span class="n">_inverse_transform</span><span class="p">(</span><span class="n">points_flat</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; shape (Npoints, 2)</span>
     <span class="n">undistorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">distortion</span><span class="o">.</span><span class="n">_inverse_transform</span><span class="p">(</span><span class="n">distorted_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; shape (Npoints, 2)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">NoExtrinsic</span><span class="p">):</span>
+        <span class="n">undistorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">undistorted_points</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; shape (Npoints, 3)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">NoIntrinsic</span><span class="p">):</span>
+        <span class="n">undistorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">undistorted_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3) -&gt; shape (Npoints, 2)</span>
     
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">rectification</span><span class="o">.</span><span class="n">rotation_vector</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)):</span>
-        <span class="n">undistorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rectification</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">undistorted_points</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># shape (Npoints, 3) -&gt; shape (Npoints, 2)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">intrinsic_projection</span><span class="o">.</span><span class="n">intrinsic_matrix</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)):</span>
-        <span class="n">undistorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">intrinsic_projection</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">undistorted_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; shape (Npoints, 2)</span>
-
     <span class="c1"># Reshape the normalized points back to the original shape (Warning shape is (..., 2) and not (..., 3))</span>
     <span class="n">undistorted_points</span> <span class="o">=</span> <span class="n">undistorted_points</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; (..., 2)</span>
 

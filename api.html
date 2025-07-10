@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>API Reference &#8212; pydistort 3.0.1 documentation</title>
+    <title>API Reference &#8212; pydistort 3.1.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=08bfcbec"></script>
+    <script src="_static/documentation_options.js?v=796a81b5"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.0.1 documentation</p>
+    <p class="title logo__title">pydistort 3.1.1 documentation</p>
   
 </a></div>
     
@@ -276,7 +276,7 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic and Intrinsic Classes:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/no_intrinsic.html">pydistort.NoIntrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_intrinsic.html">pydistort.Cv2Intrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/skew_intrinsic.html">pydistort.SkewIntrinsic</a></li>
 </ul>
@@ -286,14 +286,19 @@
 <li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_distortion.html">pydistort.Cv2Distortion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions (as OPENCV):</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic Models:</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="api_doc/no_extrinsic.html">pydistort.NoExtrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_project_points.html">pydistort.cv2_project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as PYDISTORT):</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="api_doc/project_points.html">pydistort.project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/undistort_points.html">pydistort.undistort_points</a></li>
@@ -382,11 +387,11 @@ It includes classes and functions to handle various types of distortion paramete
 </ul>
 </div>
 <p>These classes are designed to handle the transformation of points between different coordinate systems, including intrinsic and extrinsic parameters, as well as distortion models.</p>
-<p>Some Extrinsic and Intrinsic classes are provided in the package, such as:</p>
+<p>Some Intrinsic classes are provided in the package, such as:</p>
 <div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic and Intrinsic Classes:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/no_intrinsic.html">pydistort.NoIntrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_intrinsic.html">pydistort.Cv2Intrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/skew_intrinsic.html">pydistort.SkewIntrinsic</a></li>
 </ul>
@@ -400,6 +405,14 @@ It includes classes and functions to handle various types of distortion paramete
 <li class="toctree-l1"><a class="reference internal" href="api_doc/zernike_distortion.html">pydistort.ZernikeDistortion</a></li>
 </ul>
 </div>
+<p>Some extrinsic models are provided in the package, such as:</p>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic Models:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/no_extrinsic.html">pydistort.NoExtrinsic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
+</ul>
+</div>
 </section>
 <section id="global-functions">
 <h2>Global Functions<a class="headerlink" href="#global-functions" title="Link to this heading">#</a></h2>
@@ -408,7 +421,7 @@ These functions are designed to simplify the process of applying transformations
 <p>These functions are inspired by the OpenCV functions <cite>cv2.projectPoints</cite> and <cite>cv2.undistortPoints</cite>, but they are designed to work with the <cite>pydistort</cite> package’s classes and methods.
 This method use the same architecture as the <cite>cv2</cite> functions from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.</p>
 <div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions (as OPENCV):</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_project_points.html">pydistort.cv2_project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
@@ -418,7 +431,7 @@ This method use the same architecture as the <cite>cv2</cite> functions from Ope
 </div>
 <p>For a more general functions that can handle different types of points and transformations (extrinsic, intrinsic, distortion), please refer to the following:</p>
 <div class="toctree-wrapper compound">
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Global Functions:</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as PYDISTORT):</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/project_points.html">pydistort.project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api_doc/undistort_points.html">pydistort.undistort_points</a></li>

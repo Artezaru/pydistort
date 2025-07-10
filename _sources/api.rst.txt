@@ -29,13 +29,13 @@ To processing is performed by the following abstract classes stored in the `pydi
 
 These classes are designed to handle the transformation of points between different coordinate systems, including intrinsic and extrinsic parameters, as well as distortion models.
 
-Some Extrinsic and Intrinsic classes are provided in the package, such as:
+Some Intrinsic classes are provided in the package, such as:
 
 .. toctree::
    :maxdepth: 1
    :caption: Extrinsic and Intrinsic Classes:
 
-   ./api_doc/cv2_extrinsic.rst
+   ./api_doc/no_intrinsic.rst
    ./api_doc/cv2_intrinsic.rst
    ./api_doc/skew_intrinsic.rst
 
@@ -49,6 +49,15 @@ Some distortion models are provided in the package, such as:
    ./api_doc/cv2_distortion.rst
    ./api_doc/zernike_distortion.rst
 
+Some extrinsic models are provided in the package, such as:
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Extrinsic Models:
+
+   ./api_doc/no_extrinsic.rst
+   ./api_doc/cv2_extrinsic.rst
+
 
 Global Functions
 -----------------
@@ -61,7 +70,7 @@ This method use the same architecture as the `cv2` functions from OpenCV, but it
 
 .. toctree::
    :maxdepth: 1
-   :caption: Global Functions (as OPENCV):
+   :caption: (as OPENCV):
 
    ./api_doc/cv2_project_points.rst
    ./api_doc/cv2_undistort_points.rst
@@ -72,7 +81,7 @@ For a more general functions that can handle different types of points and trans
 
 .. toctree::
    :maxdepth: 1
-   :caption: Global Functions:
+   :caption: (as PYDISTORT):
 
    ./api_doc/project_points.rst
    ./api_doc/undistort_points.rst
