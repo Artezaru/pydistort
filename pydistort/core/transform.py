@@ -85,7 +85,7 @@ class TransformResult:
         
         if self.jacobian_dp is not None:
             
-            if start < 0 or end < 0 or start >= end or end > self.jacobian_dp.shape[-1]:
+            if start < 0 or end < 0 or start > end or end > self.jacobian_dp.shape[-1]:
                 raise ValueError(f"Invalid range for custom Jacobian view: start={start}, end={end}, Nparams={self.jacobian_dp.shape[-1]}")
             
             self._custom_jacobians[name] = (start, end, doc)

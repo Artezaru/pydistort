@@ -166,7 +166,7 @@ class TransformComposition(Transform):
         # Iterate over each transformation in the composition
         for index, t in enumerate(self.transformations):
             # Apply the transformation to the points
-            transformed_points, jacobian_dx, jacobian_dp = t._transform(points, dx=dx, dp=dp or (dx and index != len(self.transformations)), **kwargs)  # (Npoints, output_dim_t), (Npoints, output_dim_t, input_dim_t), (Npoints, output_dim_t, Nparams_t)
+            transformed_points, jacobian_dx, jacobian_dp = t._transform(points, dx=dx or (dp and index != 0), dp=dp, **kwargs)  # (Npoints, output_dim_t), (Npoints, output_dim_t, input_dim_t), (Npoints, output_dim_t, Nparams_t)
             
             # Append the transformed points and Jacobians to the lists
             jacobian_dx_list.append(jacobian_dx)
@@ -176,7 +176,7 @@ class TransformComposition(Transform):
             points = transformed_points
 
         # Apply the chain rules to compute the Jacobians with respect to the parameters
-        if dp and all(jacobian_dx_list[i] is not None for i in range(len(jacobian_dx_list) - 1)) and all(jacobian_dp_list[i] is not None for i in range(len(jacobian_dp_list))):
+        if dp and all(jacobian_dx_list[i] is not None for i in range(1, len(self.transformations))) and all(jacobian_dp_list[i] is not None for i in range(len(jacobian_dp_list))):
             jacobian_dp = numpy.empty((Npoints, self.output_dim, self.Nparams), dtype=numpy.float64)
             start = 0
             # Boucle over the transformations to compute the Jacobian with respect to the parameters
@@ -254,7 +254,7 @@ class TransformComposition(Transform):
         # Iterate over each transformation in the composition in reverse order !
         for index, t in enumerate(reversed(self.transformations)):
             # Apply the inverse transformation to the points
-            transformed_points, jacobian_dx, jacobian_dp = t._inverse_transform(points, dx=dx, dp=dp or (dx and index != len(self.transformations)), **kwargs) # (Npoints, input_dim_t), (Npoints, input_dim_t, output_dim_t), (Npoints, input_dim_t, Nparams_t)
+            transformed_points, jacobian_dx, jacobian_dp = t._inverse_transform(points, dx=dx or (dp and index != 0), dp=dp, **kwargs) # (Npoints, input_dim_t), (Npoints, input_dim_t, output_dim_t), (Npoints, input_dim_t, Nparams_t)
             # Append the transformed points and Jacobians to the lists
             jacobian_dx_list.append(jacobian_dx)
             jacobian_dp_list.append(jacobian_dp)
@@ -263,7 +263,7 @@ class TransformComposition(Transform):
             points = transformed_points
 
         # Apply the chain rules to compute the Jacobians with respect to the parameters
-        if dp and all(jacobian_dx_list[i] is not None for i in range(len(jacobian_dx_list) - 1)) and all(jacobian_dp_list[i] is not None for i in range(len(jacobian_dp_list))):
+        if dp and all(jacobian_dx_list[i] is not None for i in range(1, len(self.transformations))) and all(jacobian_dp_list[i] is not None for i in range(len(jacobian_dp_list))):
             jacobian_dp = numpy.empty((Npoints, self.input_dim, self.Nparams), dtype=numpy.float64)
 
             start = 0
