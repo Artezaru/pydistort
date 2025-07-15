@@ -107,15 +107,7 @@ def undistort_image(
         # Undistort the image
         undistorted_image = undistort_image(src, intrinsic=intrinsic, distortion=distortion)
 
-    """
-    # Set the default values if None
-    if K is None:
-        K = numpy.array([[1.0, 0.0, 0.0],
-                         [0.0, 1.0, 0.0],
-                         [0.0, 0.0, 1.0]], dtype=numpy.float64)
-    if distortion is None:
-        distortion = NoDistortion()
-    
+    """   
     # Set the default values if None
     if intrinsic is None:
         intrinsic = NoIntrinsic()

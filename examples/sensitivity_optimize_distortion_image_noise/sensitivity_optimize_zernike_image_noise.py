@@ -4,7 +4,7 @@
 # ======================= IMPORTATIONS ==========================================
 # ===============================================================================
 
-STOP = True
+STOP = False
 import sys
 if STOP:
     sys.exit("This example is bloqued for now to avoid erasing current files. Please remove the STOP variable to run it.")
@@ -22,7 +22,7 @@ from pydistort import ZernikeDistortion, cv2_distort_image
 
 
 
-DISPLAY_INTERMEDIATE = False
+DISPLAY_INTERMEDIATE = True
 
 
 
@@ -228,7 +228,7 @@ dis_optical_flow.setPatchStride(_step)
 
 # %%
 # ===============================================================================
-# ===== OPTIMIZE THE DISTORTION PARAMETERS (With Noise on displacment) ==========
+# ===== OPTIMIZE THE DISTORTION PARAMETERS (With Noise on image) ==========
 # ===============================================================================
 
 Nzer = 7 # Maximum order of Zernike polynomials to use
@@ -251,6 +251,7 @@ reg_factor = 0.0
 precond_jacobi = True 
 cond_cutoff = 1e8
 
+
 # Optimize the distortion parameters using the pixels points and the associated distorted points
 optimized_real_parameters = optimized_real_distortion.optimize_parameters(
     input_points=pixel_points[mask_optimisation, :],
@@ -271,7 +272,7 @@ optimized_real_distorted_points, _, _ = optimized_real_distortion._transform(pix
 optimized_real_displacement_field = optimized_real_distorted_points - pixel_points
 
 # Loop on the noise in the displacement field
-noise_std = numpy.linspace(0.0, 50, 20)
+noise_std = numpy.linspace(0.0, 10, 10)
 Nmean = 20
 distortion_list = []
 std_distortion_list = []
