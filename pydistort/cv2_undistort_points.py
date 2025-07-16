@@ -19,6 +19,11 @@ def cv2_undistort_points(
         **kwargs
     ) -> numpy.ndarray:
     r"""
+
+    .. warning::
+
+        DEPRECATED: This function is deprecated and will be removed in a future version. Use :func:`pydistort.undistort_points` instead.
+
     Undistort 2D image points using the camera intrinsic and distortion coefficients.
 
     This method use the same architecture as the `cv2.undistortPoints` function from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.

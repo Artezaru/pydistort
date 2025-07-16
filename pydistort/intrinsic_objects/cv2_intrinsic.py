@@ -99,7 +99,9 @@ class Cv2Intrinsic(Intrinsic):
         - :meth:`pydistort.Cv2Intrinsic._inverse_transform` to transform the ``image_points`` back to ``distorted_points``.
     
     """
-    def __init__(self, intrinsic_matrix: Optional[numpy.ndarray] = None):
+    def __init__(self, 
+            intrinsic_matrix: Optional[numpy.ndarray] = None, 
+        ) -> None:
         # Initialize the Transform base class
         super().__init__()
 

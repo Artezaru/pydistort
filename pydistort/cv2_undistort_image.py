@@ -15,6 +15,11 @@ def cv2_undistort_image(
         **kwargs
     ) -> numpy.ndarray:
     r"""
+
+    .. warning::
+
+        DEPRECATED: This function is deprecated and will be removed in a future version. Use :func:`pydistort.undistort_image` instead.
+
     Undistort an image using the camera intrinsic and distortion coefficients.
 
     This method use the same architecture as the `cv2.undistort` function from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.

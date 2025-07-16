@@ -46,7 +46,7 @@ def distort_image(
     METHOD 1 : Undistort
     ------------------------------
     
-    The mapping is performed using OpenCV's `cv2.remap` function, which requires the source image and the mapping of pixel coordinates.
+    The mapping is performed using OpenCV's `cv2.remap` function (or ``scipy.interpolate``), which requires the source image and the mapping of pixel coordinates.
     The mapping of pixel coordinates is performed using the ``undistort`` method of the distortion model, which applies the inverse distortion to the normalized points.
 
     In this case, the output pixels (``distorted_image``) are projected back to the input image coordinate system using the intrinsic matrix K.
@@ -71,6 +71,8 @@ def distort_image(
     | "area"         | Resampling using pixel area relation. Use cv2.INTER_AREA.                                                      |
     +----------------+----------------------------------------------------------------------------------------------------------------+
     | "lanczos4"     | Lanczos interpolation over 8x8 pixel neighborhood. Use cv2.INTER_LANCZOS4.                                     |
+    +----------------+----------------------------------------------------------------------------------------------------------------+
+    | "spline3"      | Spline interpolation. Use scipy.interpolate.RectBivariateSpline for kx=ky=3                                    |
     +----------------+----------------------------------------------------------------------------------------------------------------+
 
     METHOD 2 : Distort
@@ -183,19 +185,29 @@ def distort_image(
         raise ValueError("src must have 2 to 4 dimensions (H, W, [C], [D])")
     
     # Get the interpolation method
+    use_remap = False
+    use_bivariate_spline = False
     if method == "undistort":
         if interpolation == "linear":
             interpolation_method = cv2.INTER_LINEAR
+            use_remap = True
         elif interpolation == "nearest":
             interpolation_method = cv2.INTER_NEAREST
+            use_remap = True
         elif interpolation == "cubic":
             interpolation_method = cv2.INTER_CUBIC
+            use_remap = True
         elif interpolation == "area":
             interpolation_method = cv2.INTER_AREA
+            use_remap = True
         elif interpolation == "lanczos4":
             interpolation_method = cv2.INTER_LANCZOS4
+            use_remap = True
+        elif interpolation == "spline3":
+            interpolation_method = scipy.interpolate.RectBivariateSpline
+            use_bivariate_spline = True
         else:
-            raise ValueError(f"Invalid interpolation method for METHOD 1: {interpolation}. Available methods: 'linear', 'nearest', 'cubic', 'area', 'lanczos4'.")
+            raise ValueError(f"Invalid interpolation method for METHOD 1: {interpolation}. Available methods: 'linear', 'nearest', 'cubic', 'area', 'lanczos4', 'spline3'.")
     elif method == "distort":
         if interpolation == "linear":
             interpolation_method = scipy.interpolate.LinearNDInterpolator
@@ -215,6 +227,10 @@ def distort_image(
     image_points = image_points.reshape(2, -1).T  # shape (2, H, W) [2, Y, X] -> shape (Npoints, 2) [Y, X]
     image_points = image_points[:, [1, 0]]  # Switch to [X, Y] format, shape (Npoints, 2) [Y, X] -> shape (Npoints, 2) [X, Y]
     
+
+    # ======================================================================================
+    # ================================ WITH METHOD 1: UNDISTORT ============================
+    # ======================================================================================
     if method == "undistort":
 
         # Undistort the pixel points using the distortion model
@@ -226,17 +242,59 @@ def distort_image(
         undistorted_image_points = undistorted_image_points[:, [1, 0]]  # Switch to [Y, X] format, shape (Npoints, 2) [X', Y'] -> shape (Npoints, 2) [Y', X']
         undistorted_pixel_points = undistorted_image_points.T.reshape(2, height, width) # shape (Npoints, 2) [Y', X'] -> shape (2, H, W) [Y', X']
 
-        # Create the map for cv2.remap
-        # dst(x, y) = src(map_x(x, y), map_y(x, y))
+        if use_remap:
+            # Create the map for cv2.remap
+            # dst(x, y) = src(map_x(x, y), map_y(x, y))
+            map_x = undistorted_pixel_points[1, :, :]  # X coordinates, shape (H, W)
+            map_y = undistorted_pixel_points[0, :, :]  # Y coordinates, shape (H, W)
 
-        map_x = undistorted_pixel_points[1, :, :]  # X coordinates, shape (H, W)
-        map_y = undistorted_pixel_points[0, :, :]  # Y coordinates, shape (H, W)
+            # Remap the image using OpenCV
+            distorted_image = cv2.remap(src, map_x.astype(numpy.float32), map_y.astype(numpy.float32), interpolation=interpolation_method, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0))
 
-        # Remap the image using OpenCV
-        distorted_image = cv2.remap(src, map_x.astype(numpy.float32), map_y.astype(numpy.float32), interpolation=interpolation_method, borderMode=cv2.BORDER_CONSTANT, borderValue=(0, 0, 0))
+            return distorted_image
+        
+        elif use_bivariate_spline:
+            # Create the values and the image (H, W, 1 * [C] * [D])
+            values = src.reshape(height, width, -1).astype(numpy.float64) # shape (H, W, 1 * [C] * [D])
 
-        return distorted_image
+            # Initialize the distorted image
+            distorted_image = numpy.zeros_like(values, dtype=numpy.float64) # shape (H, W, 1 * [C] * [D])
+
+            # For all image data dimensions, interpolate the undistorted pixel points in the src image
+            for i in range(values.shape[-1]):
+                # Create the interpolator for the undistorted pixel points
+                interp = scipy.interpolate.RectBivariateSpline(
+                    numpy.arange(height),
+                    numpy.arange(width),
+                    values[:, :, i],
+                    kx=3, ky=3, s=0 # Spline interpolation with kx=ky=3
+                )
+
+                # Create the mask for points that are within the image bounds and finite
+                mask = numpy.isfinite(undistorted_pixel_points[0, :, :]) & numpy.isfinite(undistorted_pixel_points[1, :, :]) & (0.0 <= undistorted_pixel_points[0, :, :]) & (undistorted_pixel_points[0, :, :] <= height-1.0) & (0.0 <= undistorted_pixel_points[1, :, :]) & (undistorted_pixel_points[1, :, :] <= width-1.0)
+
+                # Interpolate the pixel points in the distorted image
+                result = interp.ev(undistorted_pixel_points[0, mask], undistorted_pixel_points[1, mask])
+                distorted_image[mask, i] = result
+
+            # Reshape the distorted image to the original shape
+            distorted_image = distorted_image.reshape(height, width, *src.shape[2:]) # (H, W, 1 * [C] * [D]) -> (H, W, [C], [D])
+            return distorted_image
+
+
     
+
+
+
+
+
+
+
+
+
+    # ======================================================================================
+    # ================================ WITH METHOD 2: DISTORT ==============================
+    # ======================================================================================
     elif method == "distort":
 
         # Distort the pixel points using the distortion model

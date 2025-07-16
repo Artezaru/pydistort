@@ -65,8 +65,22 @@ Global Functions
 The package also provides global functions for common tasks related to camera distortion and transformation.
 These functions are designed to simplify the process of applying transformations and corrections to camera images.
 
-These functions are inspired by the OpenCV functions `cv2.projectPoints` and `cv2.undistortPoints`, but they are designed to work with the `pydistort` package's classes and methods.
+.. toctree::
+   :maxdepth: 1
+   :caption: (as PYDISTORT):
+
+   ./api_doc/project_points.rst
+   ./api_doc/undistort_points.rst
+   ./api_doc/undistort_image.rst
+   ./api_doc/distort_image.rst
+
+
+Some functions are inspired by the OpenCV functions `cv2.projectPoints` and `cv2.undistortPoints`, but they are designed to work with the `pydistort` package's classes and methods.
 This method use the same architecture as the `cv2` functions from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.
+
+.. warning::
+
+   DEPRECATED: The following functions are deprecated and will be removed in a future version. Use the corresponding `pydistort` functions instead.
 
 .. toctree::
    :maxdepth: 1
@@ -77,13 +91,3 @@ This method use the same architecture as the `cv2` functions from OpenCV, but it
    ./api_doc/cv2_undistort_image.rst
    ./api_doc/cv2_distort_image.rst
  
-For a more general functions that can handle different types of points and transformations (extrinsic, intrinsic, distortion), please refer to the following:
-
-.. toctree::
-   :maxdepth: 1
-   :caption: (as PYDISTORT):
-
-   ./api_doc/project_points.rst
-   ./api_doc/undistort_points.rst
-   ./api_doc/undistort_image.rst
-   ./api_doc/distort_image.rst

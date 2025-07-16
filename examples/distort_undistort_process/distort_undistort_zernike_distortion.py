@@ -11,7 +11,7 @@ import os
 import csv
 import copy
 
-from pydistort import ZernikeDistortion, cv2_distort_image, cv2_undistort_image
+from pydistort import ZernikeDistortion, distort_image, undistort_image
 
 
 
@@ -139,10 +139,10 @@ pixel_points = pixel_points[:, [1, 0]]  # Swap to [X, Y] format
 # ===============================================================================
 
 method = "undistort"
-interpolation = "linear" 
+interpolation = "spline3" 
 
 # Distort the image
-distorted_image = cv2_distort_image(src=image, K=None, distortion=real_distortion, method=method, interpolation=interpolation)
+distorted_image = distort_image(src=image, intrinsic=None, distortion=real_distortion, method=method, interpolation=interpolation)
 distorted_image = numpy.round(distorted_image).astype(numpy.uint8)
 
 # Distorted pixel points
@@ -150,7 +150,7 @@ result = real_distortion.distort(pixel_points)
 distorted_pixel_points = result.transformed_points
 
 # Undistort the image
-undistorted_image = cv2_undistort_image(src=distorted_image, K=None, distortion=real_distortion, interpolation=interpolation)
+undistorted_image = undistort_image(src=distorted_image, intrinsic=None, distortion=real_distortion, interpolation=interpolation)
 undistorted_image = numpy.round(undistorted_image).astype(numpy.uint8)
 
 # Undistorted pixel points
@@ -179,7 +179,7 @@ plt.figure(figsize=(6,6))
 plt.subplot(1, 1, 1)
 plt.imshow(error_image, cmap='gray', vmin=0, vmax=max_error)
 plt.colorbar(label='Error')
-plt.title("Error Image")
+plt.title(f"Error Image with {interpolation} interpolation")
 plt.axis('off')
 plt.tight_layout()
 

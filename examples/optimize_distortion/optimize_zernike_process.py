@@ -12,7 +12,7 @@ import csv
 import copy
 import skimage
 
-from pydistort import ZernikeDistortion, cv2_distort_image
+from pydistort import ZernikeDistortion, distort_image
 
 
 
@@ -116,7 +116,7 @@ real_distortion.radius = radius
 real_distortion.center = center
 
 # Distort the image
-distorted_image = cv2_distort_image(src=image, K=None, distortion=real_distortion, method="undistort", interpolation="cubic")
+distorted_image = distort_image(src=image, intrinsic=None, distortion=real_distortion, method="undistort", interpolation="cubic")
 distorted_image = distorted_image.astype(numpy.uint8)
 
 # Save the distorted image

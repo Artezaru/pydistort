@@ -36,10 +36,10 @@ class Cv2Extrinsic(Extrinsic):
 
     Parameters
     ----------
-    rvec : Optional[numpy.ndarray]
+    rotation_vector : Optional[numpy.ndarray]
         The rotation vector of the camera. Shape (3,). If None, the rotation vector is not set.
 
-    tvec : Optional[numpy.ndarray]
+    translation_vector : Optional[numpy.ndarray]
         The translation vector of the camera. Shape (3,). If None, the translation vector is not set.
 
     Example
@@ -102,7 +102,10 @@ class Cv2Extrinsic(Extrinsic):
         - :meth:`pydistort.Cv2Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.
     
     """
-    def __init__(self, rvec: Optional[numpy.ndarray] = None, tvec: Optional[numpy.ndarray] = None):
+    def __init__(self, 
+            rotation_vector: Optional[numpy.ndarray] = None,
+            translation_vector: Optional[numpy.ndarray] = None,
+        ):
         # Initialize the Transform base class
         super().__init__()
 
@@ -111,8 +114,8 @@ class Cv2Extrinsic(Extrinsic):
         self._tvec = None
 
         # Set the extrinsic parameters
-        self.rvec = rvec
-        self.tvec = tvec
+        self.rvec = rotation_vector
+        self.tvec = translation_vector
 
     # =============================================
     # Overwrite some properties from the base class

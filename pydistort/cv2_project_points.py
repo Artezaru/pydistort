@@ -134,6 +134,11 @@ def cv2_project_points(
         **kwargs
     ) -> Cv2ProjectPointsResult:
     r"""
+
+    .. warning::
+
+        DEPRECATED: This function is deprecated and will be removed in a future version. Use :func:`pydistort.project_points` instead.
+
     Project 3D points to 2D image points using the camera intrinsic and extrinsic matrix and distortion coefficients.
 
     This method use the same architecture as the `cv2.projectPoints` function from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.
