@@ -294,8 +294,6 @@ class Cv2Intrinsic(Intrinsic):
             raise ValueError("Principal point in pixels in x direction must be a number.")
         if not numpy.isfinite(cx):
             raise ValueError("Principal point in pixels in x direction must be a finite number.")
-        if cx < 0:
-            raise ValueError("Principal point in pixels in x direction must be greater than or equal to 0.")
         self._cx = float(cx)
 
     @property
@@ -339,8 +337,6 @@ class Cv2Intrinsic(Intrinsic):
             raise ValueError("Principal point in pixels in y direction must be a number.")
         if not numpy.isfinite(cy):
             raise ValueError("Principal point in pixels in y direction must be a finite number.")
-        if cy < 0:
-            raise ValueError("Principal point in pixels in y direction must be greater than or equal to 0.")
         self._cy = float(cy)
     
     @property
