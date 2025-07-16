@@ -54,7 +54,8 @@ def distort_image(
 
     .. warning::
 
-        Iterative non-linear optimization is used to find the undistorted points.
+        - Iterative non-linear optimization is used to find the undistorted points.
+        - For scipy, output values are not positive integer values (even if the input image is integer).
 
     Different interpolation methods can be used, such as "linear", "nearest", etc. The default is "linear".
     The table below shows the available interpolation methods for METHOD 1:

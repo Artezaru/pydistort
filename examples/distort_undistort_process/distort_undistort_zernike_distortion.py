@@ -143,6 +143,9 @@ interpolation = "spline3"
 
 # Distort the image
 distorted_image = distort_image(src=image, intrinsic=None, distortion=real_distortion, method=method, interpolation=interpolation)
+print(numpy.min(distorted_image), numpy.max(distorted_image), numpy.mean(distorted_image), numpy.std(distorted_image))
+distorted_image[distorted_image < 0] = 0.0
+distorted_image[distorted_image > 255] = 255.0
 distorted_image = numpy.round(distorted_image).astype(numpy.uint8)
 
 # Distorted pixel points
@@ -151,6 +154,9 @@ distorted_pixel_points = result.transformed_points
 
 # Undistort the image
 undistorted_image = undistort_image(src=distorted_image, intrinsic=None, distortion=real_distortion, interpolation=interpolation)
+print(numpy.min(undistorted_image), numpy.max(undistorted_image), numpy.mean(undistorted_image), numpy.std(undistorted_image))
+undistorted_image[undistorted_image < 0] = 0.0
+undistorted_image[undistorted_image > 255] = 255.0
 undistorted_image = numpy.round(undistorted_image).astype(numpy.uint8)
 
 # Undistorted pixel points

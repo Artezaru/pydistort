@@ -63,6 +63,10 @@ def undistort_image(
 
         - For an image the X dimension corresponds to the width and the Y dimension corresponds to the height.
         - Pixel [0, 1] is at XY = [1, 0] in the image coordinate system.
+
+    .. warning::
+
+        - For scipy, output values are not positive integer values (even if the input image is integer).
     
     Parameters
     ----------
