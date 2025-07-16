@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.undistort_image &#8212; pydistort 3.1.3 documentation</title>
+    <title>pydistort.undistort_image &#8212; pydistort 3.2.0 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=eaea8fc6"></script>
+    <script src="../_static/documentation_options.js?v=4f6ddb47"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.1.3 documentation</p>
+    <p class="title logo__title">pydistort 3.2.0 documentation</p>
   
 </a></div>
     
@@ -291,19 +291,19 @@
 <li class="toctree-l1"><a class="reference internal" href="no_extrinsic.html">pydistort.NoExtrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">(as PYDISTORT):</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="undistort_points.html">pydistort.undistort_points</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.undistort_image</a></li>
 <li class="toctree-l1"><a class="reference internal" href="distort_image.html">pydistort.distort_image</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
 </ul>
 </div>
 </nav></div>
@@ -386,7 +386,8 @@
 </ol>
 <p>The given image <code class="docutils literal notranslate"><span class="pre">src</span></code> is assumed to be in the image coordinate system and expressed in 2D coordinates with shape (H, W, [C], [D]).
 If the user gives an identity matrix K, it is equivalent to giving directly the normalized points.</p>
-<p>The mapping is performed using OpenCV’s <cite>cv2.remap</cite> function, which requires the source image and the mapping of pixel coordinates.</p>
+<p>Fill Values for the output image are set to 0.0.</p>
+<p>The mapping is performed using using OpenCV’s <cite>cv2.remap</cite> function (or <code class="docutils literal notranslate"><span class="pre">scipy.interpolate</span></code>), which requires the source image and the mapping of pixel coordinates.</p>
 <p>Different interpolation methods can be used, such as “linear”, “nearest”, etc. The default is “linear”.
 The table below shows the available interpolation methods:</p>
 <div class="pst-scrollable-table-container"><table class="table">
@@ -410,6 +411,9 @@ The table below shows the available interpolation methods:</p>
 </tr>
 <tr class="row-even"><td><p>“lanczos4”</p></td>
 <td><p>Lanczos interpolation over 8x8 pixel neighborhood. Use cv2.INTER_LANCZOS4.</p></td>
+</tr>
+<tr class="row-odd"><td><p>“spline3”</p></td>
+<td><p>Spline interpolation. Use scipy.interpolate.RectBivariateSpline for kx=ky=3</p></td>
 </tr>
 </tbody>
 </table>

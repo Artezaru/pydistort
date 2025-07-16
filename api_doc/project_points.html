@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.project_points &#8212; pydistort 3.1.3 documentation</title>
+    <title>pydistort.project_points &#8212; pydistort 3.2.0 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=eaea8fc6"></script>
+    <script src="../_static/documentation_options.js?v=4f6ddb47"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -46,7 +46,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pydistort.undistort_points" href="undistort_points.html" />
-    <link rel="prev" title="pydistort.cv2_distort_image" href="cv2_distort_image.html" />
+    <link rel="prev" title="pydistort.Cv2Extrinsic" href="cv2_extrinsic.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.1.3 documentation</p>
+    <p class="title logo__title">pydistort 3.2.0 documentation</p>
   
 </a></div>
     
@@ -291,19 +291,19 @@
 <li class="toctree-l1"><a class="reference internal" href="no_extrinsic.html">pydistort.NoExtrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">(as PYDISTORT):</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="undistort_points.html">pydistort.undistort_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="undistort_image.html">pydistort.undistort_image</a></li>
 <li class="toctree-l1"><a class="reference internal" href="distort_image.html">pydistort.distort_image</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
 </ul>
 </div>
 </nav></div>
@@ -531,12 +531,12 @@ If False, the Jacobian is not computed. Default is False.</p></li>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="cv2_distort_image.html"
+       href="cv2_extrinsic.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">pydistort.cv2_distort_image</p>
+        <p class="prev-next-title">pydistort.Cv2Extrinsic</p>
       </div>
     </a>
     <a class="right-next"

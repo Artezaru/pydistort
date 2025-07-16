@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.Cv2Extrinsic &#8212; pydistort 3.1.3 documentation</title>
+    <title>pydistort.Cv2Extrinsic &#8212; pydistort 3.2.0 documentation</title>
   
   
   
@@ -38,14 +38,14 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=eaea8fc6"></script>
+    <script src="../_static/documentation_options.js?v=4f6ddb47"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'api_doc/cv2_extrinsic';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pydistort.cv2_project_points" href="cv2_project_points.html" />
+    <link rel="next" title="pydistort.project_points" href="project_points.html" />
     <link rel="prev" title="pydistort.NoExtrinsic" href="no_extrinsic.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.1.3 documentation</p>
+    <p class="title logo__title">pydistort 3.2.0 documentation</p>
   
 </a></div>
     
@@ -291,19 +291,19 @@
 <li class="toctree-l1"><a class="reference internal" href="no_extrinsic.html">pydistort.NoExtrinsic</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">pydistort.Cv2Extrinsic</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
-</ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">(as PYDISTORT):</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="undistort_points.html">pydistort.undistort_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="undistort_image.html">pydistort.undistort_image</a></li>
 <li class="toctree-l1"><a class="reference internal" href="distort_image.html">pydistort.distort_image</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_undistort_image.html">pydistort.cv2_undistort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cv2_distort_image.html">pydistort.cv2_distort_image</a></li>
 </ul>
 </div>
 </nav></div>
@@ -368,7 +368,7 @@
 <h1>pydistort.Cv2Extrinsic<a class="headerlink" href="#pydistort-cv2extrinsic" title="Link to this heading">#</a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="pydistort.Cv2Extrinsic">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">Cv2Extrinsic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rvec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tvec</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/extrinsic_objects/cv2_extrinsic.html#Cv2Extrinsic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Extrinsic" title="Link to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pydistort.</span></span><span class="sig-name descname"><span class="pre">Cv2Extrinsic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rotation_vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">translation_vector</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pydistort/extrinsic_objects/cv2_extrinsic.html#Cv2Extrinsic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.Cv2Extrinsic" title="Link to this definition">#</a></dt>
 <dd><p>Subclass of <a class="reference internal" href="extrinsic.html#pydistort.core.Extrinsic" title="pydistort.core.Extrinsic"><code class="xref py py-class docutils literal notranslate"><span class="pre">pydistort.core.Extrinsic</span></code></a> to represent the extrinsic transformation using OpenCV conventions.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -393,8 +393,8 @@ x_N &amp;= \frac{X_C}{Z_C} \\
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rvec</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The rotation vector of the camera. Shape (3,). If None, the rotation vector is not set.</p></li>
-<li><p><strong>tvec</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The translation vector of the camera. Shape (3,). If None, the translation vector is not set.</p></li>
+<li><p><strong>rotation_vector</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The rotation vector of the camera. Shape (3,). If None, the rotation vector is not set.</p></li>
+<li><p><strong>translation_vector</strong> (<em>Optional</em><em>[</em><em>numpy.ndarray</em><em>]</em>) – The translation vector of the camera. Shape (3,). If None, the translation vector is not set.</p></li>
 </ul>
 </dd>
 </dl>
@@ -742,11 +742,11 @@ An alias for <code class="docutils literal notranslate"><span class="pre">rotati
       </div>
     </a>
     <a class="right-next"
-       href="cv2_project_points.html"
+       href="project_points.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">pydistort.cv2_project_points</p>
+        <p class="prev-next-title">pydistort.project_points</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

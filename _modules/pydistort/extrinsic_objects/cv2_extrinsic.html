@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.extrinsic_objects.cv2_extrinsic &#8212; pydistort 3.1.3 documentation</title>
+    <title>pydistort.extrinsic_objects.cv2_extrinsic &#8212; pydistort 3.2.0 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=eaea8fc6"></script>
+    <script src="../../../_static/documentation_options.js?v=4f6ddb47"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/extrinsic_objects/cv2_extrinsic';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.1.3 documentation</p>
+    <p class="title logo__title">pydistort 3.2.0 documentation</p>
   
 </a></div>
     
@@ -350,10 +350,10 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    rvec : Optional[numpy.ndarray]</span>
+<span class="sd">    rotation_vector : Optional[numpy.ndarray]</span>
 <span class="sd">        The rotation vector of the camera. Shape (3,). If None, the rotation vector is not set.</span>
 
-<span class="sd">    tvec : Optional[numpy.ndarray]</span>
+<span class="sd">    translation_vector : Optional[numpy.ndarray]</span>
 <span class="sd">        The translation vector of the camera. Shape (3,). If None, the translation vector is not set.</span>
 
 <span class="sd">    Example</span>
@@ -416,7 +416,10 @@
 <span class="sd">        - :meth:`pydistort.Cv2Extrinsic._inverse_transform` to transform the ``normalized_points`` back to ``world_3dpoints``.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">tvec</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+            <span class="n">rotation_vector</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="n">translation_vector</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="p">):</span>
         <span class="c1"># Initialize the Transform base class</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
@@ -425,8 +428,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tvec</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># Set the extrinsic parameters</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">rvec</span> <span class="o">=</span> <span class="n">rvec</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tvec</span> <span class="o">=</span> <span class="n">tvec</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rvec</span> <span class="o">=</span> <span class="n">rotation_vector</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tvec</span> <span class="o">=</span> <span class="n">translation_vector</span>
 
     <span class="c1"># =============================================</span>
     <span class="c1"># Overwrite some properties from the base class</span>
