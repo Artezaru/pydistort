@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.distort_image &#8212; pydistort 3.2.0 documentation</title>
+    <title>pydistort.distort_image &#8212; pydistort 3.2.1 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=4f6ddb47"></script>
+    <script src="../_static/documentation_options.js?v=eb155f5e"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.2.0 documentation</p>
+    <p class="title logo__title">pydistort 3.2.1 documentation</p>
   
 </a></div>
     
@@ -400,7 +400,10 @@ The mapping of pixel coordinates is performed using the <code class="docutils li
 Then an interpolation is performed in the input image where the known points are a perfect regular grid of pixels !</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Iterative non-linear optimization is used to find the undistorted points.</p>
+<ul class="simple">
+<li><p>Iterative non-linear optimization is used to find the undistorted points.</p></li>
+<li><p>For scipy, output values are not positive integer values (even if the input image is integer).</p></li>
+</ul>
 </div>
 <p>Different interpolation methods can be used, such as “linear”, “nearest”, etc. The default is “linear”.
 The table below shows the available interpolation methods for METHOD 1:</p>
