@@ -1132,17 +1132,17 @@ class Transform(ABC):
             This method can only be used if the dimensions are the same, i.e. input_dim == dim.
 
         Lets consider a set of output points :math:`X_O` with shape (..., dim) and a set of input points :math:`X_I` with shape (..., input_dim).
-        We search :math:`X_I = X_{I0} + \delta X_I` such that:
+        We search :math:`X_I = X_{I_0} + \delta X_I` such that:
 
         .. math::
 
-            X_O = \text{Transform}(X_I, \lambda) = T(X_I + \delta X_I, \lambda)
-        
+            X_O = \text{Transform}(X_I, \lambda) = T(X_{I_0} + \delta X_I, \lambda)
+
         We have:
 
         .. math::
 
-            \nabla_{X} T (X_I, \lambda_0) \delta \lambda = X_O - T(X_I, \lambda_0)
+            \nabla_{X} T (X_{I_0}, \lambda) \delta X_I = X_O - T(X_{I_0}, \lambda)
 
         The corrections are computed using the following equations:
 
@@ -1150,9 +1150,9 @@ class Transform(ABC):
 
             J \delta X_I = R
 
-        Where :math:`J = \nabla_{X} T (X_I, \lambda_0)` is the Jacobian matrix of the transformation with respect to the input points, and :math:`R = X_O - T(X_I, \lambda_0)` is the residual vector.
+        Where :math:`J = \nabla_{X} T (X_{I_0}, \lambda)` is the Jacobian matrix of the transformation with respect to the input points, and :math:`R = X_O - T(X_{I_0}, \lambda)` is the residual vector.
 
-        :math:`X_{I0}` is the initial guess for the input points, if None, it use the output points as the initial guess.
+        :math:`X_{I_0}` is the initial guess for the input points, if None, it use the output points as the initial guess.
 
         .. note::
 

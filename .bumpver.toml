@@ -1,5 +1,5 @@
 [bumpver]
-current_version = "3.2.2"
+current_version = "3.2.4"
 version_pattern = "MAJOR.MINOR.PATCH"
 default_level = "patch"
 

@@ -140,7 +140,7 @@ real_displacement_field = real_distorted_points - pixel_points
 # + Salt & pepper noise (transmission/memory defects)
 #      ↓
 # [Final noisy image]
-noise_gaussian_var = 0.01  # Variance for Gaussian noise
+noise_gaussian_var = 0.0  # Variance for Gaussian noise
 noise_poisson = False  # Whether to add Poisson noise
 noise_salt_pepper_amount = 0.0 # Amount of salt & pepper noise
 

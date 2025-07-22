@@ -96,9 +96,12 @@ parameters_file = os.path.join(os.path.dirname(__file__), "files", "zernike_para
 parameters = read_array1D(parameters_file)
 
 image_file = os.path.join(os.path.dirname(__file__), "files", "speckle.png")
-distorted_image_file = os.path.join(os.path.dirname(__file__), "files", "distorted_speckle.png")
-undistorted_image_file = os.path.join(os.path.dirname(__file__), "files", "undistorted_speckle.png")
-error_image_file = os.path.join(os.path.dirname(__file__), "files", "error_speckle.png")
+distorted_image_file = lambda interp: os.path.join(os.path.dirname(__file__), "files", f"distorted_speckle_{interp}.png")
+undistorted_image_file = lambda interp: os.path.join(os.path.dirname(__file__), "files", f"undistorted_speckle_{interp}.png")
+error_image_file = lambda interp: os.path.join(os.path.dirname(__file__), "files", f"error_speckle_{interp}.png")
+cropped_error_image_file = lambda interp: os.path.join(os.path.dirname(__file__), "files", f"cropped_error_speckle_{interp}.png")
+
+max_error = 10  # in gray levels
 
 # Read the image
 image = cv2.imread(image_file, cv2.IMREAD_GRAYSCALE)
@@ -164,8 +167,8 @@ result = real_distortion.undistort(distorted_pixel_points)
 undistorted_pixel_points = result.transformed_points
 
 # Save the distorted and undistorted images
-cv2.imwrite(distorted_image_file, distorted_image)
-cv2.imwrite(undistorted_image_file, undistorted_image)
+cv2.imwrite(distorted_image_file(interpolation), distorted_image)
+cv2.imwrite(undistorted_image_file(interpolation), undistorted_image)
 
 # Calculate the error between the original and undistorted images
 error_image = cv2.absdiff(image, undistorted_image)
@@ -174,13 +177,21 @@ print(f"Error image min: {numpy.min(error_image)}, max: {numpy.max(error_image)}
 print(f"Error image mean: {numpy.mean(error_image)}, std: {numpy.std(error_image)}")
 
 # Save the error images
-cv2.imwrite(error_image_file, error_image)
+cv2.imwrite(error_image_file(interpolation), error_image)
+
+# Rescale the error image to [0, max_error]
+cropped_error_image = numpy.clip(error_image, 0, max_error)
+cropped_error_image = (cropped_error_image / max_error * 255).astype(numpy.uint8)
+
+# Save the cropped error image
+cv2.imwrite(cropped_error_image_file(interpolation), cropped_error_image)
 
 # Compute the mean and standard deviation of the error in points
 error_points = numpy.abs(pixel_points - undistorted_pixel_points)
 
 # Display the error image
 max_error = 10 # in gray levels
+
 plt.figure(figsize=(6,6))
 plt.subplot(1, 1, 1)
 plt.imshow(error_image, cmap='gray', vmin=0, vmax=max_error)
@@ -189,4 +200,12 @@ plt.title(f"Error Image with {interpolation} interpolation")
 plt.axis('off')
 plt.tight_layout()
 
-# %%
+plt.figure(figsize=(6,6))
+plt.subplot(1, 1, 1)
+plt.scatter(pixel_points[:, 0], pixel_points[:, 1], c=numpy.linalg.norm(error_points, axis=1), cmap='jet', s=1)
+plt.colorbar(label='Error Norm')
+plt.title(f"Error Points with {interpolation} interpolation")
+plt.axis('equal')
+plt.tight_layout()
+
+plt.show()
