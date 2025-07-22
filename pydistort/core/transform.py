@@ -728,7 +728,7 @@ class Transform(ABC):
                 raise ValueError(f"Input points must have {self.output_dim} dimensions, got {shape[-1]} dimensions.")
             
             # Flatten the input points to 2D for processing
-            points = points.reshape(-1, self.output_dim) # (..., output_dim)
+            points = points.reshape(-1, self.output_dim) # (Npoints, output_dim)
 
         # Apply the inverse transformation
         transformed_points, jacobian_dx, jacobian_dp = self._inverse_transform(points, dx=dx, dp=dp, **kwargs) # (Npoints, input_dim), (Npoints, input_dim, output_dim), (Npoints, input_dim, Nparams)

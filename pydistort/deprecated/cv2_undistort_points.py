@@ -2,10 +2,10 @@ from typing import Optional
 import numpy
 
 
-from .core.distortion import Distortion
-from .distortion_objects.no_distortion import NoDistortion
-from .intrinsic_objects.cv2_intrinsic import Cv2Intrinsic
-from .extrinsic_objects.cv2_extrinsic import Cv2Extrinsic
+from ..core.distortion import Distortion
+from ..distortion_objects.no_distortion import NoDistortion
+from ..intrinsic_objects.cv2_intrinsic import Cv2Intrinsic
+from ..extrinsic_objects.cv2_extrinsic import Cv2Extrinsic
 
 
 
@@ -192,12 +192,13 @@ def cv2_undistort_points(
     undistorted_points, _, _ = distortion._inverse_transform(distorted_points, dx=False, dp=False, **kwargs) # shape (Npoints, 2) -> shape (Npoints, 2)
     
     if not numpy.allclose(rectification.rotation_vector, numpy.zeros((3,), dtype=numpy.float64)):
-        undistorted_points, _, _ = rectification._transform(numpy.concatenate((undistorted_points, numpy.ones((Npoints, 1))), axis=1), dx=False, dp=False) # shape (Npoints, 3) -> shape (Npoints, 2)
+        undistorted_points, _, _ = rectification._transform(numpy.concatenate((undistorted_points, numpy.ones((Npoints, 1))), axis=1), dx=False, dp=False) # shape (Npoints, 3) -> shape (Npoints, 3)
+        undistorted_points = undistorted_points[:, :2] # shape (Npoints, 3) -> shape (Npoints, 2)
 
     if not numpy.allclose(intrinsic_projection.intrinsic_matrix, numpy.eye(3, dtype=numpy.float64)):
         undistorted_points, _, _ = intrinsic_projection._transform(undistorted_points, dx=False, dp=False) # shape (Npoints, 2) -> shape (Npoints, 2)
 
-    # Reshape the normalized points back to the original shape (Warning shape is (..., 2) and not (..., 3))
+    # Reshape the normalized points back to the original shape
     undistorted_points = undistorted_points.reshape(shape) # shape (Npoints, 2) -> (..., 2)
 
     # Transpose the points back to the original shape if needed

@@ -32,7 +32,7 @@ def test_pydistort_undistort_vs_opencv(Nparams, mode):
     R = np.array([0.01, 0.02, 0.03])  # small rotation
     R, _ = cv2.Rodrigues(R.copy())  # Convert to rotation matrix
 
-    Robject = Cv2Extrinsic(tvec=np.zeros((3,)))
+    Robject = Cv2Extrinsic(translation_vector=np.zeros((3,)))
     Robject.rotation_matrix = R
 
     # Projection matrix 

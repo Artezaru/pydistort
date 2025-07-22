@@ -49,6 +49,23 @@ def undistort_points(
 
     This method not compute the jacobians of the undistortion process, but it can be done by using the ``dx`` and ``dp`` flags in the intrinsic and distortion models if they can compute the jacobians.
 
+    .. note::
+
+        The expected image points can be extracted from the pixels coordinates in the image by swaping the axes :
+
+        .. code-block:: python
+
+            import numpy
+            import cv2
+
+            image = cv2.imread('image.jpg')
+            image_height, image_width = image.shape[:2]
+
+            pixel_points = numpy.indices((image_height, image_width), dtype=numpy.float64) # shape (2, H, W)
+            pixel_points = pixel_points.reshape(2, -1).T  # shape (H*W, 2) WARNING: [H, W -> Y, X]
+            
+            image_points = pixel_points[:, [1, 0]]  # Swap to [X, Y] format 
+
     Parameters
     ----------
     image_points : numpy.ndarray
@@ -178,11 +195,12 @@ def undistort_points(
 
     if not isinstance(R, NoExtrinsic):
         undistorted_points, _, _ = R._transform(numpy.concatenate((undistorted_points, numpy.ones((Npoints, 1))), axis=1), dx=False, dp=False) # shape (Npoints, 2) -> shape (Npoints, 3)
+        undistorted_points = undistorted_points[:, :2] # shape (Npoints, 3) -> shape (Npoints, 2)
 
     if not isinstance(P, NoIntrinsic):
-        undistorted_points, _, _ = P._transform(undistorted_points, dx=False, dp=False) # shape (Npoints, 3) -> shape (Npoints, 2)
+        undistorted_points, _, _ = P._transform(undistorted_points, dx=False, dp=False) # shape (Npoints, 2) -> shape (Npoints, 2)
     
-    # Reshape the normalized points back to the original shape (Warning shape is (..., 2) and not (..., 3))
+    # Reshape the normalized points back to the original shape
     undistorted_points = undistorted_points.reshape(shape) # shape (Npoints, 2) -> (..., 2)
 
     # Transpose the points back to the original shape if needed

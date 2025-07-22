@@ -33,7 +33,7 @@ Some Intrinsic classes are provided in the package, such as:
 
 .. toctree::
    :maxdepth: 1
-   :caption: Extrinsic and Intrinsic Classes:
+   :caption: Intrinsic Models:
 
    ./api_doc/no_intrinsic.rst
    ./api_doc/cv2_intrinsic.rst
@@ -67,16 +67,15 @@ These functions are designed to simplify the process of applying transformations
 
 .. toctree::
    :maxdepth: 1
-   :caption: (as PYDISTORT):
+   :caption: Pydistort Functions:
 
    ./api_doc/project_points.rst
    ./api_doc/undistort_points.rst
    ./api_doc/undistort_image.rst
    ./api_doc/distort_image.rst
-
+   ./api_doc/throw_rays.rst
 
 Some functions are inspired by the OpenCV functions `cv2.projectPoints` and `cv2.undistortPoints`, but they are designed to work with the `pydistort` package's classes and methods.
-This method use the same architecture as the `cv2` functions from OpenCV, but it is implemented in a more flexible way to allow the use of different distortion models.
 
 .. warning::
 
@@ -84,7 +83,7 @@ This method use the same architecture as the `cv2` functions from OpenCV, but it
 
 .. toctree::
    :maxdepth: 1
-   :caption: (as OPENCV):
+   :caption: (as OPENCV - deprecated):
 
    ./api_doc/cv2_project_points.rst
    ./api_doc/cv2_undistort_points.rst

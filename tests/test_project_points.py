@@ -37,7 +37,7 @@ def test_pydistort_project_vs_opencv(Nparams, mode):
         [-0.2, -0.2, 5.0]
     ])
 
-    extrinsic = Cv2Extrinsic(rvec=rvec, tvec=tvec)
+    extrinsic = Cv2Extrinsic(rvec, tvec)
     intrinsic = Cv2Intrinsic(intrinsic_matrix=K)
 
     # Project with your method
@@ -182,7 +182,7 @@ def test_pydistort_project_zernike():
             points = np.concatenate((points, 5.0 * np.ones((Npoints, 1))), axis=1) # shape (Npoints, 3)
 
             # Create the objects
-            extrinsic = Cv2Extrinsic(rvec=rvec, tvec=tvec)
+            extrinsic = Cv2Extrinsic(rvec, tvec)
             intrinsic = Cv2Intrinsic(intrinsic_matrix=K)
 
             # Projection (analytic)

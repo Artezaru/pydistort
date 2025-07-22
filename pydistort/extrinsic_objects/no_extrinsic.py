@@ -119,3 +119,33 @@ class NoExtrinsic(Extrinsic):
         if dp:
             jacobian_dp = numpy.empty((normalized_points.shape[0], 2, 0), dtype=numpy.float64) # shape (Npoints, 2, 0)
         return normalized_points, jacobian_dx, jacobian_dp
+
+
+    def _compute_rays(self, normalized_points: numpy.ndarray, **kwargs) -> numpy.ndarray:
+        r"""
+        Computes the rays in the world coordinate system for the given normalized points.
+
+        A ray is the concatenation of the normalized points with a z-coordinate of 1.0 representing the origin of the ray in the world coordinate system and a direction vector of (0, 0, 1) representing the direction of the ray in the world coordinate system.
+
+        The ray structure is as follows:
+
+        - The first 3 elements are the origin of the ray in the world coordinate system (the normalized points with z=1).
+        - The last 3 elements are the direction of the ray in the world coordinate system, which is always (0, 0, 1) for the no extrinsic model. The direction vector is normalized.
+
+        Parameters
+        ----------
+        normalized_points : numpy.ndarray
+            The normalized points in the camera coordinate system. Shape (Npoints, 2).
+
+        Returns
+        -------
+        rays : numpy.ndarray
+            The rays in the world coordinate system. Shape (Npoints, 6).
+        """
+        rays = numpy.empty((normalized_points.shape[0], 6), dtype=numpy.float64)
+        rays[:, :2] = normalized_points.copy()  # copy x and y coordinates
+        rays[:, 2] = 1.0  # set z coordinate to 1
+        rays[:, 3] = 0.0  # direction x
+        rays[:, 4] = 0.0  # direction y
+        rays[:, 5] = 1.0  # direction z
+        return rays

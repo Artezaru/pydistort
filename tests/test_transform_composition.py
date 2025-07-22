@@ -10,8 +10,8 @@ def test_compare_project_points_and_composition():
     intrinsic = Cv2Intrinsic(intrinsic_matrix=[[1000, 0, 320],
                                                [0, 1000, 240],
                                                [0, 0, 1]])
-    extrinsic = Cv2Extrinsic(rvec=numpy.random.rand(3), 
-                             tvec=numpy.random.rand(3))
+    extrinsic = Cv2Extrinsic(rotation_vector=numpy.random.rand(3), 
+                             translation_vector=numpy.random.rand(3))
     
     points = numpy.random.rand(100, 3)
     

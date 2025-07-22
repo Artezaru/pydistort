@@ -2,9 +2,9 @@ from typing import Optional
 import numpy
 import cv2
 
-from .core.distortion import Distortion
-from .distortion_objects.no_distortion import NoDistortion
-from .intrinsic_objects.cv2_intrinsic import Cv2Intrinsic
+from ..core.distortion import Distortion
+from ..distortion_objects.no_distortion import NoDistortion
+from ..intrinsic_objects.cv2_intrinsic import Cv2Intrinsic
 
 
 def cv2_undistort_image(

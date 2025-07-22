@@ -34,26 +34,34 @@ __all__.extend(["ZernikeDistortion"])
 
 # Global Functions
 
-from .cv2_project_points import cv2_project_points, Cv2ProjectPointsResult
-__all__.extend(["cv2_project_points", "Cv2ProjectPointsResult"])
-
 from .project_points import project_points, ProjectPointsResult
 __all__.extend(["project_points", "ProjectPointsResult"])
-
-from .cv2_undistort_points import cv2_undistort_points
-__all__.extend(["cv2_undistort_points"])
 
 from .undistort_points import undistort_points
 __all__.extend(["undistort_points"])
 
-from .cv2_undistort_image import cv2_undistort_image
-__all__.extend(["cv2_undistort_image"])
-
 from .undistort_image import undistort_image
 __all__.extend(["undistort_image"])
 
-from .cv2_distort_image import cv2_distort_image
-__all__.extend(["cv2_distort_image"])
-
 from .distort_image import distort_image
 __all__.extend(["distort_image"])
+
+from .throw_rays import throw_rays
+__all__.extend(["throw_rays"])
+
+
+
+
+# DEPRECATED FUNCTIONS
+
+from .deprecated.cv2_project_points import cv2_project_points, Cv2ProjectPointsResult
+__all__.extend(["cv2_project_points", "Cv2ProjectPointsResult"])
+
+from .deprecated.cv2_undistort_points import cv2_undistort_points
+__all__.extend(["cv2_undistort_points"])
+
+from .deprecated.cv2_undistort_image import cv2_undistort_image
+__all__.extend(["cv2_undistort_image"])
+
+from .deprecated.cv2_distort_image import cv2_distort_image
+__all__.extend(["cv2_distort_image"])

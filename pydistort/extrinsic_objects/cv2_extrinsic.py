@@ -634,3 +634,63 @@ class Cv2Extrinsic(Extrinsic):
             world_3dpoints_flat_dp = None
 
         return world_3dpoints_flat, world_3dpoints_flat_dx, world_3dpoints_flat_dp
+    
+
+    def _compute_rays(self, normalized_points: numpy.ndarray, **kwargs) -> numpy.ndarray:
+        r"""
+        Computes the rays in the world coordinate system for the given normalized points.
+
+        A ray is the concatenation of the normalized points with a z-coordinate of 1.0 representing the origin of the ray in the world coordinate system and a direction vector of (0, 0, 1) representing the direction of the ray in the world coordinate system.
+
+        The ray structure is as follows:
+
+        - The first 3 elements are the origin of the ray in the world coordinate system.
+        - The last 3 elements are the direction of the ray in the world coordinate system.
+
+        Lets :math:`X_{N}` the 3D normalized points, with coordinates :math:`(x_{N}, y_{N}, 1.0)` in the camera coordinate system.
+        Lets :math:`O` the camera position with coordinates :math:`(0, 0, 0)` in the camera coordinate system.
+
+        The points in the world coordinate system are computed as follows:
+
+        .. math::
+    
+            \begin{align*}
+            X_{W} &= R^{-1} \cdot (X_{N} - T) \\
+            O_{W} &= - R^{-1} \cdot T 
+            \end{align*}
+
+        The origin of the ray in the world coordinate system is the normalized points :math:`X_{W}` in world coordinates and the direction of the ray is the normalized vector from the origin to the point :math:`\vec{n}(X_{W} - O_{W})` in world coordinates.
+
+        Parameters
+        ----------
+        normalized_points : numpy.ndarray
+            The normalized points in the camera coordinate system. Shape (Npoints, 2).
+
+        Returns
+        -------
+        numpy.ndarray
+            The rays in the world coordinate system. Shape (Npoints, 6).
+        """
+        # Get the number of points
+        Npoints = normalized_points.shape[0]
+
+        # Get the rotation matrix and translation vector
+        rmat, _ = cv2.Rodrigues(self._rvec)
+        rmat_inv = rmat.T
+        tvec = self._tvec
+
+        # Compute the origin of the ray in the world coordinate system
+        origin_world = (- tvec[numpy.newaxis, :] @ rmat_inv.T).flatten()  # shape (3,)
+
+        # Compute the normalized points in the world coordinate system
+        normalized_points_world = (numpy.concatenate((normalized_points, numpy.ones((Npoints, 1), dtype=numpy.float64)), axis=1) - tvec[numpy.newaxis, :]) @ rmat_inv.T # shape (Npoints, 3)
+
+        # Compute the direction of the ray in the world coordinate system
+        direction_world = normalized_points_world - origin_world[numpy.newaxis, :]  # shape (Npoints, 3)
+
+        # Create the rays in the world coordinate system
+        rays = numpy.empty((Npoints, 6), dtype=numpy.float64) # shape (Npoints, 6)
+        rays[:, :3] = normalized_points_world # The first 3 elements are the origin of the ray in the world coordinate system
+        rays[:, 3:] = direction_world / numpy.linalg.norm(direction_world, axis=1)[:, numpy.newaxis] # The last 3 elements are the direction of the ray in the world coordinate system
+
+        return rays

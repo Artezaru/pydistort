@@ -1,3 +1,4 @@
+from abc import abstractmethod
 from dataclasses import dataclass
 import numpy
 
@@ -40,6 +41,7 @@ class ExtrinsicResult(TransformResult):
     
 
 
+
 @dataclass
 class InverseExtrinsicResult(TransformResult):
     r"""
@@ -74,6 +76,8 @@ class InverseExtrinsicResult(TransformResult):
     
 
 
+
+
 class Extrinsic(Transform):
     r"""
     .. note::
@@ -103,6 +107,7 @@ class Extrinsic(Transform):
         - "is_set": to check if the extrinsic parameters are set.
         - "_transform": to apply extrinsic to a set of points. The transformation is applied to the ``world_3dpoints`` (:math:`X_W`) to obtain the ``normalized_points`` (:math:`x_N`).
         - "_inverse_transform": to remove extrinsic from a set of points. The transformation is applied to the ``normalized_points`` (:math:`x_N`) to obtain the ``world_3dpoints`` (:math:`X_W`).
+        - "_compute_rays": to compute the rays emitted from the camera to the scene. This is used to compute the rays in the world coordinate system.
 
     """
 
@@ -120,4 +125,117 @@ class Extrinsic(Transform):
     @property
     def output_dim(self) -> int:
         return 2 # The output is a 2D point (x, y)
+    
+    # =============================================
+    # Additional ABC Methods
+    # =============================================
+    def compute_rays(
+        self, 
+        normalized_points: numpy.ndarray,
+        *,
+        transpose: bool = False,
+        _skip: bool = False,
+        **kwargs
+        ) -> numpy.ndarray:
+        r"""
+        Compute the rays emitted from the camera to the scene.
+
+        The rays are the concatenation of the normalized points and the direction of the rays in the world coordinate system.
+
+        .. code-block:: python
+
+            rays = compute_rays(normalized_points)
+
+            rays.shape  # (..., 6)
+            # The last dimension is the ray structure: (origin_x, origin_y, origin_z, direction_x, direction_y, direction_z)
+            # Where the coordinates of the origin and the direction are in the world coordinate system.
+
+        Parameters
+        ----------
+        normalized_points : numpy.ndarray
+            The normalized points in the camera coordinate system. Shape (..., 2).
+
+        transpose : bool, optional
+            If True, the input and output arrays are transposed to shape (2, ...) and (6, ...), respectively. Default is False.
+
+        _skip : bool, optional
+            If True, skip the checks and transformations. Default is False.
+
+        kwargs : dict
+            Additional arguments to be passed to the transformation method.
+
+        Returns
+        -------
+        numpy.ndarray
+            The rays in the world coordinate system containing an origin (the normalized point) and a direction (the ray direction). Shape (..., 6).
+
+        """
+        if not _skip:
+            # Check the boolean flags
+            if not isinstance(transpose, bool):
+                raise TypeError(f"transpose must be a boolean, got {type(transpose)}")
+            
+            # Check if the transformation is set
+            if not self.is_set():
+                raise ValueError("Transformation parameters are not set. Please set the parameters before transforming points.")
+            
+            # Convert input points to float64
+            points = numpy.asarray(normalized_points, dtype=numpy.float64)
+
+            # Check the shape of the input points
+            if points.ndim < 2:
+                raise ValueError(f"Input points must have at least 2 dimensions, got {points.ndim} dimensions.")
+            
+            # Transpose the input points if requested
+            if transpose:
+                points = numpy.moveaxis(points, 0, -1) # (output_dim, ...) -> (..., output_dim)
+            
+            # Save the shape of the input points
+            shape = points.shape # (..., output_dim)
+
+            # Check the last dimension of the input points
+            if shape[-1] != self.output_dim:
+                raise ValueError(f"Input points must have {self.output_dim} dimensions, got {shape[-1]} dimensions.")
+            
+            # Flatten the input points to 2D for processing
+            points = points.reshape(-1, self.output_dim) # (Npoints, output_dim)
+
+        # Apply the inverse transformation
+        rays = self._compute_rays(points, **kwargs) # (Npoints, 6)
+
+        if not _skip:
+            # Reshape the transformed points to the original shape
+            rays = rays.reshape(*shape[:-1], 6) # (Npoints, 6) -> (..., 6)
+
+            # Transpose the transformed points if requested
+            if transpose:
+                rays = numpy.moveaxis(rays, -1, 0) # (..., 6) -> (6, ...)
+
+        # Return the result as a InverseTransformResult object
+        return rays
+    
+
+    @abstractmethod
+    def _compute_rays(self, normalized_points: numpy.ndarray, **kwargs) -> numpy.ndarray:
+        r"""
+        Computes the rays in the world coordinate system for the given normalized points.
+
+        A ray is the concatenation of the normalized points with a z-coordinate of 1.0 representing the origin of the ray in the world coordinate system and a direction vector of (0, 0, 1) representing the direction of the ray in the world coordinate system.
+
+        The ray structure is as follows:
+
+        - The first 3 elements are the origin of the ray in the world coordinate system (the normalized points with z=1).
+        - The last 3 elements are the direction of the ray in the world coordinate system, which is always (0, 0, 1) for the no extrinsic model. The direction vector is normalized.
+
+        Parameters
+        ----------
+        normalized_points : numpy.ndarray
+            The normalized points in the camera coordinate system. Shape (Npoints, 2).
+
+        Returns
+        -------
+        numpy.ndarray
+            The rays in the world coordinate system. Shape (Npoints, 6).
+        """
+        raise NotImplementedError("This method should be implemented by subclasses.")
     

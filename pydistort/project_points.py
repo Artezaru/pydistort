@@ -137,7 +137,6 @@ def project_points(
     -------
     ProjectPointsResult
         The result of the projection transformation.
-
         
     Examples
     ~~~~~~~~~~
@@ -195,7 +194,24 @@ def project_points(
         print(result.jacobian_dintrinsic) # shape (5, 2, Nintrinsic) -> ordered as given by the selected intrinsic object
 
     This method can also be used without any extrinsic, distortion or intrinsic parameters by passing None.
-        
+
+    .. note::
+
+        The output image points can be converted to the pixels coordinates in the image by swaping the axes :
+
+        .. code-block:: python
+
+            import numpy
+            import cv2
+
+            image = cv2.imread('image.jpg')
+            image_height, image_width = image.shape[:2]
+
+            pixel_points = numpy.indices((image_height, image_width), dtype=numpy.float64) # shape (2, H, W)
+            pixel_points = pixel_points.reshape(2, -1).T  # shape (H*W, 2) WARNING: [H, W -> Y, X]
+            
+            image_points = pixel_points[:, [1, 0]]  # Swap to [X, Y] format
+
     """
     # Set the default values if None
     if intrinsic is None:

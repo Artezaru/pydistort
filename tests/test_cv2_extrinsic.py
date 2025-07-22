@@ -1,5 +1,6 @@
 import pytest
 import numpy
+import cv2
 
 from pydistort import Cv2Extrinsic
 
@@ -140,3 +141,26 @@ def test_custom_jacobian_view(default):
     numpy.testing.assert_allclose(
         result.jacobian_dt, result.jacobian_dp[..., 3:6], rtol=1e-3, atol=1e-5
     )
+
+def test_rays_creation(default):
+    """Test the creation of rays from the camera to the scene."""
+    points = numpy.random.rand(1, 2)  # Random 2D points
+
+    rvec = default.rotation_vector
+    tvec = default.translation_vector
+    
+    def ray_one_point(point, rvec, tvec):
+        """Create a ray for a single point."""
+        rmat, _ = cv2.Rodrigues(rvec)  # Convert rotation vector to rotation matrix
+        origin = (- rmat.T @ tvec.reshape(3, 1)).flatten()  # Camera origin in world coordinates
+        world = (rmat.T @ (numpy.array([point[0], point[1], 1]) - tvec).reshape(3, 1)).flatten()  # World coordinates of the point
+        ray = numpy.zeros((6,), dtype=numpy.float64)
+        ray[:3] = world  # World coordinates of the point
+        ray[3:] = (world - origin) / numpy.linalg.norm(world - origin)  # Direction vector
+        return ray
+    
+    expected_rays = numpy.array([ray_one_point(point, rvec, tvec) for point in points])
+    rays = default.compute_rays(points)
+
+    numpy.testing.assert_allclose(rays, expected_rays, rtol=1e-5, atol=1e-8)
+    assert rays.shape == (points.shape[0], 6)  # Each ray should have 6 components (origin + direction)
