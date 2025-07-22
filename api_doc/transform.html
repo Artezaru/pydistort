@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.core.Transform &#8212; pydistort 3.2.2 documentation</title>
+    <title>pydistort.core.Transform &#8212; pydistort 3.2.4 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=dcedd534"></script>
+    <script src="../_static/documentation_options.js?v=b31cc1e0"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.2.2 documentation</p>
+    <p class="title logo__title">pydistort 3.2.4 documentation</p>
   
 </a></div>
     
@@ -656,17 +656,17 @@ Please use this parameter with caution, as it may lead to unexpected results if 
 <p>This method can only be used if the dimensions are the same, i.e. input_dim == dim.</p>
 </div>
 <p>Lets consider a set of output points <span class="math notranslate nohighlight">\(X_O\)</span> with shape (…, dim) and a set of input points <span class="math notranslate nohighlight">\(X_I\)</span> with shape (…, input_dim).
-We search <span class="math notranslate nohighlight">\(X_I = X_{I0} + \delta X_I\)</span> such that:</p>
+We search <span class="math notranslate nohighlight">\(X_I = X_{I_0} + \delta X_I\)</span> such that:</p>
 <div class="math notranslate nohighlight">
-\[X_O = \text{Transform}(X_I, \lambda) = T(X_I + \delta X_I, \lambda)\]</div>
+\[X_O = \text{Transform}(X_I, \lambda) = T(X_{I_0} + \delta X_I, \lambda)\]</div>
 <p>We have:</p>
 <div class="math notranslate nohighlight">
-\[\nabla_{X} T (X_I, \lambda_0) \delta \lambda = X_O - T(X_I, \lambda_0)\]</div>
+\[\nabla_{X} T (X_{I_0}, \lambda) \delta X_I = X_O - T(X_{I_0}, \lambda)\]</div>
 <p>The corrections are computed using the following equations:</p>
 <div class="math notranslate nohighlight">
 \[J \delta X_I = R\]</div>
-<p>Where <span class="math notranslate nohighlight">\(J = \nabla_{X} T (X_I, \lambda_0)\)</span> is the Jacobian matrix of the transformation with respect to the input points, and <span class="math notranslate nohighlight">\(R = X_O - T(X_I, \lambda_0)\)</span> is the residual vector.</p>
-<p><span class="math notranslate nohighlight">\(X_{I0}\)</span> is the initial guess for the input points, if None, it use the output points as the initial guess.</p>
+<p>Where <span class="math notranslate nohighlight">\(J = \nabla_{X} T (X_{I_0}, \lambda)\)</span> is the Jacobian matrix of the transformation with respect to the input points, and <span class="math notranslate nohighlight">\(R = X_O - T(X_{I_0}, \lambda)\)</span> is the residual vector.</p>
+<p><span class="math notranslate nohighlight">\(X_{I_0}\)</span> is the initial guess for the input points, if None, it use the output points as the initial guess.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">_skip</span></code> parameter is used to skip the checks for the transformation parameters and assume the output points are given in the (Npoints, dim) float64 format.

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.distortion_objects.no_distortion &#8212; pydistort 3.2.4 documentation</title>
+    <title>pydistort.intrinsic_objects.no_intrinsic &#8212; pydistort 3.2.4 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
     <script src="../../../_static/documentation_options.js?v=b31cc1e0"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/distortion_objects/no_distortion';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/intrinsic_objects/no_intrinsic';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -292,7 +292,7 @@
     
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.distortion_objects.no_distortion</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.intrinsic_objects.no_intrinsic</span></li>
   </ul>
 </nav>
 </div>
@@ -309,19 +309,21 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for pydistort.distortion_objects.no_distortion</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span>
+  <h1>Source code for pydistort.intrinsic_objects.no_intrinsic</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Number</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">..core.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Intrinsic</span>
 
-<div class="viewcode-block" id="NoDistortion">
-<a class="viewcode-back" href="../../../api_doc/no_distortion.html#pydistort.NoDistortion">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">NoDistortion</span><span class="p">(</span><span class="n">Distortion</span><span class="p">):</span>
+
+
+
+<div class="viewcode-block" id="NoIntrinsic">
+<a class="viewcode-back" href="../../../api_doc/no_intrinsic.html#pydistort.NoIntrinsic">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">NoIntrinsic</span><span class="p">(</span><span class="n">Intrinsic</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Class to represent the empty distortion model where the ``distorted_points`` are equal to the ``normalized_points``.</span>
-
-<span class="sd">    The NoDistortion model is used when there is no distortion in the camera.</span>
+<span class="sd">    Subclass of :class:`pydistort.core.Intrinsic` to represent an empty intrinsic model where the image plane is assumed to be the same as the normalized plane.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -329,35 +331,35 @@
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">Nparams</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the number of parameters for the no distortion model, which is always 0.</span>
+<span class="sd">        Returns the number of parameters for the no intrinsic model, which is always 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">0</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">parameters</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Here always returns None since there are no parameters for the no distortion model.</span>
+<span class="sd">        Here always returns None since there are no parameters for the no intrinsic model.</span>
 <span class="sd">        It cannot be set, as there are no parameters to set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="NoDistortion.is_set">
-<a class="viewcode-back" href="../../../api_doc/no_distortion.html#pydistort.NoDistortion.is_set">[docs]</a>
+<div class="viewcode-block" id="NoIntrinsic.is_set">
+<a class="viewcode-back" href="../../../api_doc/no_intrinsic.html#pydistort.NoIntrinsic.is_set">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">is_set</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns True, indicating that the no distortion model is always set.</span>
+<span class="sd">        Returns True, indicating that the no intrinsic model is always set.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">True</span></div>
 
     
-<div class="viewcode-block" id="NoDistortion._transform">
-<a class="viewcode-back" href="../../../api_doc/no_distortion.html#pydistort.NoDistortion._transform">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<div class="viewcode-block" id="NoIntrinsic._transform">
+<a class="viewcode-back" href="../../../api_doc/no_intrinsic.html#pydistort.NoIntrinsic._transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distorted_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Where no distortion is applied, the normalized points are returned as distorted points.</span>
+<span class="sd">        Where no intrinsic is applied, the distorted points are returned as image points.</span>
 
-<span class="sd">        The jacobians for the distortion parameters is an empty array, as there are no parameters to compute the jacobian for.</span>
-<span class="sd">        The jacobian for the normalized points is set to the identity matrix, as the distorted points are equal to the normalized points.</span>
+<span class="sd">        The jacobians for the intrinsic parameters is an empty array, as there are no parameters to compute the jacobian for.</span>
+<span class="sd">        The jacobian for the distorted points is set to the identity matrix, as the image points are equal to the distorted points.</span>
 <span class="sd">        </span>
 <span class="sd">        .. warning::</span>
 
@@ -366,68 +368,68 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        normalized_points : numpy.ndarray</span>
-<span class="sd">            The points in normalized coordinates to be transformed. Shape (Npoints, 2).</span>
-
-<span class="sd">        dx : bool, optional</span>
-<span class="sd">            If True, the jacobian with respect to the normalized points is computed. Default is False</span>
-
-<span class="sd">        dp : bool, optional</span>
-<span class="sd">            If True, the jacobian with respect to the distortion parameters is computed. Default is False</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
 <span class="sd">        distorted_points : numpy.ndarray</span>
-<span class="sd">            The points in distorted coordinates, which are equal to the normalized points. Shape (Npoints, 2).</span>
-
-<span class="sd">        jacobian_dx : Optional[numpy.ndarray]</span>
-<span class="sd">            The jacobian of the distorted points with respect to the normalized points. Shape (Npoints, 2, 2) if dx is True, otherwise None.</span>
-
-<span class="sd">        jacobian_dp : Optional[numpy.ndarray]</span>
-<span class="sd">            The jacobian of the distorted points with respect to the distortion parameters if dp is True, otherwise None. Shape (Npoints, 2, Nparams) if dp is True, otherwise None.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">distorted_points</span> <span class="o">=</span> <span class="n">normalized_points</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># shape (Npoints, 2)</span>
-        <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># shape (Npoints, 2, 2)</span>
-        <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># shape (Npoints, 2, Nparams)</span>
-        <span class="k">if</span> <span class="n">dx</span><span class="p">:</span>
-            <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">normalized_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2, 2)</span>
-            <span class="n">jacobian_dx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-            <span class="n">jacobian_dx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="k">if</span> <span class="n">dp</span><span class="p">:</span>
-            <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">normalized_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2, 0)</span>
-        <span class="k">return</span> <span class="n">distorted_points</span><span class="p">,</span> <span class="n">jacobian_dx</span><span class="p">,</span> <span class="n">jacobian_dp</span></div>
-
-    
-    
-<div class="viewcode-block" id="NoDistortion._inverse_transform">
-<a class="viewcode-back" href="../../../api_doc/no_distortion.html#pydistort.NoDistortion._inverse_transform">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distorted_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        The inverse transform for the no distortion model is the same as the transform, since the distorted points are equal to the normalized points.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        distorted_points : numpy.ndarray</span>
-<span class="sd">            The points in distorted coordinates to be transformed. Shape (Npoints, 2).</span>
+<span class="sd">            The distorted points in normalized coordinates to be transformed. Shape (Npoints, 2).</span>
 
 <span class="sd">        dx : bool, optional</span>
 <span class="sd">            If True, the jacobian with respect to the distorted points is computed. Default is False</span>
 
 <span class="sd">        dp : bool, optional</span>
-<span class="sd">            If True, the jacobian with respect to the distortion parameters is computed. Default is False</span>
+<span class="sd">            If True, the jacobian with respect to the intrinsic parameters is computed. Default is False</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        normalized_points : numpy.ndarray</span>
-<span class="sd">            The points in normalized coordinates, which are equal to the distorted points. Shape (Npoints, 2).</span>
+<span class="sd">        image_points : numpy.ndarray</span>
+<span class="sd">            The image points in image coordinates, which are equal to the distorted points. Shape (Npoints, 2).</span>
 
 <span class="sd">        jacobian_dx : Optional[numpy.ndarray]</span>
-<span class="sd">            The jacobian of the normalized points with respect to the distorted points. Shape (Npoints, 2, 2) if dx is True, otherwise None.</span>
+<span class="sd">            The jacobian of the image points with respect to the distorted points. Shape (Npoints, 2, 2) if dx is True, otherwise None.</span>
 
 <span class="sd">        jacobian_dp : Optional[numpy.ndarray]</span>
-<span class="sd">            The jacobian of the normalized points with respect to the distortion parameters if dp is True, otherwise None. Shape (Npoints, 2, Nparams) if dp is True, otherwise None.</span>
+<span class="sd">            The jacobian of the image points with respect to the intrinsic parameters if dp is True, otherwise None. Shape (Npoints, 2, Nparams) if dp is True, otherwise None.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">distorted_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span><span class="p">)</span></div>
+        <span class="n">image_points</span> <span class="o">=</span> <span class="n">distorted_points</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># shape (Npoints, 2)</span>
+        <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># shape (Npoints, 2, 2)</span>
+        <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># shape (Npoints, 2, Nparams)</span>
+        <span class="k">if</span> <span class="n">dx</span><span class="p">:</span>
+            <span class="n">jacobian_dx</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">image_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2, 2)</span>
+            <span class="n">jacobian_dx</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+            <span class="n">jacobian_dx</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">if</span> <span class="n">dp</span><span class="p">:</span>
+            <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">image_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2, 0)</span>
+        <span class="k">return</span> <span class="n">image_points</span><span class="p">,</span> <span class="n">jacobian_dx</span><span class="p">,</span> <span class="n">jacobian_dp</span></div>
+
+    
+    
+<div class="viewcode-block" id="NoIntrinsic._inverse_transform">
+<a class="viewcode-back" href="../../../api_doc/no_intrinsic.html#pydistort.NoIntrinsic._inverse_transform">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_inverse_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">dx</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">dp</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The inverse transform for the no intrinsic model is the same as the transform, since the image points are equal to the distorted points.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        image_points : numpy.ndarray</span>
+<span class="sd">            The image points in image coordinates to be transformed. Shape (Npoints, 2).</span>
+
+<span class="sd">        dx : bool, optional</span>
+<span class="sd">            If True, the jacobian with respect to the image points is computed. Default is False</span>
+
+<span class="sd">        dp : bool, optional</span>
+<span class="sd">            If True, the jacobian with respect to the intrinsic parameters is computed. Default is False</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        distorted_points : numpy.ndarray</span>
+<span class="sd">            The distorted points in normalized coordinates, which are equal to the image points. Shape (Npoints, 2).</span>
+
+<span class="sd">        jacobian_dx : Optional[numpy.ndarray]</span>
+<span class="sd">            The jacobian of the distorted points with respect to the image points. Shape (Npoints, 2, 2) if dx is True, otherwise None.</span>
+
+<span class="sd">        jacobian_dp : Optional[numpy.ndarray]</span>
+<span class="sd">            The jacobian of the distorted points with respect to the intrinsic parameters if dp is True, otherwise None. Shape (Npoints, 2, Nparams) if dp is True, otherwise None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">image_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="n">dx</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="n">dp</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

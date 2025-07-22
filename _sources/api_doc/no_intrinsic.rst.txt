@@ -1,7 +1,7 @@
 pydistort.NoIntrinsic
 ========================
 
-.. autoclass:: pydistort.NoIntrinsics
+.. autoclass:: pydistort.NoIntrinsic
    :members:
    :undoc-members:
    :show-inheritance:
