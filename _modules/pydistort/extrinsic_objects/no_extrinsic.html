@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.extrinsic_objects.no_extrinsic &#8212; pydistort 3.2.4 documentation</title>
+    <title>pydistort.extrinsic_objects.no_extrinsic &#8212; pydistort 3.2.5 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=b31cc1e0"></script>
+    <script src="../../../_static/documentation_options.js?v=176445f9"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/extrinsic_objects/no_extrinsic';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.2.4 documentation</p>
+    <p class="title logo__title">pydistort 3.2.5 documentation</p>
   
 </a></div>
     
@@ -441,6 +441,39 @@
         <span class="k">if</span> <span class="n">dp</span><span class="p">:</span>
             <span class="n">jacobian_dp</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">normalized_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2, 0)</span>
         <span class="k">return</span> <span class="n">normalized_points</span><span class="p">,</span> <span class="n">jacobian_dx</span><span class="p">,</span> <span class="n">jacobian_dp</span></div>
+
+
+
+<div class="viewcode-block" id="NoExtrinsic._compute_rays">
+<a class="viewcode-back" href="../../../api_doc/no_extrinsic.html#pydistort.NoExtrinsic._compute_rays">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_rays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the rays in the world coordinate system for the given normalized points.</span>
+
+<span class="sd">        A ray is the concatenation of the normalized points with a z-coordinate of 1.0 representing the origin of the ray in the world coordinate system and a direction vector of (0, 0, 1) representing the direction of the ray in the world coordinate system.</span>
+
+<span class="sd">        The ray structure is as follows:</span>
+
+<span class="sd">        - The first 3 elements are the origin of the ray in the world coordinate system (the normalized points with z=1).</span>
+<span class="sd">        - The last 3 elements are the direction of the ray in the world coordinate system, which is always (0, 0, 1) for the no extrinsic model. The direction vector is normalized.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        normalized_points : numpy.ndarray</span>
+<span class="sd">            The normalized points in the camera coordinate system. Shape (Npoints, 2).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        rays : numpy.ndarray</span>
+<span class="sd">            The rays in the world coordinate system. Shape (Npoints, 6).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">rays</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">normalized_points</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+        <span class="n">rays</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalized_points</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># copy x and y coordinates</span>
+        <span class="n">rays</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># set z coordinate to 1</span>
+        <span class="n">rays</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># direction x</span>
+        <span class="n">rays</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># direction y</span>
+        <span class="n">rays</span><span class="p">[:,</span> <span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># direction z</span>
+        <span class="k">return</span> <span class="n">rays</span></div>
 </div>
 
 </pre></div>

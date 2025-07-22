@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.undistort_points &#8212; pydistort 3.2.5 documentation</title>
+    <title>pydistort.throw_rays &#8212; pydistort 3.2.5 documentation</title>
   
   
   
@@ -40,7 +40,7 @@
     <script src="../../_static/documentation_options.js?v=176445f9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/undistort_points';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/throw_rays';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -292,7 +292,7 @@
     
     <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.undistort_points</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pydistort.throw_rays</span></li>
   </ul>
 </nav>
 </div>
@@ -309,10 +309,11 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for pydistort.undistort_points</h1><div class="highlight"><pre>
+  <h1>Source code for pydistort.throw_rays</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
-
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.core.distortion</span><span class="w"> </span><span class="kn">import</span> <span class="n">Distortion</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.core.intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Intrinsic</span>
@@ -322,46 +323,45 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">.intrinsic_objects.no_intrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoIntrinsic</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.extrinsic_objects.no_extrinsic</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoExtrinsic</span>
 
-
-
-
-<div class="viewcode-block" id="undistort_points">
-<a class="viewcode-back" href="../../api_doc/undistort_points.html#pydistort.undistort_points">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">undistort_points</span><span class="p">(</span>
-        <span class="n">image_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
-        <span class="n">intrinsic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Intrinsic</span><span class="p">],</span>
-        <span class="n">distortion</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Distortion</span><span class="p">],</span>
-        <span class="n">R</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Extrinsic</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">P</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Intrinsic</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="o">*</span><span class="p">,</span>
-        <span class="n">transpose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="o">**</span><span class="n">kwargs</span>
+<div class="viewcode-block" id="throw_rays">
+<a class="viewcode-back" href="../../api_doc/throw_rays.html#pydistort.throw_rays">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">throw_rays</span><span class="p">(</span>
+    <span class="n">image_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+    <span class="n">intrinsic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Intrinsic</span><span class="p">],</span>
+    <span class="n">distortion</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Distortion</span><span class="p">],</span>
+    <span class="n">extrinsic</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Extrinsic</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">transpose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Undistort 2D image points using the camera intrinsic, distortion and extrinsic transformations.</span>
 
-<span class="sd">    .. seealso::</span>
+<span class="sd">    Compute the rays emitted from the camera to the scene based on the given image points, intrinsic parameters, distortion model, and extrinsic parameters.</span>
 
-<span class="sd">        To use a method usage-like OpenCV, use the :func:`pydistort.cv2_undistort_points` function.</span>
+<span class="sd">    The process to correspond a 3D-world point to a 2D-image point is as follows:</span>
 
-<span class="sd">    The process to undistort a 2D-image point is as follows:</span>
+<span class="sd">    1. The ``world_3dpoints`` (:math:`X_W`) are projected to the camera coordinate system using the extrinsic parameters (rotation and translation) to obtain the ``normalized_points`` (:math:`x_N`).</span>
+<span class="sd">    3. The ``normalized_points`` (:math:`x_N`) are distorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``distorted_points`` (:math:`x_D`).</span>
+<span class="sd">    4. The ``distorted_points`` (:math:`x_D`) are projected onto the image plane using the intrinsic transformation to obtain the ``image_points`` (:math:`x_I`).</span>
 
-<span class="sd">    1. The ``image_points`` (:math:`x_I`) are normalized by applying the inverse intrinsic application to obtain the ``distorted_points`` (:math:`x_D`).</span>
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \begin{align*}</span>
+<span class="sd">        x_N = \text{Extrinsic}(X_W) \\</span>
+<span class="sd">        x_D = \text{Distortion}(x_N) \\</span>
+<span class="sd">        x_I = \text{Intrinsic}(x_D) \\</span>
+<span class="sd">        \end{align*}</span>
+
+<span class="sd">    The inverse process to compute the rays is as follows:</span>
+
+<span class="sd">    1. The ``image_points`` (:math:`x_I`) are normalized by multiplying by the inverse of the intrinsic matrix K to obtain the ``distorted_points`` (:math:`x_D`).</span>
 <span class="sd">    2. The ``distorted_points`` (:math:`x_D`) are undistorted by the distortion model using the coefficients :math:`\{\lambda_1, \lambda_2, \lambda_3, \ldots\}` to obtain the ``normalized_points`` (:math:`x_N`).</span>
-<span class="sd">    3. A rectification extrinsic operation R and a new projection intrinsic projection P can be applied to the ``normalized_points`` to return the ``undistorted_points`` in the space required by the user.</span>
+<span class="sd">    3. The ``normalized_points`` (:math:`x_N`) are used to compute the rays in the world coordinate system using the extrinsic parameters (rotation and translation) to obtain the ``rays``.</span>
 
-<span class="sd">    .. note::</span>
+<span class="sd">    The ray structure is as follows:</span>
 
-<span class="sd">        The ``P = intrinsic`` to return the undistorted points in the image coordinate system.</span>
-
-<span class="sd">    .. warning::</span>
-
-<span class="sd">        Iterative non-linear optimization is used to find the undistorted points.</span>
-
-<span class="sd">    The given points ``image_points`` are assumed to be in the image coordinate system and expressed in 2D coordinates with shape (..., 2).</span>
-<span class="sd">    If the user gives not give a intrinsic transformation, it equivalent to give directly the normalized points.</span>
-
-<span class="sd">    This method not compute the jacobians of the undistortion process, but it can be done by using the ``dx`` and ``dp`` flags in the intrinsic and distortion models if they can compute the jacobians.</span>
+<span class="sd">    - The first 3 elements are the origin of the ray in the world coordinate system.</span>
+<span class="sd">    - The last 3 elements are the direction of the ray in the world coordinate system. The direction vector is normalized.</span>
 
 <span class="sd">    .. note::</span>
 
@@ -384,7 +384,7 @@
 <span class="sd">    ----------</span>
 <span class="sd">    image_points : numpy.ndarray</span>
 <span class="sd">        The 2D image points in the camera coordinate system. Shape (..., 2)</span>
-<span class="sd">        </span>
+
 <span class="sd">    intrinsic : Optional[Intrinsic]</span>
 <span class="sd">        The intrinsic transformation to be applied to the image points.</span>
 <span class="sd">        If None, a zero intrinsic is applied (i.e., identity transformation).</span>
@@ -393,75 +393,67 @@
 <span class="sd">        The distortion model to be applied to the normalized points.</span>
 <span class="sd">        If None, a zero distortion is applied (i.e., identity transformation).</span>
 
-<span class="sd">    R : Optional[Extrinsic], optional</span>
-<span class="sd">        The rectification extrinsic transformation (rotation and translation) to be applied to the normalized points.</span>
-<span class="sd">        If None, a zero extrinsic is applied (i.e., identity transformation). Default is None.</span>
-
-<span class="sd">    P : Optional[Intrinsic], optional</span>
-<span class="sd">        The projection intrinsic transformation to be applied to the normalized points.</span>
-<span class="sd">        If None, the intrinsic matrix is assumed to be the identity matrix (i.e., no projection transformation).</span>
-<span class="sd">        This is useful to return the undistorted points in the image coordinate system.</span>
+<span class="sd">    extrinsic : Optional[Extrinsic]</span>
+<span class="sd">        The extrinsic transformation (rotation and translation) to be applied to the normalized points.</span>
+<span class="sd">        If None, a zero extrinsic is applied (i.e., identity transformation).</span>
 
 <span class="sd">    transpose : bool, optional</span>
-<span class="sd">        If True, the input points are assumed to be in the shape (2, ...) instead of (..., 2). Default is False.</span>
-<span class="sd">        The output points will be in the same shape as the input points.</span>
-<span class="sd">    </span>
-<span class="sd">    kwargs : optional</span>
-<span class="sd">        Additional arguments to be passed to the distortion model &quot;undistort&quot; method.</span>
-<span class="sd">        This is useful for some distortion models that require additional parameters.</span>
+<span class="sd">        If True, the input image points are transposed before processing, the input shape is expected to be (2, ...) instead of (..., 2) and the output shape will be (6, ...).</span>
+<span class="sd">        Default is False.</span>
+
+<span class="sd">    **kwargs : dict</span>
+<span class="sd">        Additional keyword arguments for distortion models ``undistort`` method.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    numpy.ndarray</span>
-<span class="sd">        The undistorted 2D image points in the camera coordinate system. Shape (..., 2). If no ``P`` is given, the ``normalized_points`` are returned instead of the ``undistorted_points``.</span>
-
+<span class="sd">        The rays in the world coordinate system. Shape (..., 6)</span>
+<span class="sd">    </span>
 <span class="sd">    Example</span>
-<span class="sd">    --------</span>
-<span class="sd">    The following example shows how to undistort 2D image points using the intrinsic camera matrix and a distortion model.</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    Create a simple example to construct the rays from an image to the scene:</span>
 
 <span class="sd">    .. code-block:: python</span>
 
 <span class="sd">        import numpy</span>
-<span class="sd">        from pydistort import undistort_points, Cv2Distortion, Cv2Intrinsic</span>
-<span class="sd">        from py3dframe import Frame</span>
+<span class="sd">        import cv2</span>
+<span class="sd">        from pydistort import throw_rays, Cv2Extrinsic, Cv2Intrinsic, Cv2Distortion</span>
 
-<span class="sd">        # Define the 2D image points in the camera coordinate system</span>
-<span class="sd">        image_points = numpy.array([[320.0, 240.0],</span>
-<span class="sd">                                    [420.0, 440.0],</span>
-<span class="sd">                                    [520.0, 540.0],</span>
-<span class="sd">                                    [620.0, 640.0],</span>
-<span class="sd">                                    [720.0, 740.0]]) # shape (5, 2)</span>
+<span class="sd">        # Read the image : </span>
+<span class="sd">        image = cv2.imread(&#39;image.jpg&#39;)</span>
+<span class="sd">        image_height, image_width = image.shape[:2]</span>
 
-<span class="sd">        # Define the intrinsic camera matrix</span>
-<span class="sd">        K = numpy.array([[1000.0, 0.0, 320.0],</span>
-<span class="sd">                        [0.0, 1000.0, 240.0],</span>
-<span class="sd">                        [0.0, 0.0, 1.0]])</span>
-<span class="sd">    </span>
-<span class="sd">        # Create the intrinsic object</span>
-<span class="sd">        intrinsic = Cv2Intrinsic(intrinsic_matrix=K)</span>
+<span class="sd">        # Construct the intrinsic transformation :</span>
+<span class="sd">        intrinsic = Cv2Intrinsic(intrinsic_matrix=numpy.array([[1000, 0, image_width / 2],</span>
+<span class="sd">                                                              [0, 1000, image_height / 2],</span>
+<span class="sd">                                                              [0, 0, 1]], dtype=numpy.float64))</span>
 
-<span class="sd">        # Define the distortion model (optional)</span>
-<span class="sd">        distortion = Cv2Distortion([0.1, 0.2, 0.3, 0.4, 0.5])</span>
+<span class="sd">        # Construct the distortion transformation:</span>
+<span class="sd">        distortion = Cv2Distortion(parameters=numpy.array([0.1, -0.05, 0, 0, 0], dtype=numpy.float64))</span>
 
-<span class="sd">        # Undistort the 2D image points</span>
-<span class="sd">        normalized_points = undistort_points(image_points, intrinsic=intrinsic, distortion=distortion)</span>
+<span class="sd">        # Construct the extrinsic transformation:</span>
+<span class="sd">        extrinsic = Cv2Extrinsic(rotation_vector=[0.1, 0.2, 0.3], translation_vector=[0, 0, 5])</span>
 
-<span class="sd">    To return the undistorted points in the image coordinate system, you can provide a projection P equal to the intrinsic K:</span>
+<span class="sd">        # Define the image points (e.g., pixels in the image):</span>
+<span class="sd">        pixel_points = numpy.indices((image_height, image_width), dtype=numpy.float64) # shape (2, H, W)</span>
+<span class="sd">        pixel_points = pixel_points.reshape(2, -1).T  # shape (H*W, 2) WARNING: [H, W -&gt; Y, X]</span>
+<span class="sd">        image_points = pixel_points[:, [1, 0]]  # Swap to [X, Y] format</span>
 
-<span class="sd">    .. code-block:: python</span>
+<span class="sd">        # Throw rays from the image points to the scene:</span>
+<span class="sd">        rays = throw_rays(image_points, intrinsic, distortion, extrinsic, transpose=False)</span>
 
-<span class="sd">        undistorted_points = undistort_points(image_points, intrinsic=intrinsic, distortion=distortion, P=K)</span>
-<span class="sd">    </span>
+<span class="sd">        # Here `rays` will contain the origin and direction of the rays in the world coordinate system with shape (..., 6).</span>
+<span class="sd">        # rays[:,i] = [origin_x, origin_y, origin_z, direction_x, direction_y, direction_z]</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Set the default values if None</span>
     <span class="k">if</span> <span class="n">intrinsic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">intrinsic</span> <span class="o">=</span> <span class="n">NoIntrinsic</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">distortion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">distortion</span> <span class="o">=</span> <span class="n">NoDistortion</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">R</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">R</span> <span class="o">=</span> <span class="n">NoExtrinsic</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">P</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">P</span> <span class="o">=</span> <span class="n">NoIntrinsic</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">extrinsic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">extrinsic</span> <span class="o">=</span> <span class="n">NoExtrinsic</span><span class="p">()</span>
 
     <span class="c1"># Check the types of the parameters</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">intrinsic</span><span class="p">,</span> <span class="n">Intrinsic</span><span class="p">):</span>
@@ -472,15 +464,10 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;distortion must be an instance of the Distortion class.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">distortion</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The distortion object must be ready to transform the points, check is_set() method.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">Extrinsic</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;R must be an instance of the Extrinsic class&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">R</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The rectification extrinsic object must be ready to transform the points, check is_set() method.&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">Intrinsic</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;P must be an instance of the Intrinsic class&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">P</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The projection intrinsic object must be ready to transform the points, check is_set() method.&quot;</span><span class="p">)</span>
-
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">extrinsic</span><span class="p">,</span> <span class="n">Extrinsic</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;extrinsic must be an instance of the Extrinsic class&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">extrinsic</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The extrinsic object must be ready to transform the points, check is_set() method.&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transpose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;transpose must be a boolean value&quot;</span><span class="p">)</span>
     
@@ -506,23 +493,16 @@
     <span class="c1"># Realize the transformation:</span>
     <span class="n">distorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">intrinsic</span><span class="o">.</span><span class="n">_inverse_transform</span><span class="p">(</span><span class="n">points_flat</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; shape (Npoints, 2)</span>
     <span class="n">undistorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">distortion</span><span class="o">.</span><span class="n">_inverse_transform</span><span class="p">(</span><span class="n">distorted_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; shape (Npoints, 2)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">NoExtrinsic</span><span class="p">):</span>
-        <span class="n">undistorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">R</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">undistorted_points</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">Npoints</span><span class="p">,</span> <span class="mi">1</span><span class="p">))),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; shape (Npoints, 3)</span>
-        <span class="n">undistorted_points</span> <span class="o">=</span> <span class="n">undistorted_points</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># shape (Npoints, 3) -&gt; shape (Npoints, 2)</span>
-
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">NoIntrinsic</span><span class="p">):</span>
-        <span class="n">undistorted_points</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">P</span><span class="o">.</span><span class="n">_transform</span><span class="p">(</span><span class="n">undistorted_points</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">dp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; shape (Npoints, 2)</span>
+    <span class="n">rays</span> <span class="o">=</span> <span class="n">extrinsic</span><span class="o">.</span><span class="n">_compute_rays</span><span class="p">(</span><span class="n">undistorted_points</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; shape (Npoints, 6)</span>
     
-    <span class="c1"># Reshape the normalized points back to the original shape</span>
-    <span class="n">undistorted_points</span> <span class="o">=</span> <span class="n">undistorted_points</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="c1"># shape (Npoints, 2) -&gt; (..., 2)</span>
+    <span class="c1"># Reshape the rays  back to the original shape</span>
+    <span class="n">rays</span> <span class="o">=</span> <span class="n">rays</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">*</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">6</span><span class="p">))</span> <span class="c1"># shape (Npoints, 6) -&gt; (..., 6)</span>
 
-    <span class="c1"># Transpose the points back to the original shape if needed</span>
+    <span class="c1"># Transpose the rays back to the original shape if needed</span>
     <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
-        <span class="n">undistorted_points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">undistorted_points</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># (..., 2) -&gt; (2, ...)</span>
-    
-    <span class="k">return</span> <span class="n">undistorted_points</span></div>
+        <span class="n">rays</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">rays</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># (..., 6) -&gt; (6, ...)</span>
 
+    <span class="k">return</span> <span class="n">rays</span></div>
 
 </pre></div>
 

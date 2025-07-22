@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.core.extrinsic &#8212; pydistort 3.2.4 documentation</title>
+    <title>pydistort.core.extrinsic &#8212; pydistort 3.2.5 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../../_static/documentation_options.js?v=b31cc1e0"></script>
+    <script src="../../../_static/documentation_options.js?v=176445f9"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/core/extrinsic';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.2.4 documentation</p>
+    <p class="title logo__title">pydistort 3.2.5 documentation</p>
   
 </a></div>
     
@@ -310,7 +310,8 @@
                 <article class="bd-article">
                   
   <h1>Source code for pydistort.core.extrinsic</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.transform</span><span class="w"> </span><span class="kn">import</span> <span class="n">Transform</span><span class="p">,</span> <span class="n">TransformResult</span>
@@ -355,6 +356,7 @@
     
 
 
+
 <div class="viewcode-block" id="InverseExtrinsicResult">
 <a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.core.InverseExtrinsicResult">[docs]</a>
 <span class="nd">@dataclass</span>
@@ -392,6 +394,8 @@
     
 
 
+
+
 <div class="viewcode-block" id="Extrinsic">
 <a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.core.Extrinsic">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Extrinsic</span><span class="p">(</span><span class="n">Transform</span><span class="p">):</span>
@@ -423,6 +427,7 @@
 <span class="sd">        - &quot;is_set&quot;: to check if the extrinsic parameters are set.</span>
 <span class="sd">        - &quot;_transform&quot;: to apply extrinsic to a set of points. The transformation is applied to the ``world_3dpoints`` (:math:`X_W`) to obtain the ``normalized_points`` (:math:`x_N`).</span>
 <span class="sd">        - &quot;_inverse_transform&quot;: to remove extrinsic from a set of points. The transformation is applied to the ``normalized_points`` (:math:`x_N`) to obtain the ``world_3dpoints`` (:math:`X_W`).</span>
+<span class="sd">        - &quot;_compute_rays&quot;: to compute the rays emitted from the camera to the scene. This is used to compute the rays in the world coordinate system.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -439,7 +444,126 @@
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">output_dim</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">2</span> <span class="c1"># The output is a 2D point (x, y)</span></div>
+        <span class="k">return</span> <span class="mi">2</span> <span class="c1"># The output is a 2D point (x, y)</span>
+    
+    <span class="c1"># =============================================</span>
+    <span class="c1"># Additional ABC Methods</span>
+    <span class="c1"># =============================================</span>
+<div class="viewcode-block" id="Extrinsic.compute_rays">
+<a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.core.Extrinsic.compute_rays">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_rays</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">transpose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">_skip</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+        <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the rays emitted from the camera to the scene.</span>
+
+<span class="sd">        The rays are the concatenation of the normalized points and the direction of the rays in the world coordinate system.</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            rays = compute_rays(normalized_points)</span>
+
+<span class="sd">            rays.shape  # (..., 6)</span>
+<span class="sd">            # The last dimension is the ray structure: (origin_x, origin_y, origin_z, direction_x, direction_y, direction_z)</span>
+<span class="sd">            # Where the coordinates of the origin and the direction are in the world coordinate system.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        normalized_points : numpy.ndarray</span>
+<span class="sd">            The normalized points in the camera coordinate system. Shape (..., 2).</span>
+
+<span class="sd">        transpose : bool, optional</span>
+<span class="sd">            If True, the input and output arrays are transposed to shape (2, ...) and (6, ...), respectively. Default is False.</span>
+
+<span class="sd">        _skip : bool, optional</span>
+<span class="sd">            If True, skip the checks and transformations. Default is False.</span>
+
+<span class="sd">        kwargs : dict</span>
+<span class="sd">            Additional arguments to be passed to the transformation method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            The rays in the world coordinate system containing an origin (the normalized point) and a direction (the ray direction). Shape (..., 6).</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_skip</span><span class="p">:</span>
+            <span class="c1"># Check the boolean flags</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">transpose</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;transpose must be a boolean, got </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">transpose</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Check if the transformation is set</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Transformation parameters are not set. Please set the parameters before transforming points.&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Convert input points to float64</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">normalized_points</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+            <span class="c1"># Check the shape of the input points</span>
+            <span class="k">if</span> <span class="n">points</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input points must have at least 2 dimensions, got </span><span class="si">{</span><span class="n">points</span><span class="o">.</span><span class="n">ndim</span><span class="si">}</span><span class="s2"> dimensions.&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Transpose the input points if requested</span>
+            <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+                <span class="n">points</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># (output_dim, ...) -&gt; (..., output_dim)</span>
+            
+            <span class="c1"># Save the shape of the input points</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">shape</span> <span class="c1"># (..., output_dim)</span>
+
+            <span class="c1"># Check the last dimension of the input points</span>
+            <span class="k">if</span> <span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input points must have </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="si">}</span><span class="s2"> dimensions, got </span><span class="si">{</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> dimensions.&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Flatten the input points to 2D for processing</span>
+            <span class="n">points</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dim</span><span class="p">)</span> <span class="c1"># (Npoints, output_dim)</span>
+
+        <span class="c1"># Apply the inverse transformation</span>
+        <span class="n">rays</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_rays</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># (Npoints, 6)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">_skip</span><span class="p">:</span>
+            <span class="c1"># Reshape the transformed points to the original shape</span>
+            <span class="n">rays</span> <span class="o">=</span> <span class="n">rays</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">6</span><span class="p">)</span> <span class="c1"># (Npoints, 6) -&gt; (..., 6)</span>
+
+            <span class="c1"># Transpose the transformed points if requested</span>
+            <span class="k">if</span> <span class="n">transpose</span><span class="p">:</span>
+                <span class="n">rays</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">rays</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># (..., 6) -&gt; (6, ...)</span>
+
+        <span class="c1"># Return the result as a InverseTransformResult object</span>
+        <span class="k">return</span> <span class="n">rays</span></div>
+
+    
+
+<div class="viewcode-block" id="Extrinsic._compute_rays">
+<a class="viewcode-back" href="../../../api_doc/extrinsic.html#pydistort.core.Extrinsic._compute_rays">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_rays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalized_points</span><span class="p">:</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the rays in the world coordinate system for the given normalized points.</span>
+
+<span class="sd">        A ray is the concatenation of the normalized points with a z-coordinate of 1.0 representing the origin of the ray in the world coordinate system and a direction vector of (0, 0, 1) representing the direction of the ray in the world coordinate system.</span>
+
+<span class="sd">        The ray structure is as follows:</span>
+
+<span class="sd">        - The first 3 elements are the origin of the ray in the world coordinate system (the normalized points with z=1).</span>
+<span class="sd">        - The last 3 elements are the direction of the ray in the world coordinate system, which is always (0, 0, 1) for the no extrinsic model. The direction vector is normalized.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        normalized_points : numpy.ndarray</span>
+<span class="sd">            The normalized points in the camera coordinate system. Shape (Npoints, 2).</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        numpy.ndarray</span>
+<span class="sd">            The rays in the world coordinate system. Shape (Npoints, 6).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This method should be implemented by subclasses.&quot;</span><span class="p">)</span></div>
+</div>
 
     
 </pre></div>

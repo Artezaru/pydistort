@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pydistort.project_points &#8212; pydistort 3.2.4 documentation</title>
+    <title>pydistort.project_points &#8212; pydistort 3.2.5 documentation</title>
   
   
   
@@ -37,7 +37,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../../_static/documentation_options.js?v=b31cc1e0"></script>
+    <script src="../../_static/documentation_options.js?v=176445f9"></script>
     <script src="../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pydistort/project_points';</script>
@@ -107,7 +107,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.2.4 documentation</p>
+    <p class="title logo__title">pydistort 3.2.5 documentation</p>
   
 </a></div>
     
@@ -454,7 +454,6 @@
 <span class="sd">    -------</span>
 <span class="sd">    ProjectPointsResult</span>
 <span class="sd">        The result of the projection transformation.</span>
-
 <span class="sd">        </span>
 <span class="sd">    Examples</span>
 <span class="sd">    ~~~~~~~~~~</span>
@@ -512,7 +511,24 @@
 <span class="sd">        print(result.jacobian_dintrinsic) # shape (5, 2, Nintrinsic) -&gt; ordered as given by the selected intrinsic object</span>
 
 <span class="sd">    This method can also be used without any extrinsic, distortion or intrinsic parameters by passing None.</span>
-<span class="sd">        </span>
+
+<span class="sd">    .. note::</span>
+
+<span class="sd">        The output image points can be converted to the pixels coordinates in the image by swaping the axes :</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            import numpy</span>
+<span class="sd">            import cv2</span>
+
+<span class="sd">            image = cv2.imread(&#39;image.jpg&#39;)</span>
+<span class="sd">            image_height, image_width = image.shape[:2]</span>
+
+<span class="sd">            pixel_points = numpy.indices((image_height, image_width), dtype=numpy.float64) # shape (2, H, W)</span>
+<span class="sd">            pixel_points = pixel_points.reshape(2, -1).T  # shape (H*W, 2) WARNING: [H, W -&gt; Y, X]</span>
+<span class="sd">            </span>
+<span class="sd">            image_points = pixel_points[:, [1, 0]]  # Swap to [X, Y] format</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Set the default values if None</span>
     <span class="k">if</span> <span class="n">intrinsic</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

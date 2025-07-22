@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>pydistort.core.Extrinsic &#8212; pydistort 3.2.4 documentation</title>
+    <title>pydistort.core.Extrinsic &#8212; pydistort 3.2.5 documentation</title>
   
   
   
@@ -38,7 +38,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="../_static/documentation_options.js?v=b31cc1e0"></script>
+    <script src="../_static/documentation_options.js?v=176445f9"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -111,7 +111,7 @@
   
   
   
-    <p class="title logo__title">pydistort 3.2.4 documentation</p>
+    <p class="title logo__title">pydistort 3.2.5 documentation</p>
   
 </a></div>
     
@@ -274,7 +274,7 @@
 <li class="toctree-l1"><a class="reference internal" href="intrinsic.html">pydistort.core.Intrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="distortion.html">pydistort.core.Distortion</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Extrinsic and Intrinsic Classes:</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Intrinsic Models:</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="no_intrinsic.html">pydistort.NoIntrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_intrinsic.html">pydistort.Cv2Intrinsic</a></li>
@@ -291,14 +291,15 @@
 <li class="toctree-l1"><a class="reference internal" href="no_extrinsic.html">pydistort.NoExtrinsic</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_extrinsic.html">pydistort.Cv2Extrinsic</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as PYDISTORT):</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Pydistort Functions:</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="project_points.html">pydistort.project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="undistort_points.html">pydistort.undistort_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="undistort_image.html">pydistort.undistort_image</a></li>
 <li class="toctree-l1"><a class="reference internal" href="distort_image.html">pydistort.distort_image</a></li>
+<li class="toctree-l1"><a class="reference internal" href="throw_rays.html">pydistort.throw_rays</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV):</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">(as OPENCV - deprecated):</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="cv2_project_points.html">pydistort.cv2_project_points</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cv2_undistort_points.html">pydistort.cv2_undistort_points</a></li>
@@ -395,12 +396,36 @@
 <li><p>“is_set”: to check if the extrinsic parameters are set.</p></li>
 <li><p>“_transform”: to apply extrinsic to a set of points. The transformation is applied to the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_W\)</span>) to obtain the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>).</p></li>
 <li><p>“_inverse_transform”: to remove extrinsic from a set of points. The transformation is applied to the <code class="docutils literal notranslate"><span class="pre">normalized_points</span></code> (<span class="math notranslate nohighlight">\(x_N\)</span>) to obtain the <code class="docutils literal notranslate"><span class="pre">world_3dpoints</span></code> (<span class="math notranslate nohighlight">\(X_W\)</span>).</p></li>
+<li><p>“_compute_rays”: to compute the rays emitted from the camera to the scene. This is used to compute the rays in the world coordinate system.</p></li>
 </ul>
 </div>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydistort.core.Extrinsic._abc_impl">
 <span class="sig-name descname"><span class="pre">_abc_impl</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pydistort.core.Extrinsic._abc_impl" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic._compute_rays">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">_compute_rays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/core/extrinsic.html#Extrinsic._compute_rays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.core.Extrinsic._compute_rays" title="Link to this definition">#</a></dt>
+<dd><p>Computes the rays in the world coordinate system for the given normalized points.</p>
+<p>A ray is the concatenation of the normalized points with a z-coordinate of 1.0 representing the origin of the ray in the world coordinate system and a direction vector of (0, 0, 1) representing the direction of the ray in the world coordinate system.</p>
+<p>The ray structure is as follows:</p>
+<ul class="simple">
+<li><p>The first 3 elements are the origin of the ray in the world coordinate system (the normalized points with z=1).</p></li>
+<li><p>The last 3 elements are the direction of the ray in the world coordinate system, which is always (0, 0, 1) for the no extrinsic model. The direction vector is normalized.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – The normalized points in the camera coordinate system. Shape (Npoints, 2).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The rays in the world coordinate system. Shape (Npoints, 6).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pydistort.core.Extrinsic._inverse_result_class">
@@ -417,6 +442,36 @@
 <dt class="sig sig-object py" id="pydistort.core.Extrinsic._result_class">
 <span class="sig-name descname"><span class="pre">_result_class</span></span><a class="headerlink" href="#pydistort.core.Extrinsic._result_class" title="Link to this definition">#</a></dt>
 <dd><p>alias of <a class="reference internal" href="#pydistort.core.ExtrinsicResult" title="pydistort.core.extrinsic.ExtrinsicResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">ExtrinsicResult</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pydistort.core.Extrinsic.compute_rays">
+<span class="sig-name descname"><span class="pre">compute_rays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalized_points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transpose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_skip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/pydistort/core/extrinsic.html#Extrinsic.compute_rays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pydistort.core.Extrinsic.compute_rays" title="Link to this definition">#</a></dt>
+<dd><p>Compute the rays emitted from the camera to the scene.</p>
+<p>The rays are the concatenation of the normalized points and the direction of the rays in the world coordinate system.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rays</span> <span class="o">=</span> <span class="n">compute_rays</span><span class="p">(</span><span class="n">normalized_points</span><span class="p">)</span>
+
+<span class="n">rays</span><span class="o">.</span><span class="n">shape</span>  <span class="c1"># (..., 6)</span>
+<span class="c1"># The last dimension is the ray structure: (origin_x, origin_y, origin_z, direction_x, direction_y, direction_z)</span>
+<span class="c1"># Where the coordinates of the origin and the direction are in the world coordinate system.</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>normalized_points</strong> (<em>numpy.ndarray</em>) – The normalized points in the camera coordinate system. Shape (…, 2).</p></li>
+<li><p><strong>transpose</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the input and output arrays are transposed to shape (2, …) and (6, …), respectively. Default is False.</p></li>
+<li><p><strong>_skip</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, skip the checks and transformations. Default is False.</p></li>
+<li><p><strong>kwargs</strong> (<em>dict</em>) – Additional arguments to be passed to the transformation method.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The rays in the world coordinate system containing an origin (the normalized point) and a direction (the ray direction). Shape (…, 6).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -572,9 +627,11 @@
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic"><code class="docutils literal notranslate"><span class="pre">Extrinsic</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._abc_impl"><code class="docutils literal notranslate"><span class="pre">Extrinsic._abc_impl</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._compute_rays"><code class="docutils literal notranslate"><span class="pre">Extrinsic._compute_rays()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._inverse_result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic._inverse_result_class</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._jacobian_short_hand"><code class="docutils literal notranslate"><span class="pre">Extrinsic._jacobian_short_hand</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic._result_class"><code class="docutils literal notranslate"><span class="pre">Extrinsic._result_class</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.compute_rays"><code class="docutils literal notranslate"><span class="pre">Extrinsic.compute_rays()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.input_dim"><code class="docutils literal notranslate"><span class="pre">Extrinsic.input_dim</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pydistort.core.Extrinsic.output_dim"><code class="docutils literal notranslate"><span class="pre">Extrinsic.output_dim</span></code></a></li>
 </ul>
