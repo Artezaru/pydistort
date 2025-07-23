@@ -342,8 +342,8 @@ class Cv2Extrinsic(Extrinsic):
             return
         if not isinstance(frame, Frame):
             raise ValueError("Frame must be a py3dframe.Frame object.")
-        self._rvec = frame.get_global_rotation_vector(convention=4)
-        self._tvec = frame.get_global_translation(convention=4)
+        self._rvec = frame.get_global_rotation_vector(convention=4).flatten()
+        self._tvec = frame.get_global_translation(convention=4).flatten()
 
     # =============================================
     # Display the extrinsic parameters
